@@ -1,8 +1,6 @@
 import { RedisPubSub } from "graphql-redis-subscriptions";
 import Redis, { RedisOptions } from "ioredis";
 
-import { z } from "zod";
-import dotenv from "dotenv";
 import { MongoClient } from "mongodb";
 import { IUser } from "../services/user/models";
 
@@ -10,6 +8,7 @@ import { ExpressContextFunctionArgument } from "@apollo/server/dist/esm/express4
 import find from "../services/user/find";
 import create from "../services/message/create";
 import getAll from "../services/message/getAll";
+import { configObject } from "./config";
 
 export enum EAuthScope {
   UNAUTHENTICATED = "unauthenticated",
@@ -17,17 +16,8 @@ export enum EAuthScope {
   ADMIN = "admin",
 }
 
-dotenv.config();
-
-const envVariablesSchema = z.object({
-  MONGO_CONNECTION_STRING: z.string(),
-  MONGO_DB_NAME: z.string(),
-});
-
 const createGlobalContext = async () => {
-  const config = envVariablesSchema.parse(process.env);
-
-  const client = new MongoClient(config.MONGO_CONNECTION_STRING);
+  const client = new MongoClient(configObject.MONGO_CONNECTION_STRING);
 
   await client.connect();
 
@@ -37,15 +27,15 @@ const createGlobalContext = async () => {
     user: db.collection<IUser>("users"),
   } as const;
 
-  const options = {
-    host: "localhost",
-    port: 6379,
+  const redisOptions = {
+    host: configObject.REDIS_HOST,
+    port: configObject.REDIS_PORT,
     retryStrategy: (times: number) => Math.min(times * 50, 2000),
   } satisfies RedisOptions;
 
-  const publisher = new Redis(options);
-  const subscriber = new Redis(options);
-  const redis = new Redis(options);
+  const publisher = new Redis(redisOptions);
+  const subscriber = new Redis(redisOptions);
+  const redis = new Redis(redisOptions);
 
   const pubsub = new RedisPubSub({
     subscriber,
@@ -66,7 +56,7 @@ const createGlobalContext = async () => {
     db,
     collections,
     redis,
-    config,
+    config: configObject,
     pubsub,
     services,
   };

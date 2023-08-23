@@ -58,10 +58,7 @@ apolloServer
       cors<cors.CorsRequest>({ origin: "*" }),
       json(),
       expressMiddleware(apolloServer, {
-        context: (...a) => {
-          console.log(a);
-          return getContext(...a);
-        },
+        context: getContext,
       })
     );
 
