@@ -7,61 +7,18 @@ import express from "express";
 import cors from "cors";
 import { json } from "body-parser";
 
-import { Redis, RedisOptions } from "ioredis";
-
 import { ApolloServer } from "@apollo/server";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import { useServer } from "graphql-ws/lib/use/ws";
-import { RedisPubSub } from "graphql-redis-subscriptions";
-import { Resolvers } from "./generated/graphql";
 
-const options = {
-  host: "localhost",
-  port: 6379,
-  retryStrategy: (times: number) => Math.min(times * 50, 2000),
-} satisfies RedisOptions;
+import { TGlobalContext, getContext } from "./infrastructure/context";
+import { resolvers } from "./graphql/resolvers/root";
 
-const publisher = new Redis(options);
-const subscriber = new Redis(options);
-const redis = new Redis(options);
-
-const pubsub = new RedisPubSub({
-  subscriber,
-  publisher,
-});
-
-const typeDefs = fs.readFileSync("./src/schema.graphql", {
+const typeDefs = fs.readFileSync("./src/graphql/schema.graphql", {
   encoding: "utf-8",
 });
-
-const MESSAGE_ADDED = "MESSAGE_ADDED";
-const MESSAGES = "MESSAGES";
-
-const resolvers: Resolvers = {
-  Query: {
-    messages: () =>
-      redis
-        .lrange(MESSAGES, 0, -1)
-        .then((v) => v.map((content) => ({ content }))),
-  },
-  Subscription: {
-    messageAdded: {
-      subscribe: () => ({
-        [Symbol.asyncIterator]: () => pubsub.asyncIterator(MESSAGE_ADDED),
-      }),
-    },
-  },
-  Mutation: {
-    addMessage: (_root: unknown, { content }: { content: string }) => {
-      const messageAdded = { content };
-      redis.lpush(MESSAGES, content);
-      pubsub.publish(MESSAGE_ADDED, { messageAdded });
-      return messageAdded;
-    },
-  },
-};
 
 const app = express();
 
@@ -76,8 +33,9 @@ const wsServer = new WebSocketServer({
 
 const serverCleanup = useServer({ schema }, wsServer);
 
-const apolloServer = new ApolloServer({
+const apolloServer = new ApolloServer<TGlobalContext>({
   schema,
+
   plugins: [
     ApolloServerPluginDrainHttpServer({ httpServer }),
     {
@@ -99,7 +57,12 @@ apolloServer
       "/graphql",
       cors<cors.CorsRequest>({ origin: "*" }),
       json(),
-      expressMiddleware(apolloServer)
+      expressMiddleware(apolloServer, {
+        context: (...a) => {
+          console.log(a);
+          return getContext(...a);
+        },
+      })
     );
 
     httpServer.listen(3000, () =>
