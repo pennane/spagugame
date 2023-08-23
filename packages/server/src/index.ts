@@ -1,3 +1,5 @@
+import fs from "fs";
+
 import { createServer } from "http";
 import { WebSocketServer } from "ws";
 
@@ -13,6 +15,7 @@ import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import { useServer } from "graphql-ws/lib/use/ws";
 import { RedisPubSub } from "graphql-redis-subscriptions";
+import { Resolvers } from "./generated/graphql";
 
 const options = {
   host: "localhost",
@@ -29,28 +32,14 @@ const pubsub = new RedisPubSub({
   publisher,
 });
 
-const typeDefs = /* GraphQL */ `
-  type Query {
-    messages: [Message!]!
-  }
-
-  type Message {
-    content: String!
-  }
-
-  type Subscription {
-    messageAdded: Message!
-  }
-
-  type Mutation {
-    addMessage(content: String!): Message!
-  }
-`;
+const typeDefs = fs.readFileSync("./src/schema.graphql", {
+  encoding: "utf-8",
+});
 
 const MESSAGE_ADDED = "MESSAGE_ADDED";
 const MESSAGES = "MESSAGES";
 
-const resolvers = {
+const resolvers: Resolvers = {
   Query: {
     messages: () =>
       redis
@@ -59,13 +48,15 @@ const resolvers = {
   },
   Subscription: {
     messageAdded: {
-      subscribe: () => pubsub.asyncIterator([MESSAGE_ADDED]),
+      subscribe: () => ({
+        [Symbol.asyncIterator]: () => pubsub.asyncIterator(MESSAGE_ADDED),
+      }),
     },
   },
   Mutation: {
     addMessage: (_root: unknown, { content }: { content: string }) => {
       const messageAdded = { content };
-      redis.lpush("MESSAGES", content);
+      redis.lpush(MESSAGES, content);
       pubsub.publish(MESSAGE_ADDED, { messageAdded });
       return messageAdded;
     },
