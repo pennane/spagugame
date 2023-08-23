@@ -1,28 +1,33 @@
-# Social gaming website - name pending
+# NextGen Social Gaming Platform (Name TBA)
 
-A course project for Web-sovelluskehitys 2 TX00DZ38-3006 at Metropolia UAS.
+Welcome to the future of social gaming, a visionary course project for the "Web-sovelluskehitys 2 TX00DZ38-3006" at Metropolia UAS.
 
-The intention of the project is to create a gaming website with real-time games and social features. A some kind of homage to [aapeli.com](http://www.aapeli.com/) The idea is to encapsulate ongoing games in redis and publish updates using GraphQL subscriptions with websockets. Also elo system for each game is planned.
+Inspired by the legendary [aapeli.com](http://www.aapeli.com/), our goal is to craft an exhilarating social gaming experience enriched with real-time gameplay and robust social features. By leveraging the power of Redis, we seamlessly manage ongoing games, while GraphQL subscriptions combined with websockets allow for dynamic game updates in real-time. A sophisticated ELO ranking system is also on the horizon, ensuring competitive thrills for every game on our platform.
 
-It most likely is not overly performant to have the GraphQl layer in the game logic, but that is also just a thing I want to try.
+One might argue the integration of GraphQL directly into the game logic might affect performance. While that's a valid concern, we see it as an exciting challenge and a unique exploration of what’s possible.
 
-The idea is to add somewhat basic turn based games, so that the GraphQL subscription can actually hold up. These games might be something like connect four, Battleship (laivanupotus), hangman, guess the drawing etc.
+To ensure smooth gameplay even with this architecture, we're focusing on timeless turn-based classics. Think: Connect Four, Battleship (laivanupotus), Hangman, Guess the Drawing, etc.
 
-The code tries to follow pure functional conventionals and uses [ramda.js](https://ramdajs.com/) as the library to facilitate that.
+Underpinning our code is the purity of functional programming conventions, greatly assisted by the [ramda.js](https://ramdajs.com/) library.
 
-### Stack
+## Tech Stack
 
 **Backend:**
 
-Typescript, apollo gql, mongo, redis
+- Typescript
+- Apollo GQL
+- MongoDB
+- Redis
 
 **Frontend:**
 
-Typescript, Vite, React
+- Typescript
+- Vite
+- React
 
-**Package structure**
+## Monorepo Package Breakdown
 
-The project is organized as a monorepo with three main packages:
+The project is organized as a monorepo for clarity and scalability. Here are the three main packages:
 
 1. **server**: Contains all the backend code including API endpoints, database models, and business logic.
 2. **front**: Houses the frontend React application, components, and client-side logic.
