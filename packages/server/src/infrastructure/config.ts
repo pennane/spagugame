@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const envVariablesSchema = z.object({
+  HTTP_SERVER_PORT: z.number({ coerce: true }).default(3000),
+  SERVER_SESSION_SECRET: z.string(),
   MONGO_CONNECTION_STRING: z.string(),
   MONGO_DB_NAME: z.string(),
   REDIS_PORT: z.number({ coerce: true }).default(6379),
@@ -15,4 +17,4 @@ const envVariablesSchema = z.object({
     .default("http://localhost:3000/auth/github/callback"),
 });
 
-export const configObject = envVariablesSchema.parse(process.env);
+export const CONFIG_OBJECT = envVariablesSchema.parse(process.env);

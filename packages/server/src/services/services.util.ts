@@ -1,13 +1,9 @@
 import { EAuthScope } from "../infrastructure/context";
 import { TServiceHandler } from "./services.models";
 
-export const authenticatedService = <
-  IN,
-  OUT,
-  T extends TServiceHandler<IN, OUT>
->(
+export const authenticatedService = <T extends TServiceHandler<any, any>>(
   service: T
-): T =>
+) =>
   ((ctx, args) => {
     if (ctx.authScope === EAuthScope.UNAUTHENTICATED) {
       throw new Error(

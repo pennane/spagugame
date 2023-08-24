@@ -31,7 +31,17 @@ type Game {
   processState: GameProcessState!
   jsonState: String!
   players: [GamePlayer!]!
-  currentTurn: GamePlayer
+  currentTurn: ID
+}
+
+type GameStateChange {
+  _id: ID
+  gameType: GameType
+  processState: GameProcessState
+  jsonState: String
+  players: [GamePlayer!]
+  currentTurn: ID
+  startsIn: Int
 }
 
 type Query {
@@ -40,7 +50,7 @@ type Query {
 }
 
 type Subscription {
-  gameStateChanged(gameId: ID!): Game!
+  gameStateChange(gameId: ID!): GameStateChange!
 }
 
 type Mutation {
