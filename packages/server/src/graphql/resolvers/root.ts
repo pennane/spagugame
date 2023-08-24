@@ -1,24 +1,30 @@
-import { TGlobalContext, getGlobalContext } from "../../infrastructure/context";
-import { MESSAGE_ADDED_KEY } from "../../services/message/models";
+import { TContext } from "../../infrastructure/context";
+import createGame from "../../services/game/createGame";
+import joinGame from "../../services/game/joinGame";
+import { getGame, gqlSerializeGame } from "../../services/game/lib/serialize";
 import { Resolvers } from "../generated/graphql";
 
-export const resolvers: Resolvers<TGlobalContext> = {
+export const resolvers: Resolvers<TContext> = {
   Query: {
-    messages: (_root, _args, ctx) => ctx.services.message.getAll(ctx),
+    game: async (_root, { gameId }, ctx) => {
+      const game = await getGame(ctx, gameId);
+      if (!game) throw new Error("Invalid game id");
+      return gqlSerializeGame(game);
+    },
   },
   Subscription: {
-    messageAdded: {
-      subscribe: async () => {
-        const ctx = await getGlobalContext();
+    gameStateChange: {
+      subscribe: async (_root, { gameId }, ctx) => {
         return {
           [Symbol.asyncIterator]: () =>
-            ctx.pubsub.asyncIterator(MESSAGE_ADDED_KEY),
+            ctx.pubsub.asyncIterator(`game_changed.${gameId}`),
         };
       },
     },
   },
   Mutation: {
-    addMessage: (_root, { content }: { content: string }, ctx) =>
-      ctx.services.message.create(ctx, { content }),
+    createGame: async (_root, { gameType }, ctx) =>
+      createGame(ctx, { gameType }),
+    joinGame: async (_root, { gameId }, ctx) => joinGame(ctx, { gameId }),
   },
 };

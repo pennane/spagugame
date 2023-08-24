@@ -1,15 +1,59 @@
-type Query {
-  messages: [Message!]!
+enum GameType {
+  TICK_TACK_TOE
 }
 
-type Message {
-  content: String!
+enum UserRole {
+  USER
+  ADMIN
+}
+
+type User {
+  _id: ID!
+  roles: [UserRole!]!
+}
+
+type GamePlayer {
+  userId: ID!
+  score: Int!
+}
+
+enum GameProcessState {
+  NOT_STARTED
+  STARTING
+  ONGOING
+  FINISHED
+  CANCELLED
+}
+
+type Game {
+  _id: ID!
+  gameType: GameType!
+  processState: GameProcessState!
+  jsonState: String!
+  players: [GamePlayer!]!
+  currentTurn: ID
+}
+
+type GameStateChange {
+  _id: ID
+  gameType: GameType
+  processState: GameProcessState
+  jsonState: String
+  players: [GamePlayer!]
+  currentTurn: ID
+  startsIn: Int
+}
+
+type Query {
+  game(gameId: ID!): Game!
+  userActiveGames(userId: ID!): [Game!]!
 }
 
 type Subscription {
-  messageAdded: Message!
+  gameStateChange(gameId: ID!): GameStateChange!
 }
 
 type Mutation {
-  addMessage(content: String!): Message!
+  createGame(gameType: GameType!): Game!
+  joinGame(gameId: ID!): Game!
 }

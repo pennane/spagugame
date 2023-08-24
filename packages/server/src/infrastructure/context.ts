@@ -2,13 +2,10 @@ import { RedisPubSub } from "graphql-redis-subscriptions";
 import Redis, { RedisOptions } from "ioredis";
 
 import { MongoClient } from "mongodb";
-import { IUser } from "../services/user/models";
+import { IUser } from "../services/user/user.models";
 
 import { ExpressContextFunctionArgument } from "@apollo/server/dist/esm/express4";
-import find from "../services/user/find";
-import create from "../services/message/create";
-import getAll from "../services/message/getAll";
-import { configObject } from "./config";
+import { CONFIG_OBJECT } from "./config";
 
 export enum EAuthScope {
   UNAUTHENTICATED = "unauthenticated",
@@ -17,7 +14,7 @@ export enum EAuthScope {
 }
 
 const createGlobalContext = async () => {
-  const client = new MongoClient(configObject.MONGO_CONNECTION_STRING);
+  const client = new MongoClient(CONFIG_OBJECT.MONGO_CONNECTION_STRING);
 
   await client.connect();
 
@@ -28,8 +25,8 @@ const createGlobalContext = async () => {
   } as const;
 
   const redisOptions = {
-    host: configObject.REDIS_HOST,
-    port: configObject.REDIS_PORT,
+    host: CONFIG_OBJECT.REDIS_HOST,
+    port: CONFIG_OBJECT.REDIS_PORT,
     retryStrategy: (times: number) => Math.min(times * 50, 2000),
   } satisfies RedisOptions;
 
@@ -42,23 +39,12 @@ const createGlobalContext = async () => {
     publisher,
   });
 
-  const services = {
-    user: {
-      find: find,
-    },
-    message: {
-      create: create,
-      getAll: getAll,
-    },
-  };
-
   return {
     db,
     collections,
     redis,
-    config: configObject,
     pubsub,
-    services,
+    config: CONFIG_OBJECT,
   };
 };
 
@@ -66,9 +52,17 @@ const globalContext = createGlobalContext();
 
 export const getGlobalContext = () => Promise.resolve(globalContext);
 
-export const getContext = async (_: ExpressContextFunctionArgument) => {
+export const getContext = async ({ req }: ExpressContextFunctionArgument) => {
   const globalContext = await Promise.resolve(getGlobalContext());
-  return { ...globalContext, authScope: EAuthScope.UNAUTHENTICATED };
+  const additionalContext = {
+    authScope: req?.user ? EAuthScope.USER : EAuthScope.UNAUTHENTICATED,
+    user: req?.user as IUser,
+  };
+  return {
+    ...globalContext,
+    ...additionalContext,
+  };
 };
 
 export type TGlobalContext = Awaited<ReturnType<typeof getGlobalContext>>;
+export type TContext = Awaited<ReturnType<typeof getContext>>;
