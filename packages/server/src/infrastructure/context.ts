@@ -5,9 +5,7 @@ import { MongoClient } from "mongodb";
 import { IUser } from "../services/user/models";
 
 import { ExpressContextFunctionArgument } from "@apollo/server/dist/esm/express4";
-import find from "../services/user/find";
-import create from "../services/message/create";
-import getAll from "../services/message/getAll";
+import findUsers from "../services/user/findUsers";
 import { configObject } from "./config";
 
 export enum EAuthScope {
@@ -44,11 +42,7 @@ const createGlobalContext = async () => {
 
   const services = {
     user: {
-      find: find,
-    },
-    message: {
-      create: create,
-      getAll: getAll,
+      find: findUsers,
     },
   };
 
@@ -66,9 +60,17 @@ const globalContext = createGlobalContext();
 
 export const getGlobalContext = () => Promise.resolve(globalContext);
 
-export const getContext = async (_: ExpressContextFunctionArgument) => {
+export const getContext = async ({ req }: ExpressContextFunctionArgument) => {
   const globalContext = await Promise.resolve(getGlobalContext());
-  return { ...globalContext, authScope: EAuthScope.UNAUTHENTICATED };
+  const additionalContext = {
+    authScope: req.user ? EAuthScope.USER : EAuthScope.UNAUTHENTICATED,
+    user: req.user as IUser,
+  };
+  return {
+    ...globalContext,
+    ...additionalContext,
+  };
 };
 
 export type TGlobalContext = Awaited<ReturnType<typeof getGlobalContext>>;
+export type TContext = Awaited<ReturnType<typeof getContext>>;

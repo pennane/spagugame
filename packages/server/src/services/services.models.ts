@@ -1,6 +1,6 @@
-import { TGlobalContext } from "../infrastructure/context";
+import { TContext } from "../infrastructure/context";
 
 export type TServiceHandler<IN, OUT> = (
-  ctx: TGlobalContext,
+  ctx: TContext,
   args: IN
 ) => Promise<OUT>;

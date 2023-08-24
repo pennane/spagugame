@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { GraphQLResolveInfo } from 'graphql';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -16,30 +17,86 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
-export type Message = {
-  __typename?: 'Message';
-  content: Scalars['String']['output'];
+export type Game = {
+  __typename?: 'Game';
+  _id: Scalars['ID']['output'];
+  currentTurn?: Maybe<GamePlayer>;
+  gameType: GameType;
+  jsonState: Scalars['String']['output'];
+  players: Array<GamePlayer>;
+  processState: GameProcessState;
 };
+
+export type GamePlayer = {
+  __typename?: 'GamePlayer';
+  score: Scalars['Int']['output'];
+  userId: Scalars['ID']['output'];
+};
+
+export enum GameProcessState {
+  Cancelled = 'CANCELLED',
+  Finished = 'FINISHED',
+  NotStarted = 'NOT_STARTED',
+  Ongoing = 'ONGOING',
+  Starting = 'STARTING'
+}
+
+export enum GameType {
+  TickTackToe = 'TICK_TACK_TOE'
+}
 
 export type Mutation = {
   __typename?: 'Mutation';
-  addMessage: Message;
+  createGame: Game;
+  joinGame: Game;
 };
 
 
-export type MutationAddMessageArgs = {
-  content: Scalars['String']['input'];
+export type MutationCreateGameArgs = {
+  gameType: GameType;
+};
+
+
+export type MutationJoinGameArgs = {
+  gameId: Scalars['ID']['input'];
 };
 
 export type Query = {
   __typename?: 'Query';
-  messages: Array<Message>;
+  game: Game;
+  userActiveGames: Array<Game>;
+};
+
+
+export type QueryGameArgs = {
+  gameId: Scalars['ID']['input'];
+};
+
+
+export type QueryUserActiveGamesArgs = {
+  userId: Scalars['ID']['input'];
 };
 
 export type Subscription = {
   __typename?: 'Subscription';
-  messageAdded: Message;
+  gameStateChanged: Game;
 };
+
+
+export type SubscriptionGameStateChangedArgs = {
+  gameId: Scalars['ID']['input'];
+};
+
+export type User = {
+  __typename?: 'User';
+  _id: Scalars['ID']['output'];
+  roles: Array<UserRole>;
+};
+
+export enum UserRole {
+  Admin = 'ADMIN',
+  User = 'USER'
+}
 
 
 
@@ -113,44 +170,76 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
-  Message: ResolverTypeWrapper<Message>;
+  Game: ResolverTypeWrapper<Game>;
+  GamePlayer: ResolverTypeWrapper<GamePlayer>;
+  GameProcessState: GameProcessState;
+  GameType: GameType;
+  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   Subscription: ResolverTypeWrapper<{}>;
+  User: ResolverTypeWrapper<User>;
+  UserRole: UserRole;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
-  Message: Message;
+  Game: Game;
+  GamePlayer: GamePlayer;
+  ID: Scalars['ID']['output'];
+  Int: Scalars['Int']['output'];
   Mutation: {};
   Query: {};
   String: Scalars['String']['output'];
   Subscription: {};
+  User: User;
 };
 
-export type MessageResolvers<ContextType = any, ParentType extends ResolversParentTypes['Message'] = ResolversParentTypes['Message']> = {
-  content?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+export type GameResolvers<ContextType = any, ParentType extends ResolversParentTypes['Game'] = ResolversParentTypes['Game']> = {
+  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  currentTurn?: Resolver<Maybe<ResolversTypes['GamePlayer']>, ParentType, ContextType>;
+  gameType?: Resolver<ResolversTypes['GameType'], ParentType, ContextType>;
+  jsonState?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  players?: Resolver<Array<ResolversTypes['GamePlayer']>, ParentType, ContextType>;
+  processState?: Resolver<ResolversTypes['GameProcessState'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GamePlayerResolvers<ContextType = any, ParentType extends ResolversParentTypes['GamePlayer'] = ResolversParentTypes['GamePlayer']> = {
+  score?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  userId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  addMessage?: Resolver<ResolversTypes['Message'], ParentType, ContextType, RequireFields<MutationAddMessageArgs, 'content'>>;
+  createGame?: Resolver<ResolversTypes['Game'], ParentType, ContextType, RequireFields<MutationCreateGameArgs, 'gameType'>>;
+  joinGame?: Resolver<ResolversTypes['Game'], ParentType, ContextType, RequireFields<MutationJoinGameArgs, 'gameId'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  messages?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType>;
+  game?: Resolver<ResolversTypes['Game'], ParentType, ContextType, RequireFields<QueryGameArgs, 'gameId'>>;
+  userActiveGames?: Resolver<Array<ResolversTypes['Game']>, ParentType, ContextType, RequireFields<QueryUserActiveGamesArgs, 'userId'>>;
 };
 
 export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
-  messageAdded?: SubscriptionResolver<ResolversTypes['Message'], "messageAdded", ParentType, ContextType>;
+  gameStateChanged?: SubscriptionResolver<ResolversTypes['Game'], "gameStateChanged", ParentType, ContextType, RequireFields<SubscriptionGameStateChangedArgs, 'gameId'>>;
+};
+
+export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  roles?: Resolver<Array<ResolversTypes['UserRole']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = any> = {
-  Message?: MessageResolvers<ContextType>;
+  Game?: GameResolvers<ContextType>;
+  GamePlayer?: GamePlayerResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Subscription?: SubscriptionResolvers<ContextType>;
+  User?: UserResolvers<ContextType>;
 };
 
