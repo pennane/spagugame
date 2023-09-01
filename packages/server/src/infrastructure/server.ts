@@ -56,7 +56,6 @@ const configurePassport = (ctx: TGlobalContext) => {
         done: (err: unknown | null, user: IUser | null) => void
       ) {
         const ctx = await getGlobalContext();
-        console.log(profile);
         const result = await ctx.collections.user.findOneAndUpdate(
           { githubId: profile.id },
           {
@@ -64,6 +63,7 @@ const configurePassport = (ctx: TGlobalContext) => {
               githubId: profile.id,
               roles: [UserRole.User],
               userName: profile.displayName || profile.username,
+              joinedAt: new Date(),
             },
           },
           { upsert: true, returnDocument: "after" }
