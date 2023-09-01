@@ -1,7 +1,12 @@
-import { Game, GamePlayer, GameType } from "../../graphql/generated/graphql";
-import { TickTackToeSettings } from "./games/TickTackToe";
+import {
+  OngoingGame,
+  OngoingGamePlayer,
+  GameType,
+} from "../graphql/generated/graphql";
+import { TickTackToeSettings } from "./TickTackToe/TickTackToe";
 
 export interface GameSettings<T> {
+  type: GameType;
   maxPlayers: number;
   minPlayers: number;
   initialState: () => DeserializedGame<T>;
@@ -14,14 +19,14 @@ export const GAME_SETTINGS_MAP = {
   [GameType.TickTackToe]: TickTackToeSettings,
 } satisfies Record<GameType, GameSettings<any>>;
 
-export type GqlSerializedGame = Omit<Game, "jsonState"> & {
+export type GqlSerializedGame = Omit<OngoingGame, "jsonState"> & {
   jsonState: string;
 };
-export type SerializedGame = Omit<Game, "jsonState" | "players"> & {
+export type SerializedGame = Omit<OngoingGame, "jsonState" | "players"> & {
   jsonState: string;
   players: string;
 };
-export type DeserializedGame<T> = Omit<Game, "jsonState" | "players"> & {
+export type DeserializedGame<T> = Omit<OngoingGame, "jsonState" | "players"> & {
   jsonState: T;
-  players: GamePlayer[];
+  players: OngoingGamePlayer[];
 };

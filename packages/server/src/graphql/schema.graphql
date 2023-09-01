@@ -1,3 +1,5 @@
+scalar Date
+
 enum GameType {
   TICK_TACK_TOE
 }
@@ -7,17 +9,65 @@ enum UserRole {
   ADMIN
 }
 
+# Static mongo types
+
+## User
+
 type User {
   _id: ID!
+  githubID: ID!
+  userName: String!
+  description: String
   roles: [UserRole!]!
+  joinedAt: Date!
 }
 
-type GamePlayer {
+input UserInput {
+  userName: String
+  description: String
+}
+
+## UserStats
+
+type UserStats {
+  _id: ID!
+  userId: ID!
+  gameID: ID!
+  totalWins: Int!
+  totalLosses: Int!
+  totalDraws: Int!
+  elo: Int!
+}
+
+## Game
+
+type Game {
+  _id: ID!
+  type: GameType!
+  name: String!
+  description: String!
+}
+
+## PlayedGame
+
+type PlayedGame {
+  _id: ID!
+  gameId: ID!
+  playerIdsInWinningOrder: [ID!]!
+  playerElosBeforeInWinningOrder: [Int!]!
+  playerElosAfterInWinningOrder: [Int!]!
+  startedAt: Date!
+  finishedAt: Date!
+}
+
+# Ongoing game types
+
+type OngoingGamePlayer {
   userId: ID!
   score: Int!
 }
 
-enum GameProcessState {
+enum OngoingGameProcessState {
   NOT_STARTED
   STARTING
   ONGOING
@@ -25,35 +75,42 @@ enum GameProcessState {
   CANCELLED
 }
 
-type Game {
+type OngoingGame {
   _id: ID!
   gameType: GameType!
-  processState: GameProcessState!
+  processState: OngoingGameProcessState!
   jsonState: String!
-  players: [GamePlayer!]!
+  players: [OngoingGamePlayer!]!
   currentTurn: ID
 }
 
-type GameStateChange {
+type OngoingGameStateChange {
   _id: ID
   gameType: GameType
-  processState: GameProcessState
+  processState: OngoingGameProcessState
   jsonState: String
-  players: [GamePlayer!]
+  players: [OngoingGamePlayer!]
   currentTurn: ID
   startsIn: Int
 }
 
 type Query {
-  game(gameId: ID!): Game!
-  userActiveGames(userId: ID!): [Game!]!
+  ongoingGame(ongoingGameId: ID!): OngoingGame!
+  userActiveGames(userId: ID!): [OngoingGame!]!
+  user(id: ID!): User
+  users(ids: [ID!]!): [User!]!
+  currentUser: User
+  game(id: ID!): Game
+  games(ids: [ID!]): [Game!]!
 }
 
 type Subscription {
-  gameStateChange(gameId: ID!): GameStateChange!
+  ongoingGameStateChange(ongoingGameId: ID!): OngoingGameStateChange!
 }
 
 type Mutation {
-  createGame(gameType: GameType!): Game!
-  joinGame(gameId: ID!): Game!
+  createOngoingGame(gameType: GameType!): OngoingGame!
+  joinOngoingGame(ongoingGameId: ID!): OngoingGame!
+  playTurn(json: String!): OngoingGame!
+  updateUser(userInput: UserInput): User!
 }

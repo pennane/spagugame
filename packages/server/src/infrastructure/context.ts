@@ -1,28 +1,14 @@
 import { RedisPubSub } from "graphql-redis-subscriptions";
 import Redis, { RedisOptions } from "ioredis";
 
-import { MongoClient } from "mongodb";
-import { IUser } from "../services/user/user.models";
+import { IUser } from "../collections/User";
 
 import { ExpressContextFunctionArgument } from "@apollo/server/dist/esm/express4";
 import { CONFIG_OBJECT } from "./config";
-
-export enum EAuthScope {
-  UNAUTHENTICATED = "unauthenticated",
-  USER = "user",
-  ADMIN = "admin",
-}
+import { initializeMongo } from "./mongo";
 
 const createGlobalContext = async () => {
-  const client = new MongoClient(CONFIG_OBJECT.MONGO_CONNECTION_STRING);
-
-  await client.connect();
-
-  const db = client.db(process.env.DB_NAME);
-
-  const collections = {
-    user: db.collection<IUser>("users"),
-  } as const;
+  const { db, collections } = await initializeMongo();
 
   const redisOptions = {
     host: CONFIG_OBJECT.REDIS_HOST,
@@ -55,8 +41,7 @@ export const getGlobalContext = () => Promise.resolve(globalContext);
 export const getContext = async ({ req }: ExpressContextFunctionArgument) => {
   const globalContext = await Promise.resolve(getGlobalContext());
   const additionalContext = {
-    authScope: req?.user ? EAuthScope.USER : EAuthScope.UNAUTHENTICATED,
-    user: req?.user as IUser,
+    user: req?.user as IUser | undefined,
   };
   return {
     ...globalContext,

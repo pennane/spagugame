@@ -1,6 +1,9 @@
 import { randomUUID } from "crypto";
-import { GameType, GameProcessState } from "../../../graphql/generated/graphql";
-import { GameSettings } from "../game.models";
+import {
+  GameType,
+  OngoingGameProcessState,
+} from "../../graphql/generated/graphql";
+import { GameSettings } from "../models";
 
 export type TickTackToeState = [
   [null | "o" | "x", null | "o" | "x", null | "o" | "x"],
@@ -9,6 +12,7 @@ export type TickTackToeState = [
 ];
 
 export const TickTackToeSettings: GameSettings<TickTackToeState> = {
+  type: GameType.TickTackToe,
   maxPlayers: 2,
   minPlayers: 2,
   validateState: (d): d is TickTackToeState => {
@@ -27,7 +31,7 @@ export const TickTackToeSettings: GameSettings<TickTackToeState> = {
     return {
       _id: randomUUID(),
       gameType: GameType.TickTackToe,
-      processState: GameProcessState.NotStarted,
+      processState: OngoingGameProcessState.NotStarted,
       players: [],
       jsonState: Array.from({ length: 3 }, () =>
         Array.from({ length: 3 }, () => null)
@@ -38,11 +42,11 @@ export const TickTackToeSettings: GameSettings<TickTackToeState> = {
     return (
       s.players.length >= this.minPlayers &&
       s.players.length <= this.maxPlayers &&
-      s.processState === GameProcessState.NotStarted
+      s.processState === OngoingGameProcessState.NotStarted
     );
   },
   nextState: function (state, move) {
-    if (state.processState !== GameProcessState.Ongoing)
+    if (state.processState !== OngoingGameProcessState.Ongoing)
       throw new Error("Invalid process state");
     if (!state.jsonState)
       throw new Error("MUST MAVE JSON STATE WHEN CHECKING NEXT STATE");

@@ -1,16 +1,15 @@
-import { TServiceHandler } from "../services.models";
-import { GameProcessState } from "../../graphql/generated/graphql";
+import { OngoingGameProcessState } from "../../graphql/generated/graphql";
 
-import { authenticatedService } from "../services.util";
+import { authenticatedService } from "../lib";
 import { getGame } from "./lib/serialize";
-import { GAME_SETTINGS_MAP } from "./game.models";
-import { sample, wait } from "../../graphql/lib/common";
+import { GAME_SETTINGS_MAP } from "../../games/models";
+import { sample, wait } from "../../lib/common";
 
 const STARTING_DURATION_SECONDS = 5;
 const SECOND_IN_MS = 1000;
 
-const startGame: TServiceHandler<{ gameId: string }, void> =
-  authenticatedService(async (ctx, { gameId }) => {
+const startGame = authenticatedService<{ gameId: string }, void>(
+  async (ctx, { gameId }) => {
     const game = await getGame(ctx, gameId);
     if (!game) throw new Error("Game does not exist");
 
@@ -21,11 +20,11 @@ const startGame: TServiceHandler<{ gameId: string }, void> =
     await Promise.all([
       ctx.pubsub.publish(`game_changed.${gameId}`, {
         gameStateChange: {
-          processState: GameProcessState.Starting,
+          processState: OngoingGameProcessState.Starting,
         },
       }),
       ctx.redis.hset(`game.${gameId}`, {
-        processState: GameProcessState.Starting,
+        processState: OngoingGameProcessState.Starting,
       }),
     ]);
 
@@ -44,16 +43,17 @@ const startGame: TServiceHandler<{ gameId: string }, void> =
     await Promise.all([
       ctx.pubsub.publish(`game_changed.${gameId}`, {
         gameStateChange: {
-          processState: GameProcessState.Ongoing,
+          processState: OngoingGameProcessState.Ongoing,
           currentTurn: startingUserId,
           startsIn: 0,
         },
       }),
       ctx.redis.hset(`game.${gameId}`, {
-        processState: GameProcessState.Ongoing,
+        processState: OngoingGameProcessState.Ongoing,
         currentTurn: startingUserId,
       }),
     ]);
-  });
+  }
+);
 
 export default startGame;

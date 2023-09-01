@@ -1,13 +1,13 @@
 import * as R from "ramda";
-import { TServiceHandler } from "../services.models";
-import { Game, GameType } from "../../graphql/generated/graphql";
 
-import { GAME_SETTINGS_MAP } from "./game.models";
-import { authenticatedService } from "../services.util";
+import { GameType, OngoingGame } from "../../graphql/generated/graphql";
+
+import { GAME_SETTINGS_MAP } from "../../games/models";
+import { authenticatedService } from "../lib";
 import { saveGame } from "./lib/serialize";
 
-const createGame: TServiceHandler<{ gameType: GameType }, Game> =
-  authenticatedService(async (ctx, { gameType }) => {
+const createGame = authenticatedService<{ gameType: GameType }, OngoingGame>(
+  async (ctx, { gameType }) => {
     const settings = GAME_SETTINGS_MAP[gameType];
 
     // Join the game automatically
@@ -22,6 +22,7 @@ const createGame: TServiceHandler<{ gameType: GameType }, Game> =
     await saveGame(ctx, initialState);
 
     return initialState;
-  });
+  }
+);
 
 export default createGame;

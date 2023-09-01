@@ -1,18 +1,20 @@
 import * as R from "ramda";
-import { TServiceHandler } from "../services.models";
-import { Game, GameProcessState } from "../../graphql/generated/graphql";
+import {
+  OngoingGame,
+  OngoingGameProcessState,
+} from "../../graphql/generated/graphql";
 
-import { authenticatedService } from "../services.util";
-import { GAME_SETTINGS_MAP } from "./game.models";
+import { authenticatedService } from "../lib";
+import { GAME_SETTINGS_MAP } from "../../games/models";
 import { gqlSerializeGame, getGame } from "./lib/serialize";
 import startGame from "./startGame";
 
-const joinGame: TServiceHandler<{ gameId: string }, Game> =
-  authenticatedService(async (ctx, { gameId }) => {
+const joinGame = authenticatedService<{ gameId: string }, OngoingGame>(
+  async (ctx, { gameId }) => {
     const game = await getGame(ctx, gameId);
     if (!game) throw new Error("Game does not exist");
 
-    if (game.processState !== GameProcessState.NotStarted) {
+    if (game.processState !== OngoingGameProcessState.NotStarted) {
       throw new Error("Cannot join a game that is already started or starting");
     }
 
@@ -47,6 +49,7 @@ const joinGame: TServiceHandler<{ gameId: string }, Game> =
     }
 
     return gqlSerializeGame(game);
-  });
+  }
+);
 
 export default joinGame;

@@ -3,9 +3,9 @@ import {
   DeserializedGame,
   GqlSerializedGame,
   SerializedGame,
-} from "../game.models";
+} from "../../../games/models";
 import { TContext } from "../../../infrastructure/context";
-import { isNilOrEmpty } from "../../../graphql/lib/fp";
+import { isNilOrEmpty } from "../../../lib/fp";
 
 export const gqlSerializeGame = <T>(
   game: DeserializedGame<T>

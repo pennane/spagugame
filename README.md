@@ -32,3 +32,14 @@ The project is organized as a monorepo for clarity and scalability. Here are the
 1. **server**: Contains all the backend code including API endpoints, database models, and business logic.
 2. **front**: Houses the frontend React application, components, and client-side logic.
 3. **environment**: Includes Docker configurations for MongoDB and Redis, ensuring a consistent environment setup.
+
+## What kind of games can be added?
+
+- No limit on player count
+- OnlyoOne player can play at a time (sad)
+- Game must end with each player having a score that can be used to determine who won etc
+
+## Keeping track of some of the implemented techical features
+
+- automatic index creation and dropping
+  - indexes are automatically kept upto date

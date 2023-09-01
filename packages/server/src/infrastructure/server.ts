@@ -20,7 +20,7 @@ import { useServer } from "graphql-ws/lib/use/ws";
 import { ObjectId } from "mongodb";
 import { UserRole } from "../graphql/generated/graphql";
 import { resolvers } from "../graphql/resolvers/root";
-import { IUser } from "../services/user/user.models";
+import { IUser } from "../collections/User";
 
 import {
   getGlobalContext,
@@ -31,7 +31,6 @@ import {
 
 const configurePassport = (ctx: TGlobalContext) => {
   passport.serializeUser(function (user, done) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     done(null, (user as any)._id);
   });
 
@@ -53,13 +52,20 @@ const configurePassport = (ctx: TGlobalContext) => {
       async function (
         _accessToken: string,
         _refreshToken: string,
-        profile: { id: string },
+        profile: { id: string; displayName?: string; username?: string },
         done: (err: unknown | null, user: IUser | null) => void
       ) {
         const ctx = await getGlobalContext();
+        console.log(profile);
         const result = await ctx.collections.user.findOneAndUpdate(
           { githubId: profile.id },
-          { $setOnInsert: { githubId: profile.id, roles: [UserRole.User] } },
+          {
+            $setOnInsert: {
+              githubId: profile.id,
+              roles: [UserRole.User],
+              userName: profile.displayName || profile.username,
+            },
+          },
           { upsert: true, returnDocument: "after" }
         );
 
