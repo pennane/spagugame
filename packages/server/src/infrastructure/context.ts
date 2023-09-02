@@ -6,11 +6,12 @@ import { initializeMongo } from "./mongo";
 import { initializeRedis } from "./redis";
 
 const createGlobalContext = async () => {
-  const { db, collections } = await initializeMongo();
+  const { db, collections, mongoClient } = await initializeMongo();
   const { pubsub, redis } = await initializeRedis();
 
   return {
     db,
+    mongoClient,
     collections,
     redis,
     pubsub,

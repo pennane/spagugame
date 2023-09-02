@@ -5,11 +5,11 @@ import {
 
 import { authenticatedService } from "../lib";
 import { GAME_SPECIFICATIONS_MAP } from "../../games/models";
-import { gqlSerializeGame, getGame } from "./lib/serialize";
+import { gqlSerializeGame, getGameFromRedis } from "./lib/serialize";
 
 const leaveGame = authenticatedService<{ gameId: string }, OngoingGame>(
   async (ctx, { gameId }) => {
-    const game = await getGame(ctx, gameId);
+    const game = await getGameFromRedis(ctx, gameId);
     if (!game) throw new Error("Game does not exist");
 
     if (game.processState !== OngoingGameProcessState.NotStarted) {

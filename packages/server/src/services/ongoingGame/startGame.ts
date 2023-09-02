@@ -1,7 +1,7 @@
 import { OngoingGameProcessState } from "../../graphql/generated/graphql";
 
 import { authenticatedService } from "../lib";
-import { getGame } from "./lib/serialize";
+import { getGameFromRedis } from "./lib/serialize";
 import { GAME_SPECIFICATIONS_MAP } from "../../games/models";
 import { sample, wait } from "../../lib/common";
 
@@ -10,7 +10,7 @@ const SECOND_IN_MS = 1000;
 
 const startGame = authenticatedService<{ gameId: string }, void>(
   async (ctx, { gameId }) => {
-    const game = await getGame(ctx, gameId);
+    const game = await getGameFromRedis(ctx, gameId);
     if (!game) throw new Error("Game does not exist");
 
     const canStart = GAME_SPECIFICATIONS_MAP[game.gameType].canStart(
@@ -21,7 +21,7 @@ const startGame = authenticatedService<{ gameId: string }, void>(
 
     await Promise.all([
       ctx.pubsub.publish(`game_changed.${gameId}`, {
-        gameStateChange: {
+        ongoingGameStateChange: {
           processState: OngoingGameProcessState.Starting,
         },
       }),
@@ -33,7 +33,7 @@ const startGame = authenticatedService<{ gameId: string }, void>(
     for (let i = 0; i < STARTING_DURATION_SECONDS; i++) {
       await Promise.all([
         ctx.pubsub.publish(`game_changed.${gameId}`, {
-          gameStateChange: {
+          ongoingGameStateChange: {
             startsIn: STARTING_DURATION_SECONDS - i,
           },
         }),
@@ -44,7 +44,7 @@ const startGame = authenticatedService<{ gameId: string }, void>(
     const startingUserId = sample(game.players).userId;
     await Promise.all([
       ctx.pubsub.publish(`game_changed.${gameId}`, {
-        gameStateChange: {
+        ongoingGameStateChange: {
           processState: OngoingGameProcessState.Ongoing,
           currentTurn: startingUserId,
           startsIn: 0,

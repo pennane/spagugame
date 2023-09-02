@@ -14,7 +14,7 @@ const connectDb = async () => {
 
   const db = client.db(CONFIG_OBJECT.MONGO_DB_NAME);
 
-  return db;
+  return { mongoClient: client, db };
 };
 
 const createCollections = async (
@@ -67,7 +67,7 @@ const createAndDropIndexes = async (
 };
 
 export const initializeMongo = async () => {
-  const db = await connectDb();
+  const { db, mongoClient } = await connectDb();
 
   const collectionSettings = {
     user: USER_COLLECTION_SETTINGS,
@@ -89,5 +89,5 @@ export const initializeMongo = async () => {
 
   await createAndDropIndexes(db, collectionSettings);
 
-  return { db, collections, collectionSettings };
+  return { db, collections, collectionSettings, mongoClient };
 };

@@ -6,12 +6,12 @@ import {
 
 import { authenticatedService } from "../lib";
 import { GAME_SPECIFICATIONS_MAP } from "../../games/models";
-import { gqlSerializeGame, getGame } from "./lib/serialize";
+import { gqlSerializeGame, getGameFromRedis } from "./lib/serialize";
 import startGame from "./startGame";
 
 const joinGame = authenticatedService<{ gameId: string }, OngoingGame>(
   async (ctx, { gameId }) => {
-    const game = await getGame(ctx, gameId);
+    const game = await getGameFromRedis(ctx, gameId);
     if (!game) throw new Error("Game does not exist");
 
     if (game.processState !== OngoingGameProcessState.NotStarted) {
@@ -19,6 +19,10 @@ const joinGame = authenticatedService<{ gameId: string }, OngoingGame>(
     }
 
     const settings = GAME_SPECIFICATIONS_MAP[game.gameType];
+
+    if (game.players.some((p) => p.userId === ctx.user._id.toString())) {
+      throw new Error("Cannot join twice");
+    }
 
     if (game.players.length + 1 > settings.maxPlayers) {
       throw new Error("Cannot join a game that is already full");

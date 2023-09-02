@@ -10,6 +10,7 @@ import { json } from "body-parser";
 import session from "express-session";
 import passport from "passport";
 import { Strategy as GithubStrategy } from "passport-github2";
+import MongoStore from "connect-mongo";
 
 import { ApolloServer } from "@apollo/server";
 import { makeExecutableSchema } from "@graphql-tools/schema";
@@ -39,6 +40,7 @@ const configurePassport = (ctx: TGlobalContext) => {
     const user = await ctx.collections.user.findOne({
       _id: new ObjectId(id),
     });
+
     done(!user ? "no user" : null, user);
   });
 
@@ -141,6 +143,11 @@ const registerMiddleware =
         secret: ctx.config.SERVER_SESSION_SECRET,
         saveUninitialized: false,
         resave: true,
+        store: MongoStore.create({
+          collectionName: "sessions",
+          client: ctx.mongoClient,
+          dbName: ctx.config.MONGO_DB_NAME,
+        }),
       })
     );
     app.use(passport.initialize());
@@ -151,11 +158,7 @@ const registerMiddleware =
       json(),
       expressMiddleware(apolloServer, {
         context: getContext,
-      }),
-      (req, res, next) => {
-        console.log({ user: req.user });
-        next();
-      }
+      })
     );
     app.get("/auth/github", passport.authenticate("github"));
     app.get(

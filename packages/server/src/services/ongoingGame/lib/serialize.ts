@@ -25,7 +25,7 @@ export const deserializeGame = <T>(
     game
   ) as unknown as DeserializedGame<T>;
 
-export const getGame = async (
+export const getGameFromRedis = async (
   ctx: TContext,
   gameId: string
 ): Promise<DeserializedGame<unknown> | null> => {
@@ -34,14 +34,14 @@ export const getGame = async (
   return deserializeGame(data);
 };
 
-export const saveGame = async (
+export const saveGameToRedis = async (
   ctx: TContext,
   game: DeserializedGame<unknown>
 ) => {
   const serialized = serializeGame(game);
 
   await ctx.redis.hset(`game.${serialized._id}`, serialized);
-  await ctx.redis.expire(`game.${serialized._id}`, 60);
+  await ctx.redis.expire(`game.${serialized._id}`, 600);
   return serialized;
 };
 

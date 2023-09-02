@@ -1,4 +1,5 @@
 import { randomUUID } from "crypto";
+import * as R from "ramda";
 import {
   GameType,
   OngoingGameProcessState,
@@ -11,6 +12,57 @@ export type TickTackToeState = [
   [null | "o" | "x", null | "o" | "x", null | "o" | "x"],
   [null | "o" | "x", null | "o" | "x", null | "o" | "x"]
 ];
+
+const checkWinner = (board: TickTackToeState) => {
+  for (let row = 0; row < 3; row++) {
+    if (
+      board[row][0] &&
+      board[row][0] === board[row][1] &&
+      board[row][1] === board[row][2]
+    ) {
+      return board[row][0];
+    }
+  }
+
+  // Check columns
+  for (let col = 0; col < 3; col++) {
+    if (
+      board[0][col] &&
+      board[0][col] === board[1][col] &&
+      board[1][col] === board[2][col]
+    ) {
+      return board[0][col];
+    }
+  }
+
+  // Check diagonals
+  if (
+    board[0][0] &&
+    board[0][0] === board[1][1] &&
+    board[1][1] === board[2][2]
+  ) {
+    return board[0][0];
+  }
+  if (
+    board[0][2] &&
+    board[0][2] === board[1][1] &&
+    board[1][1] === board[2][0]
+  ) {
+    return board[0][2];
+  }
+
+  // Check for a draw
+  for (let row = 0; row < 3; row++) {
+    for (let col = 0; col < 3; col++) {
+      if (board[row][col] === null) {
+        return null; // Game is still ongoing
+      }
+    }
+  }
+
+  // If we've reached here, it's a draw
+  return "-";
+};
 
 export const TickTackToeSpecification: GameSpecification<TickTackToeState> = {
   _id: mongoIdFromSeed("tick tack toe"),
@@ -54,23 +106,52 @@ export const TickTackToeSpecification: GameSpecification<TickTackToeState> = {
     if (state.processState !== OngoingGameProcessState.Ongoing)
       throw new Error("Invalid process state");
     if (!state.jsonState)
-      throw new Error("MUST MAVE JSON STATE WHEN CHECKING NEXT STATE");
+      throw new Error("MUST HAVE JSON STATE WHEN CHECKING NEXT STATE");
     const [x, y] = move.split("").map((s) => parseInt(s));
+    console.log(
+      x,
+      y,
+      state.jsonState?.[x]?.[y],
+      state.jsonState,
+      typeof state.jsonState
+    );
     if (state.jsonState?.[x]?.[y] !== null) {
-      return state;
+      throw new Error("Cannot place piece over old placement");
     }
 
-    const currentPlayerIndex = state.players.findIndex(
-      (p) => p.userId === state.currentTurn
+    const newState = R.clone(state);
+
+    const currentPlayerIndex = newState.players.findIndex(
+      (p) => p.userId === newState.currentTurn
     );
 
-    state.jsonState[x][y] = currentPlayerIndex === 0 ? "x" : "o";
+    console.log("userIndex", currentPlayerIndex);
 
-    const nextUp =
-      state.players[currentPlayerIndex + (1 % state.players.length)].userId;
+    const playerSymbol = currentPlayerIndex === 0 ? "x" : "o";
 
-    state.currentTurn = nextUp;
+    newState.jsonState[x][y] = playerSymbol;
 
-    return state;
+    const winner = checkWinner(newState.jsonState);
+
+    if (!winner) {
+      const nextUp =
+        newState.players[(currentPlayerIndex + 1) % state.players.length]
+          .userId;
+
+      newState.currentTurn = nextUp;
+
+      return newState;
+    }
+
+    newState.currentTurn = null;
+    newState.processState = OngoingGameProcessState.Finished;
+
+    if (winner === "-") {
+      return newState;
+    }
+
+    newState.players[currentPlayerIndex].score = 100;
+
+    return newState;
   },
 };

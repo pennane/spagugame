@@ -4,7 +4,7 @@ import { GameType, OngoingGame } from "../../graphql/generated/graphql";
 
 import { GAME_SPECIFICATIONS_MAP } from "../../games/models";
 import { authenticatedService } from "../lib";
-import { saveGame } from "./lib/serialize";
+import { gqlSerializeGame, saveGameToRedis } from "./lib/serialize";
 
 const createGame = authenticatedService<{ gameType: GameType }, OngoingGame>(
   async (ctx, { gameType }) => {
@@ -14,14 +14,13 @@ const createGame = authenticatedService<{ gameType: GameType }, OngoingGame>(
     const initialState = R.evolve(
       {
         players: R.concat([{ score: 0, userId: ctx.user._id.toString() }]),
-        jsonState: (s) => JSON.stringify(s),
       },
       settings.initialState()
     );
 
-    await saveGame(ctx, initialState);
+    await saveGameToRedis(ctx, initialState);
 
-    return initialState;
+    return gqlSerializeGame(initialState);
   }
 );
 

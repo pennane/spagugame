@@ -111,6 +111,6 @@ type Subscription {
 type Mutation {
   createOngoingGame(gameType: GameType!): OngoingGame!
   joinOngoingGame(ongoingGameId: ID!): OngoingGame!
-  playTurn(json: String!): OngoingGame!
+  playTurn(ongoingGameId: ID!, json: String!): OngoingGame!
   updateUser(userInput: UserInput): User!
 }

@@ -4,11 +4,12 @@ import { TContext } from "../../infrastructure/context";
 import createGame from "../../services/ongoingGame/createGame";
 import joinGame from "../../services/ongoingGame/joinGame";
 import {
-  getGame,
+  getGameFromRedis,
   gqlSerializeGame,
 } from "../../services/ongoingGame/lib/serialize";
 import { Resolvers } from "../generated/graphql";
 import { dateScalar } from "../scalars/Date/Date";
+import playTurn from "../../services/ongoingGame/playTurn";
 
 export const resolvers: Resolvers<TContext> = {
   Date: dateScalar,
@@ -35,7 +36,7 @@ export const resolvers: Resolvers<TContext> = {
       }
     },
     ongoingGame: async (_root, { ongoingGameId }, ctx) => {
-      const game = await getGame(ctx, ongoingGameId);
+      const game = await getGameFromRedis(ctx, ongoingGameId);
       if (!game) throw new Error("Invalid game id");
       return gqlSerializeGame(game);
     },
@@ -55,5 +56,7 @@ export const resolvers: Resolvers<TContext> = {
       createGame(ctx, { gameType }),
     joinOngoingGame: async (_root, { ongoingGameId }, ctx) =>
       joinGame(ctx, { gameId: ongoingGameId }),
+    playTurn: async (_root, { json, ongoingGameId }, ctx) =>
+      playTurn(ctx, { gameId: ongoingGameId, json }),
   },
 };
