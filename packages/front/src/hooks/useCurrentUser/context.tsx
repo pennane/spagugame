@@ -3,7 +3,7 @@ import { FC, ReactNode, createContext } from 'react'
 import {
   CurrentUserFragment,
   useCurrentUserQuery
-} from './graphql/CurrentUserQuery.generated'
+} from './graphql/CurrentUser.generated'
 
 export const CurrentUserContext = createContext<CurrentUserFragment | null>(
   null

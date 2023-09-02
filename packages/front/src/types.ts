@@ -150,6 +150,7 @@ export type QueryUsersArgs = {
 export type Subscription = {
   __typename?: 'Subscription';
   ongoingGameStateChange: OngoingGameStateChange;
+  testCounter: Scalars['Int']['output'];
 };
 
 

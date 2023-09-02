@@ -82,6 +82,14 @@ export const resolvers: Resolvers<TContext> = {
         };
       },
     },
+    testCounter: {
+      subscribe: async (_root, _args, ctx) => {
+        return {
+          [Symbol.asyncIterator]: () =>
+            ctx.pubsub.asyncIterator(`test_counter`),
+        };
+      },
+    },
   },
   Mutation: {
     createOngoingGame: async (_root, { gameType }, ctx) =>

@@ -1,12 +1,17 @@
+import './index.css'
+
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {
   ApolloClient,
   InMemoryCache,
   ApolloProvider,
-  createHttpLink
+  split,
+  HttpLink
 } from '@apollo/client'
-import './index.css'
+import { getMainDefinition } from '@apollo/client/utilities'
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
+import { createClient } from 'graphql-ws'
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
@@ -15,14 +20,32 @@ import { LandingPage } from './routes/LandingPage'
 import { Root } from './routes/Root'
 import { CurrentUserContextProvider } from './hooks/useCurrentUser/context'
 
-const link = createHttpLink({
+const httpLink = new HttpLink({
   uri: 'http://localhost:3000/graphql',
   credentials: 'include'
 })
 
+const wsLink = new GraphQLWsLink(
+  createClient({
+    url: 'ws://localhost:3000/graphql'
+  })
+)
+
+const splitLink = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query)
+    return (
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    )
+  },
+  wsLink,
+  httpLink
+)
+
 const client = new ApolloClient({
   cache: new InMemoryCache(),
-  link
+  link: splitLink
 })
 
 const router = createBrowserRouter([

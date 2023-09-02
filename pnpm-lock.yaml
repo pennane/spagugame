@@ -10,10 +10,13 @@ importers:
     dependencies:
       '@apollo/client':
         specifier: ^3.8.2
-        version: 3.8.2(graphql@16.8.0)(react-dom@18.2.0)(react@18.2.0)
+        version: 3.8.2(graphql-ws@5.14.0)(graphql@16.8.0)(react-dom@18.2.0)(react@18.2.0)
       graphql:
         specifier: ^16.8.0
         version: 16.8.0
+      graphql-ws:
+        specifier: ^5.14.0
+        version: 5.14.0(graphql@16.8.0)
       ramda:
         specifier: ^0.29.0
         version: 0.29.0
@@ -225,7 +228,7 @@ packages:
       graphql: 16.8.0
     dev: false
 
-  /@apollo/client@3.8.2(graphql@16.8.0)(react-dom@18.2.0)(react@18.2.0):
+  /@apollo/client@3.8.2(graphql-ws@5.14.0)(graphql@16.8.0)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-SSxRTHlHdlR65mvV5j5e3JkYs9z/eFQfJPgSfqTeKa3jgHKofBaMb+UWxJPInqV5MqBFAkPFt8fYEBZwM7oGZA==}
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
@@ -249,6 +252,7 @@ packages:
       '@wry/trie': 0.4.3
       graphql: 16.8.0
       graphql-tag: 2.12.6(graphql@16.8.0)
+      graphql-ws: 5.14.0(graphql@16.8.0)
       hoist-non-react-statics: 3.3.2
       optimism: 0.17.5
       prop-types: 15.8.1

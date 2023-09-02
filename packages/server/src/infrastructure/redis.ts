@@ -18,6 +18,9 @@ export const initializeRedis = async () => {
     publisher,
   });
 
+  let i = 0;
+  setInterval(() => pubsub.publish("test_counter", { testCounter: i++ }), 1000);
+
   return {
     redis,
     pubsub,
