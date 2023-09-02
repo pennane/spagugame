@@ -9,7 +9,7 @@ import {
   getGameFromRedis,
   gqlSerializeGame,
 } from "../../services/ongoingGame/lib/serialize";
-import { Resolvers } from "../generated/graphql";
+import { Resolvers, UserStats } from "../generated/graphql";
 import { dateScalar } from "../scalars/Date/Date";
 import playTurn from "../../services/ongoingGame/playTurn";
 
@@ -37,6 +37,15 @@ export const resolvers: Resolvers<TContext> = {
         return null;
       }
     },
+    users: async (_root, { ids }, ctx) => {
+      const users = await find(ctx, "user", {
+        filter: { _id: { $in: ids.map((id) => new ObjectId(id)) } },
+      });
+      return R.map(
+        R.modify<"_id", ObjectId, string>("_id", (id) => id.toString()),
+        users
+      );
+    },
     ongoingGame: async (_root, { ongoingGameId }, ctx) => {
       const game = await getGameFromRedis(ctx, ongoingGameId);
       if (!game) throw new Error("Invalid game id");
@@ -54,6 +63,14 @@ export const resolvers: Resolvers<TContext> = {
         filter: {},
       });
       return R.map((g) => R.modify("_id", (id) => id.toString(), g), games);
+    },
+    userStats: async (_root, { gameType, userId }, ctx) => {
+      const stats = await get(ctx, "userStats", {
+        filter: { gameType, userId },
+      });
+      if (!stats) return null;
+      const modified: UserStats = R.modify("_id", (id) => id.toString(), stats);
+      return modified;
     },
   },
   Subscription: {
