@@ -101,7 +101,7 @@ type Query {
   users(ids: [ID!]!): [User!]!
   currentUser: User
   game(id: ID!): Game
-  games(ids: [ID!]): [Game!]!
+  games: [Game!]!
 }
 
 type Subscription {

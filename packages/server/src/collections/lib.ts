@@ -20,13 +20,13 @@ export const find = async <T extends keyof TContext["collections"]>(
     filter: Filter<ExtractCollectionSchema<TContext["collections"][T]>>;
     options?: FindOptions;
   }
-): Promise<ExtractCollectionSchema<TContext["collections"][T]>> => {
+): Promise<ExtractCollectionSchema<TContext["collections"][T]>[]> => {
   const documents = await ctx.collections[collection]
     .find(filter as any, options)
     .toArray();
   return documents as any as ExtractCollectionSchema<
     TContext["collections"][T]
-  >;
+  >[];
 };
 
 export const get = async <T extends keyof TContext["collections"]>(

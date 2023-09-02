@@ -122,11 +122,6 @@ export type QueryGameArgs = {
 };
 
 
-export type QueryGamesArgs = {
-  ids?: InputMaybe<Array<Scalars['ID']['input']>>;
-};
-
-
 export type QueryOngoingGameArgs = {
   ongoingGameId: Scalars['ID']['input'];
 };
@@ -359,7 +354,7 @@ export type PlayedGameResolvers<ContextType = any, ParentType extends ResolversP
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   currentUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   game?: Resolver<Maybe<ResolversTypes['Game']>, ParentType, ContextType, RequireFields<QueryGameArgs, 'id'>>;
-  games?: Resolver<Array<ResolversTypes['Game']>, ParentType, ContextType, Partial<QueryGamesArgs>>;
+  games?: Resolver<Array<ResolversTypes['Game']>, ParentType, ContextType>;
   ongoingGame?: Resolver<ResolversTypes['OngoingGame'], ParentType, ContextType, RequireFields<QueryOngoingGameArgs, 'ongoingGameId'>>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
   userActiveGames?: Resolver<Array<ResolversTypes['OngoingGame']>, ParentType, ContextType, RequireFields<QueryUserActiveGamesArgs, 'userId'>>;
