@@ -67,6 +67,7 @@ export type OngoingGame = {
   jsonState: Scalars['String']['output'];
   players: Array<OngoingGamePlayer>;
   processState: OngoingGameProcessState;
+  startedAt?: Maybe<Scalars['Int']['output']>;
 };
 
 export type OngoingGamePlayer = {
@@ -98,10 +99,11 @@ export type PlayedGame = {
   __typename?: 'PlayedGame';
   _id: Scalars['ID']['output'];
   finishedAt: Scalars['Date']['output'];
-  gameId: Scalars['ID']['output'];
-  playerElosAfterInWinningOrder: Array<Scalars['Int']['output']>;
-  playerElosBeforeInWinningOrder: Array<Scalars['Int']['output']>;
-  playerIdsInWinningOrder: Array<Scalars['ID']['output']>;
+  gameType: GameType;
+  playerElosAfter: Array<Scalars['Int']['output']>;
+  playerElosBefore: Array<Scalars['Int']['output']>;
+  playerIds: Array<Scalars['ID']['output']>;
+  playerScores: Array<Scalars['Int']['output']>;
   startedAt: Scalars['Date']['output'];
 };
 
@@ -113,6 +115,7 @@ export type Query = {
   ongoingGame: OngoingGame;
   user?: Maybe<User>;
   userActiveGames: Array<OngoingGame>;
+  userStats?: Maybe<UserStats>;
   users: Array<User>;
 };
 
@@ -133,6 +136,12 @@ export type QueryUserArgs = {
 
 
 export type QueryUserActiveGamesArgs = {
+  userId: Scalars['ID']['input'];
+};
+
+
+export type QueryUserStatsArgs = {
+  gameType: GameType;
   userId: Scalars['ID']['input'];
 };
 
@@ -175,9 +184,7 @@ export type UserStats = {
   __typename?: 'UserStats';
   _id: Scalars['ID']['output'];
   elo: Scalars['Int']['output'];
-  gameID: Scalars['ID']['output'];
-  totalDraws: Scalars['Int']['output'];
-  totalLosses: Scalars['Int']['output'];
+  gameType: GameType;
   totalWins: Scalars['Int']['output'];
   userId: Scalars['ID']['output'];
 };
@@ -320,6 +327,7 @@ export type OngoingGameResolvers<ContextType = any, ParentType extends Resolvers
   jsonState?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   players?: Resolver<Array<ResolversTypes['OngoingGamePlayer']>, ParentType, ContextType>;
   processState?: Resolver<ResolversTypes['OngoingGameProcessState'], ParentType, ContextType>;
+  startedAt?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -343,10 +351,11 @@ export type OngoingGameStateChangeResolvers<ContextType = any, ParentType extend
 export type PlayedGameResolvers<ContextType = any, ParentType extends ResolversParentTypes['PlayedGame'] = ResolversParentTypes['PlayedGame']> = {
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   finishedAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
-  gameId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  playerElosAfterInWinningOrder?: Resolver<Array<ResolversTypes['Int']>, ParentType, ContextType>;
-  playerElosBeforeInWinningOrder?: Resolver<Array<ResolversTypes['Int']>, ParentType, ContextType>;
-  playerIdsInWinningOrder?: Resolver<Array<ResolversTypes['ID']>, ParentType, ContextType>;
+  gameType?: Resolver<ResolversTypes['GameType'], ParentType, ContextType>;
+  playerElosAfter?: Resolver<Array<ResolversTypes['Int']>, ParentType, ContextType>;
+  playerElosBefore?: Resolver<Array<ResolversTypes['Int']>, ParentType, ContextType>;
+  playerIds?: Resolver<Array<ResolversTypes['ID']>, ParentType, ContextType>;
+  playerScores?: Resolver<Array<ResolversTypes['Int']>, ParentType, ContextType>;
   startedAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -358,6 +367,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   ongoingGame?: Resolver<ResolversTypes['OngoingGame'], ParentType, ContextType, RequireFields<QueryOngoingGameArgs, 'ongoingGameId'>>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
   userActiveGames?: Resolver<Array<ResolversTypes['OngoingGame']>, ParentType, ContextType, RequireFields<QueryUserActiveGamesArgs, 'userId'>>;
+  userStats?: Resolver<Maybe<ResolversTypes['UserStats']>, ParentType, ContextType, RequireFields<QueryUserStatsArgs, 'gameType' | 'userId'>>;
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUsersArgs, 'ids'>>;
 };
 
@@ -378,9 +388,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 export type UserStatsResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserStats'] = ResolversParentTypes['UserStats']> = {
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   elo?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  gameID?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  totalDraws?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  totalLosses?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  gameType?: Resolver<ResolversTypes['GameType'], ParentType, ContextType>;
   totalWins?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   userId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;

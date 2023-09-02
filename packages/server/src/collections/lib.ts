@@ -8,6 +8,8 @@ import {
 } from "mongodb";
 import { TContext } from "../infrastructure/context";
 
+type MakeOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+
 type ExtractCollectionSchema<T> = T extends Collection<infer X> ? X : never;
 
 export const find = async <T extends keyof TContext["collections"]>(
@@ -45,7 +47,7 @@ export const get = async <T extends keyof TContext["collections"]>(
 export const create = async <T extends keyof TContext["collections"]>(
   ctx: TContext,
   collection: T,
-  data: ExtractCollectionSchema<TContext["collections"][T]>
+  data: MakeOptional<ExtractCollectionSchema<TContext["collections"][T]>, "_id">
 ): Promise<InsertOneResult<any>> => {
   const result = await ctx.collections[collection].insertOne(data as any);
   return result;

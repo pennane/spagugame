@@ -17,8 +17,10 @@ const createGame = authenticatedService<{ gameType: GameType }, OngoingGame>(
       },
       settings.initialState()
     );
-
-    await saveGameToRedis(ctx, initialState);
+    await Promise.all([
+      saveGameToRedis(ctx, initialState),
+      ctx.redis.lpush(`games.${gameType}`, initialState._id),
+    ]);
 
     return gqlSerializeGame(initialState);
   }

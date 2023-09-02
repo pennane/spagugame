@@ -41,6 +41,8 @@ const startGame = authenticatedService<{ gameId: string }, void>(
       ]);
     }
 
+    const now = Date.now();
+
     const startingUserId = sample(game.players).userId;
     await Promise.all([
       ctx.pubsub.publish(`game_changed.${gameId}`, {
@@ -48,11 +50,13 @@ const startGame = authenticatedService<{ gameId: string }, void>(
           processState: OngoingGameProcessState.Ongoing,
           currentTurn: startingUserId,
           startsIn: 0,
+          startedAt: now,
         },
       }),
       ctx.redis.hset(`game.${gameId}`, {
         processState: OngoingGameProcessState.Ongoing,
         currentTurn: startingUserId,
+        startedAt: now,
       }),
     ]);
   }
