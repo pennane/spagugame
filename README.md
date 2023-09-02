@@ -1,8 +1,8 @@
-# NextGen Social Gaming Platform (Name TBA)
+# spagugame
 
-Welcome to the future of social gaming, a visionary course project for the "Web-sovelluskehitys 2 TX00DZ38-3006" at Metropolia UAS.
+Welcome to the future of social gaming, spagugame, a course project for the "Web-sovelluskehitys 2 TX00DZ38-3006" at Metropolia UAS.
 
-Inspired by the legendary [aapeli.com](http://www.aapeli.com/), our goal is to craft an exhilarating social gaming experience enriched with real-time gameplay and robust social features. By leveraging the power of Redis, we seamlessly manage ongoing games, while GraphQL subscriptions combined with websockets allow for dynamic game updates in real-time. A sophisticated ELO ranking system is also on the horizon, ensuring competitive thrills for every game on our platform.
+Inspired by the legendary [aapeli.com](http://www.aapeli.com/), the goal is to craft an exhilarating social gaming experience enriched with real-time gameplay and robust social features. By leveraging the power of Redis, we seamlessly manage ongoing games, while GraphQL subscriptions combined with websockets allow for dynamic game updates in real-time. A sophisticated ELO ranking system is also on the horizon, ensuring competitive thrills for every game on our platform.
 
 One might argue the integration of GraphQL directly into the game logic might affect performance. While that's a valid concern, we see it as an exciting challenge and a unique exploration of what’s possible.
 
