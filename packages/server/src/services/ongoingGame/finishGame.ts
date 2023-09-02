@@ -72,7 +72,7 @@ const finishGame = authenticatedService<
       elo: statsBefore.find((s) => s.userId === p.userId)?.elo || 1500,
       score: p.score,
     }))
-    .toSorted((a, b) => b.score - a.score);
+    .sort((a, b) => b.score - a.score);
 
   const newEloPlayers = calculateNewElos(eloPlayersInWinningOrder);
 
