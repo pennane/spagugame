@@ -3,7 +3,8 @@ import {
   GameType,
   OngoingGameProcessState,
 } from "../../graphql/generated/graphql";
-import { GameSettings } from "../models";
+import { GameSpecification } from "../models";
+import { mongoIdFromSeed } from "../../lib/mongo";
 
 export type TickTackToeState = [
   [null | "o" | "x", null | "o" | "x", null | "o" | "x"],
@@ -11,7 +12,11 @@ export type TickTackToeState = [
   [null | "o" | "x", null | "o" | "x", null | "o" | "x"]
 ];
 
-export const TickTackToeSettings: GameSettings<TickTackToeState> = {
+export const TickTackToeSpecification: GameSpecification<TickTackToeState> = {
+  _id: mongoIdFromSeed("tick tack toe"),
+  name: "Tick tack toe",
+  description:
+    "a game for two players who take turns marking the spaces in a three-by-three grid with X or O. The player who succeeds in placing three of their marks in a horizontal, vertical, or diagonal row is the winner.",
   type: GameType.TickTackToe,
   maxPlayers: 2,
   minPlayers: 2,

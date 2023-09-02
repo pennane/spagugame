@@ -2,7 +2,7 @@ import { OngoingGameProcessState } from "../../graphql/generated/graphql";
 
 import { authenticatedService } from "../lib";
 import { getGame } from "./lib/serialize";
-import { GAME_SETTINGS_MAP } from "../../games/models";
+import { GAME_SPECIFICATIONS_MAP } from "../../games/models";
 import { sample, wait } from "../../lib/common";
 
 const STARTING_DURATION_SECONDS = 5;
@@ -13,7 +13,9 @@ const startGame = authenticatedService<{ gameId: string }, void>(
     const game = await getGame(ctx, gameId);
     if (!game) throw new Error("Game does not exist");
 
-    const canStart = GAME_SETTINGS_MAP[game.gameType].canStart(game as any);
+    const canStart = GAME_SPECIFICATIONS_MAP[game.gameType].canStart(
+      game as any
+    );
 
     if (!canStart) return;
 

@@ -22,8 +22,17 @@ const createCollections = async (
   collectionSettingsMap: Record<string, CollectionSettings<any>>
 ) => {
   const collectionSettings = Object.values(collectionSettingsMap);
+
   for (const settings of collectionSettings) {
-    await db.createCollection(settings.name);
+    const existingCollections = await db
+      .listCollections({
+        name: settings.name,
+      })
+      .toArray();
+
+    if (existingCollections.length === 0) {
+      await db.createCollection(settings.name);
+    }
   }
 };
 
@@ -80,5 +89,5 @@ export const initializeMongo = async () => {
 
   await createAndDropIndexes(db, collectionSettings);
 
-  return { db, collections };
+  return { db, collections, collectionSettings };
 };

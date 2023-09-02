@@ -2,13 +2,13 @@ import * as R from "ramda";
 
 import { GameType, OngoingGame } from "../../graphql/generated/graphql";
 
-import { GAME_SETTINGS_MAP } from "../../games/models";
+import { GAME_SPECIFICATIONS_MAP } from "../../games/models";
 import { authenticatedService } from "../lib";
 import { saveGame } from "./lib/serialize";
 
 const createGame = authenticatedService<{ gameType: GameType }, OngoingGame>(
   async (ctx, { gameType }) => {
-    const settings = GAME_SETTINGS_MAP[gameType];
+    const settings = GAME_SPECIFICATIONS_MAP[gameType];
 
     // Join the game automatically
     const initialState = R.evolve(

@@ -1,29 +1,13 @@
-import { RedisPubSub } from "graphql-redis-subscriptions";
-import Redis, { RedisOptions } from "ioredis";
-
 import { IUser } from "../collections/User";
 
 import { ExpressContextFunctionArgument } from "@apollo/server/dist/esm/express4";
 import { CONFIG_OBJECT } from "./config";
 import { initializeMongo } from "./mongo";
+import { initializeRedis } from "./redis";
 
 const createGlobalContext = async () => {
   const { db, collections } = await initializeMongo();
-
-  const redisOptions = {
-    host: CONFIG_OBJECT.REDIS_HOST,
-    port: CONFIG_OBJECT.REDIS_PORT,
-    retryStrategy: (times: number) => Math.min(times * 50, 2000),
-  } satisfies RedisOptions;
-
-  const publisher = new Redis(redisOptions);
-  const subscriber = new Redis(redisOptions);
-  const redis = new Redis(redisOptions);
-
-  const pubsub = new RedisPubSub({
-    subscriber,
-    publisher,
-  });
+  const { pubsub, redis } = await initializeRedis();
 
   return {
     db,

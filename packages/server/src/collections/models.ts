@@ -17,4 +17,5 @@ export type CollectionSettings<T extends Document> = {
   name: string;
   indexSpecs: IndexSpec[];
   collectionGetter: CollectionGetter<T>;
+  seedDocuments?: T[];
 };
