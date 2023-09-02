@@ -138,11 +138,18 @@ const registerMiddleware =
     app,
     httpServer,
   }: Awaited<ReturnType<typeof startApolloServer>>) => {
+    const corsOptions = {
+      origin: ctx.config.CLIENT_URL,
+      methods: "GET",
+      credentials: true,
+      optionsSuccessStatus: 204,
+    };
+
     app.use(
       session({
         secret: ctx.config.SERVER_SESSION_SECRET,
         saveUninitialized: false,
-        resave: true,
+        resave: false,
         store: MongoStore.create({
           collectionName: "sessions",
           client: ctx.mongoClient,
@@ -154,20 +161,54 @@ const registerMiddleware =
     app.use(passport.session());
     app.use(
       "/graphql",
-      cors<cors.CorsRequest>({ origin: "*" }),
+      cors<cors.CorsRequest>(corsOptions),
       json(),
       expressMiddleware(apolloServer, {
         context: getContext,
       })
     );
-    app.get("/auth/github", passport.authenticate("github"));
+    app.get(
+      "/auth/github",
+      cors<cors.CorsRequest>(corsOptions),
+      passport.authenticate("github")
+    );
     app.get(
       "/auth/github/callback",
+      cors<cors.CorsRequest>(corsOptions),
       passport.authenticate("github", { failureRedirect: "/" }),
-      (_req, res) => res.redirect("/")
+      (req, res) => {
+        res.cookie(ctx.config.SERVER_SESSION_COOKIE_NAME, req.sessionID, {
+          httpOnly: true,
+          sameSite: "none",
+          secure: true,
+        });
+        res.redirect(ctx.config.CLIENT_URL);
+      }
     );
-    app.get("/", (req, res) => {
-      res.send(JSON.stringify(req.user));
+    app.get("/auth/logout", async (req, res, next) => {
+      try {
+        await new Promise((resolve, reject) => {
+          req.logOut((e) => {
+            if (e) return reject(e);
+            resolve(true);
+          });
+        });
+        await new Promise((resolve, reject) => {
+          req.session.destroy((error) => {
+            if (error) reject(error);
+
+            res.clearCookie(ctx.config.SERVER_SESSION_COOKIE_NAME);
+
+            req.session = null as any;
+
+            resolve(true);
+          });
+        });
+
+        res.redirect(ctx.config.CLIENT_URL);
+      } catch (e) {
+        next(e);
+      }
     });
 
     return {
@@ -191,15 +232,15 @@ export const startServer = async () => {
 
   return Promise.resolve(configurePassport(ctx))
     .then(createHttpServer)
-    .then(R.tap(() => console.log("Created http server")))
+    .then(R.tap(() => console.info("Created http server")))
     .then(createApolloServer)
-    .then(R.tap(() => console.log("Created apollo server")))
+    .then(R.tap(() => console.info("Created apollo server")))
     .then(startApolloServer)
-    .then(R.tap(() => console.log("Started apollo server")))
+    .then(R.tap(() => console.info("Started apollo server")))
     .then(registerMiddleware(ctx))
-    .then(R.tap(() => console.log("Registered app middleware")))
+    .then(R.tap(() => console.info("Registered app middleware")))
     .then(startHttpServer(ctx))
     .then(
-      R.tap((port) => console.log(`HTTP server listening on port ${port}`))
+      R.tap((port) => console.info(`HTTP server listening on port ${port}`))
     );
 };
