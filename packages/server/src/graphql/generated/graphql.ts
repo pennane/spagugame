@@ -23,6 +23,7 @@ export type Game = {
   _id: Scalars['ID']['output'];
   description: Scalars['String']['output'];
   name: Scalars['String']['output'];
+  ongoingGameIds: Array<Scalars['ID']['output']>;
   type: GameType;
 };
 
@@ -310,6 +311,7 @@ export type GameResolvers<ContextType = any, ParentType extends ResolversParentT
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  ongoingGameIds?: Resolver<Array<ResolversTypes['ID']>, ParentType, ContextType>;
   type?: Resolver<ResolversTypes['GameType'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };

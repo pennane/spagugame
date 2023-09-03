@@ -4,7 +4,7 @@ import { Game } from "../graphql/generated/graphql";
 import { CollectionSettings } from "./models";
 import { TickTackToeSpecification } from "../games/TickTackToe/TickTackToe";
 
-export interface IGame extends Omit<Game, "_id"> {
+export interface IGame extends Omit<Game, "_id" | "ongoingGameIds"> {
   _id: ObjectId;
 }
 

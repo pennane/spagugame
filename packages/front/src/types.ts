@@ -20,6 +20,7 @@ export type Game = {
   _id: Scalars['ID']['output'];
   description: Scalars['String']['output'];
   name: Scalars['String']['output'];
+  ongoingGameIds: Array<Scalars['ID']['output']>;
   type: GameType;
 };
 

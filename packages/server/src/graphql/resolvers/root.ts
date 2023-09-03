@@ -9,11 +9,21 @@ import {
   getGameFromRedis,
   gqlSerializeGame,
 } from "../../services/ongoingGame/lib/serialize";
-import { Resolvers, UserStats } from "../generated/graphql";
+import { Game, Resolvers, UserStats } from "../generated/graphql";
 import { dateScalar } from "../scalars/Date/Date";
 import playTurn from "../../services/ongoingGame/playTurn";
 
 export const resolvers: Resolvers<TContext> = {
+  Game: {
+    ongoingGameIds: async (game, _args, ctx) => {
+      const ongoingGameIds = await ctx.redis.lrange(
+        `games.${game.type}`,
+        0,
+        -1
+      );
+      return ongoingGameIds;
+    },
+  },
   Date: dateScalar,
   Query: {
     currentUser: async (_root, _args, ctx) => {
@@ -56,13 +66,16 @@ export const resolvers: Resolvers<TContext> = {
         filter: { _id: new ObjectId(id) },
       });
       if (!game) return null;
-      return R.modify("_id", (id) => id.toString(), game);
+      return R.modify("_id", (id) => id.toString(), game) as Game;
     },
     games: async (_root, _args, ctx) => {
       const games = await find(ctx, "game", {
         filter: {},
       });
-      return R.map((g) => R.modify("_id", (id) => id.toString(), g), games);
+      return R.map(
+        (g) => R.modify("_id", (id) => id.toString(), g),
+        games
+      ) as Game[];
     },
     userStats: async (_root, { gameType, userId }, ctx) => {
       const stats = await get(ctx, "userStats", {

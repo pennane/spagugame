@@ -44,6 +44,7 @@ type Game {
   type: GameType!
   name: String!
   description: String!
+  ongoingGameIds: [ID!]!
 }
 
 ## PlayedGame
@@ -96,7 +97,6 @@ type OngoingGameStateChange {
 
 type Query {
   ongoingGame(ongoingGameId: ID!): OngoingGame!
-  userActiveGames(userId: ID!): [OngoingGame!]!
   user(id: ID!): User
   users(ids: [ID!]!): [User!]!
   currentUser: User
