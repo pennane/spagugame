@@ -22,7 +22,7 @@ export type Game = {
   maxPlayers: Scalars['Int']['output'];
   minPlayers: Scalars['Int']['output'];
   name: Scalars['String']['output'];
-  ongoingGameIds: Array<Scalars['ID']['output']>;
+  ongoingGames: Array<OngoingGame>;
   type: GameType;
 };
 
@@ -42,6 +42,7 @@ export type Mutation = {
 
 export type MutationCreateOngoingGameArgs = {
   gameType: GameType;
+  isPrivate?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -71,6 +72,7 @@ export type OngoingGame = {
   _id: Scalars['ID']['output'];
   currentTurn?: Maybe<Scalars['ID']['output']>;
   gameType: GameType;
+  isPrivate: Scalars['Boolean']['output'];
   jsonState: Scalars['String']['output'];
   players: Array<OngoingGamePlayer>;
   processState: OngoingGameProcessState;

@@ -44,7 +44,7 @@ type Game {
   type: GameType!
   name: String!
   description: String!
-  ongoingGameIds: [ID!]!
+  ongoingGames: [OngoingGame!]!
   minPlayers: Int!
   maxPlayers: Int!
 }
@@ -87,6 +87,7 @@ type OngoingGame {
   currentTurn: ID
   startedAt: Float
   startsIn: Int
+  isPrivate: Boolean!
 }
 
 type OngoingGameStateChange {
@@ -116,7 +117,7 @@ type Subscription {
 }
 
 type Mutation {
-  createOngoingGame(gameType: GameType!): OngoingGame!
+  createOngoingGame(gameType: GameType!, isPrivate: Boolean): OngoingGame!
   joinOngoingGame(ongoingGameId: ID!): OngoingGame!
   playTurn(ongoingGameId: ID!, json: String!): OngoingGame!
   toggleReady(ongoingGameId: ID!, ready: Boolean!): OngoingGame!

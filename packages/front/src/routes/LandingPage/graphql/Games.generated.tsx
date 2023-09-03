@@ -3,24 +3,39 @@ import * as Types from '../../../types';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type GameFragment = { __typename?: 'Game', _id: string, type: Types.GameType, name: string, description: string, ongoingGameIds: Array<string>, maxPlayers: number, minPlayers: number };
+export type GamesViewOngoingGameFragment = { __typename?: 'OngoingGame', _id: string, gameType: Types.GameType, isPrivate: boolean, processState: Types.OngoingGameProcessState, players: Array<{ __typename?: 'OngoingGamePlayer', userId: string }> };
+
+export type GameFragment = { __typename?: 'Game', _id: string, type: Types.GameType, name: string, description: string, maxPlayers: number, minPlayers: number, ongoingGames: Array<{ __typename?: 'OngoingGame', _id: string, gameType: Types.GameType, isPrivate: boolean, processState: Types.OngoingGameProcessState, players: Array<{ __typename?: 'OngoingGamePlayer', userId: string }> }> };
 
 export type GamesQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GamesQuery = { __typename?: 'Query', games: Array<{ __typename?: 'Game', _id: string, type: Types.GameType, name: string, description: string, ongoingGameIds: Array<string>, maxPlayers: number, minPlayers: number }> };
+export type GamesQuery = { __typename?: 'Query', games: Array<{ __typename?: 'Game', _id: string, type: Types.GameType, name: string, description: string, maxPlayers: number, minPlayers: number, ongoingGames: Array<{ __typename?: 'OngoingGame', _id: string, gameType: Types.GameType, isPrivate: boolean, processState: Types.OngoingGameProcessState, players: Array<{ __typename?: 'OngoingGamePlayer', userId: string }> }> }> };
 
+export const GamesViewOngoingGameFragmentDoc = gql`
+    fragment GamesViewOngoingGame on OngoingGame {
+  _id
+  gameType
+  players {
+    userId
+  }
+  isPrivate
+  processState
+}
+    `;
 export const GameFragmentDoc = gql`
     fragment Game on Game {
   _id
   type
   name
   description
-  ongoingGameIds
+  ongoingGames {
+    ...GamesViewOngoingGame
+  }
   maxPlayers
   minPlayers
 }
-    `;
+    ${GamesViewOngoingGameFragmentDoc}`;
 export const GamesDocument = gql`
     query Games {
   games {

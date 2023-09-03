@@ -16,13 +16,16 @@ import toggleReady from "../../services/ongoingGame/toggleReady";
 
 export const resolvers: Resolvers<TContext> = {
   Game: {
-    ongoingGameIds: async (game, _args, ctx) => {
+    ongoingGames: async (game, _args, ctx) => {
       const ongoingGameIds = await ctx.redis.lrange(
         `games.${game.type}`,
         0,
         -1
       );
-      return ongoingGameIds;
+      const games = (
+        await Promise.all(ongoingGameIds.map((id) => getGameFromRedis(ctx, id)))
+      ).filter(R.isNotNil);
+      return games.map(gqlSerializeGame);
     },
   },
   Date: dateScalar,
@@ -115,8 +118,8 @@ export const resolvers: Resolvers<TContext> = {
     },
   },
   Mutation: {
-    createOngoingGame: async (_root, { gameType }, ctx) =>
-      createGame(ctx, { gameType }),
+    createOngoingGame: async (_root, { gameType, isPrivate }, ctx) =>
+      createGame(ctx, { gameType, isPrivate: isPrivate ?? false }),
     joinOngoingGame: async (_root, { ongoingGameId }, ctx) =>
       joinGame(ctx, { gameId: ongoingGameId }),
     playTurn: async (_root, { json, ongoingGameId }, ctx) =>

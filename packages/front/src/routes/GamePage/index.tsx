@@ -34,7 +34,7 @@ export const GamePage = () => {
 
   if (!game) return <div>Game does not exist</div>
 
-  const hasOngoingGames = game.ongoingGameIds.length > 0
+  const hasOngoingGames = game.ongoingGames.length > 0
 
   return (
     <StyledGamePage>
@@ -57,8 +57,16 @@ export const GamePage = () => {
       <h2>Currently going games:</h2>
       {hasOngoingGames && (
         <ul>
-          {game.ongoingGameIds.map((id) => (
-            <Link to={`/game/${gameType}/${id}`}>{id}</Link>
+          {game.ongoingGames.map((ongoingGame) => (
+            <Link
+              key={ongoingGame._id}
+              to={`/game/${game.type}/${ongoingGame._id}`}
+            >
+              <p>
+                {game.name} ({ongoingGame.players.length} / {game.maxPlayers}{' '}
+                players)
+              </p>
+            </Link>
           ))}
         </ul>
       )}

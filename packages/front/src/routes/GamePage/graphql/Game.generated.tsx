@@ -10,14 +10,14 @@ export type GameQueryVariables = Types.Exact<{
 }>;
 
 
-export type GameQuery = { __typename?: 'Query', game?: { __typename?: 'Game', _id: string, type: Types.GameType, name: string, description: string, ongoingGameIds: Array<string>, maxPlayers: number, minPlayers: number } | null };
+export type GameQuery = { __typename?: 'Query', game?: { __typename?: 'Game', _id: string, type: Types.GameType, name: string, description: string, maxPlayers: number, minPlayers: number, ongoingGames: Array<{ __typename?: 'OngoingGame', _id: string, gameType: Types.GameType, isPrivate: boolean, processState: Types.OngoingGameProcessState, players: Array<{ __typename?: 'OngoingGamePlayer', userId: string }> }> } | null };
 
 export type NewGameMutationVariables = Types.Exact<{
   gameType: Types.GameType;
 }>;
 
 
-export type NewGameMutation = { __typename?: 'Mutation', createOngoingGame: { __typename?: 'OngoingGame', _id: string, gameType: Types.GameType, processState: Types.OngoingGameProcessState, jsonState: string, currentTurn?: string | null, startedAt?: number | null, players: Array<{ __typename?: 'OngoingGamePlayer', score: number, userId: string, ready: boolean }> } };
+export type NewGameMutation = { __typename?: 'Mutation', createOngoingGame: { __typename?: 'OngoingGame', _id: string, gameType: Types.GameType, processState: Types.OngoingGameProcessState, jsonState: string, currentTurn?: string | null, startedAt?: number | null, startsIn?: number | null, players: Array<{ __typename?: 'OngoingGamePlayer', score: number, userId: string, ready: boolean }> } };
 
 
 export const GameDocument = gql`

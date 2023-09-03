@@ -22,9 +22,15 @@ export const LandingPage = () => {
           ))}
           <p>Current games:</p>
           {data.games.map((game) =>
-            game.ongoingGameIds.map((gameId) => (
-              <Link key={gameId} to={`/game/${game.type}/${gameId}`}>
-                <p>{game.name}</p>
+            game.ongoingGames.map((ongoingGame) => (
+              <Link
+                key={ongoingGame._id}
+                to={`/game/${game.type}/${ongoingGame._id}`}
+              >
+                <p>
+                  {game.name} ({ongoingGame.players.length} / {game.maxPlayers}{' '}
+                  players)
+                </p>
               </Link>
             ))
           )}

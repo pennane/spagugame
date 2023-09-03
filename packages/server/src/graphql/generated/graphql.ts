@@ -25,7 +25,7 @@ export type Game = {
   maxPlayers: Scalars['Int']['output'];
   minPlayers: Scalars['Int']['output'];
   name: Scalars['String']['output'];
-  ongoingGameIds: Array<Scalars['ID']['output']>;
+  ongoingGames: Array<OngoingGame>;
   type: GameType;
 };
 
@@ -45,6 +45,7 @@ export type Mutation = {
 
 export type MutationCreateOngoingGameArgs = {
   gameType: GameType;
+  isPrivate?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -74,6 +75,7 @@ export type OngoingGame = {
   _id: Scalars['ID']['output'];
   currentTurn?: Maybe<Scalars['ID']['output']>;
   gameType: GameType;
+  isPrivate: Scalars['Boolean']['output'];
   jsonState: Scalars['String']['output'];
   players: Array<OngoingGamePlayer>;
   processState: OngoingGameProcessState;
@@ -327,7 +329,7 @@ export type GameResolvers<ContextType = any, ParentType extends ResolversParentT
   maxPlayers?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   minPlayers?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  ongoingGameIds?: Resolver<Array<ResolversTypes['ID']>, ParentType, ContextType>;
+  ongoingGames?: Resolver<Array<ResolversTypes['OngoingGame']>, ParentType, ContextType>;
   type?: Resolver<ResolversTypes['GameType'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -344,6 +346,7 @@ export type OngoingGameResolvers<ContextType = any, ParentType extends Resolvers
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   currentTurn?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   gameType?: Resolver<ResolversTypes['GameType'], ParentType, ContextType>;
+  isPrivate?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   jsonState?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   players?: Resolver<Array<ResolversTypes['OngoingGamePlayer']>, ParentType, ContextType>;
   processState?: Resolver<ResolversTypes['OngoingGameProcessState'], ParentType, ContextType>;

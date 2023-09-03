@@ -6,6 +6,10 @@ import {
 } from "../graphql/generated/graphql";
 import { TickTackToeSpecification } from "./TickTackToe/TickTackToe";
 
+type InitialStateOptions = {
+  isPrivate: boolean;
+};
+
 export type GameSpecification<T> = {
   _id: ObjectId;
   name: string;
@@ -13,7 +17,7 @@ export type GameSpecification<T> = {
   type: GameType;
   maxPlayers: number;
   minPlayers: number;
-  initialState: () => DeserializedGame<T>;
+  initialState: (options: InitialStateOptions) => DeserializedGame<T>;
   nextState: (state: DeserializedGame<T>, move: string) => DeserializedGame<T>;
   canStart: (state: DeserializedGame<any>) => boolean;
   validateState: (data: unknown) => data is T;

@@ -84,7 +84,7 @@ export const TickTackToeSpecification: GameSpecification<TickTackToeState> = {
         y.every((v: unknown) => v === "o" || v === "x" || v === null)
     );
   },
-  initialState: function () {
+  initialState: function (options) {
     return {
       _id: randomUUID(),
       gameType: GameType.TickTackToe,
@@ -93,6 +93,7 @@ export const TickTackToeSpecification: GameSpecification<TickTackToeState> = {
       jsonState: Array.from({ length: 3 }, () =>
         Array.from({ length: 3 }, () => null)
       ) as TickTackToeState,
+      isPrivate: options.isPrivate,
     };
   },
   canStart: function (s) {

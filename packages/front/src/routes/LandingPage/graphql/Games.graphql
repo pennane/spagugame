@@ -1,9 +1,21 @@
+fragment GamesViewOngoingGame on OngoingGame {
+  _id
+  gameType
+  players {
+    userId
+  }
+  isPrivate
+  processState
+}
+
 fragment Game on Game {
   _id
   type
   name
   description
-  ongoingGameIds
+  ongoingGames {
+    ...GamesViewOngoingGame
+  }
   maxPlayers
   minPlayers
 }

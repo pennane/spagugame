@@ -21,6 +21,7 @@ export const serializeGame = <T>(game: DeserializedGame<T>): SerializedGame =>
       jsonState: (s) => JSON.stringify(s),
       players: (p) => JSON.stringify(p),
       startedAt: (s) => s.toString(),
+      isPrivate: (p) => p.toString(),
     },
     game
   );
@@ -33,6 +34,7 @@ export const deserializeGame = <T>(
       jsonState: (s) => JSON.parse(s),
       players: (p) => JSON.parse(p),
       startedAt: (s) => parseInt(s),
+      isPrivate: (p) => (p === "true" ? true : false),
     },
     game
   ) as unknown as DeserializedGame<T>;
