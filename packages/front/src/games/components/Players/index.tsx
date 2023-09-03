@@ -1,5 +1,9 @@
 import { FC } from 'react'
-import { OngoingGame, User } from '../../../types'
+import {
+  OngoingGame,
+  OngoingGamePlayer,
+  OngoingGameProcessState
+} from '../../../types'
 import styled from 'styled-components'
 import {
   OngoingGamePlayerProfileFragment,
@@ -19,7 +23,9 @@ const StyledPlayers = styled.div`
 const StyledPlayer = styled.div``
 
 type MergedUser = Partial<
-  User & OngoingGamePlayerProfileFragment & OngoingGameUserStatsFragment
+  OngoingGamePlayer &
+    OngoingGamePlayerProfileFragment &
+    OngoingGameUserStatsFragment
 >
 
 export const Players: FC<PlayersProps> = ({ game }) => {
@@ -30,19 +36,24 @@ export const Players: FC<PlayersProps> = ({ game }) => {
     }
   })
 
+  const dataUsers = data?.users
+  const dataUserStats = data?.usersStats
+
   const users = (
-    !data
+    !dataUsers || !dataUserStats
       ? game.players
       : game.players.map((player) => ({
           ...player,
-          ...data.users.find((user) => user._id === player.userId),
-          ...data.usersStats.find(
-            (userStats) => userStats._id === player.userId
-          )
+          ...dataUsers.find((user) => user._id === player.userId),
+          ...dataUserStats.find((userStats) => userStats._id === player.userId)
         }))
   ) as MergedUser[]
 
   const currentTurnPlayerId = game.currentTurn
+
+  const showReadyState =
+    game.processState === OngoingGameProcessState.NotStarted ||
+    game.processState === OngoingGameProcessState.Starting
 
   return (
     <StyledPlayers>
@@ -51,6 +62,7 @@ export const Players: FC<PlayersProps> = ({ game }) => {
           {player.userName || player.userId}{' '}
           {player.elo ? `(${player.elo}) ` : ''}
           {player.userId === currentTurnPlayerId && '⚡'}
+          {showReadyState && (player.ready ? '✅' : '❌')}
         </StyledPlayer>
       ))}
     </StyledPlayers>

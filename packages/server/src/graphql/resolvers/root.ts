@@ -9,9 +9,10 @@ import {
   getGameFromRedis,
   gqlSerializeGame,
 } from "../../services/ongoingGame/lib/serialize";
-import { Game, Resolvers, UserStats } from "../generated/graphql";
+import { Game, Resolvers, User, UserStats } from "../generated/graphql";
 import { dateScalar } from "../scalars/Date/Date";
 import playTurn from "../../services/ongoingGame/playTurn";
+import toggleReady from "../../services/ongoingGame/toggleReady";
 
 export const resolvers: Resolvers<TContext> = {
   Game: {
@@ -39,10 +40,11 @@ export const resolvers: Resolvers<TContext> = {
     },
     user: async (_root, { id }, ctx) => {
       try {
-        const user = (await get(ctx, "user", {
+        const user = await get(ctx, "user", {
           filter: { _id: new ObjectId(id) },
-        })) as any;
-        if (user) return user;
+        });
+        if (!user) return null;
+        return R.modify("_id", (id) => id.toString(), user) as User;
       } catch {
         return null;
       }
@@ -119,5 +121,7 @@ export const resolvers: Resolvers<TContext> = {
       joinGame(ctx, { gameId: ongoingGameId }),
     playTurn: async (_root, { json, ongoingGameId }, ctx) =>
       playTurn(ctx, { gameId: ongoingGameId, json }),
+    toggleReady: async (_root, { ready, ongoingGameId }, ctx) =>
+      toggleReady(ctx, { gameId: ongoingGameId, ready }),
   },
 };

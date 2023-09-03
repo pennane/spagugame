@@ -97,6 +97,7 @@ export const TickTackToeSpecification: GameSpecification<TickTackToeState> = {
   },
   canStart: function (s) {
     return (
+      s.players.every((p) => p.ready) &&
       s.players.length >= this.minPlayers &&
       s.players.length <= this.maxPlayers &&
       s.processState === OngoingGameProcessState.NotStarted

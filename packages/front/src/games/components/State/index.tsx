@@ -8,15 +8,17 @@ type GameRenderedProps = {
   playMove: (move: string) => void
 }
 export const State: FC<GameRenderedProps> = ({ game, playMove }) => {
+  const gameType = game.gameType
+  const jsonState = game.jsonState
+
   const specification = useMemo(
-    () => GAME_TYPE_TO_SPECIFICATION[game.gameType],
-    [game.gameType]
+    () => GAME_TYPE_TO_SPECIFICATION[gameType],
+    [gameType]
   )
 
-  const deserializedState = useMemo(
-    () => specification.parseState(game.jsonState),
-    [specification, game.jsonState]
-  )
+  const deserializedState = useMemo(() => {
+    return specification.parseState(jsonState)
+  }, [specification, jsonState])
 
   if (!deserializedState) throw new Error('Failed to deserialize state')
 

@@ -34,7 +34,7 @@ type UserStats {
   userId: ID!
   gameType: GameType!
   totalWins: Int!
-  elo: Int!
+  elo: Float!
 }
 
 ## Game
@@ -67,6 +67,7 @@ type PlayedGame {
 type OngoingGamePlayer {
   userId: ID!
   score: Int!
+  ready: Boolean!
 }
 
 enum OngoingGameProcessState {
@@ -85,6 +86,7 @@ type OngoingGame {
   players: [OngoingGamePlayer!]!
   currentTurn: ID
   startedAt: Float
+  startsIn: Int
 }
 
 type OngoingGameStateChange {
@@ -117,5 +119,6 @@ type Mutation {
   createOngoingGame(gameType: GameType!): OngoingGame!
   joinOngoingGame(ongoingGameId: ID!): OngoingGame!
   playTurn(ongoingGameId: ID!, json: String!): OngoingGame!
+  toggleReady(ongoingGameId: ID!, ready: Boolean!): OngoingGame!
   updateUser(userInput: UserInput): User!
 }

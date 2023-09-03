@@ -39,13 +39,24 @@ const StyledRow = styled.div`
   flex-direction: column;
 `
 
-const StyledCell = styled.td`
+const StyledCell = styled.div`
   height: 4rem;
   width: 4rem;
   border: 1px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  text-transform: capitalize;
+  font-weight: 900;
 
   &:empty {
     cursor: pointer;
+  }
+
+  &:not(:empty) {
+    pointer-events: none;
+    cursor: none;
   }
 `
 

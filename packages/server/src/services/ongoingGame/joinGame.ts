@@ -7,7 +7,6 @@ import {
 import { authenticatedService } from "../lib";
 import { GAME_SPECIFICATIONS_MAP } from "../../games/models";
 import { gqlSerializeGame, getGameFromRedis } from "./lib/serialize";
-import startGame from "./startGame";
 
 const joinGame = authenticatedService<{ gameId: string }, OngoingGame>(
   async (ctx, { gameId }) => {
@@ -34,23 +33,25 @@ const joinGame = authenticatedService<{ gameId: string }, OngoingGame>(
           {
             userId: ctx.user._id.toString(),
             score: 0,
+            ready: false,
           },
         ]),
       },
       game
     );
 
-    await ctx.redis.hset(`game.${gameId}`, {
-      players: JSON.stringify(updatedGame.players),
-    });
+    const serializedPlayers = JSON.stringify(updatedGame.players);
 
-    const canStart = GAME_SPECIFICATIONS_MAP[updatedGame.gameType].canStart(
-      updatedGame as any
-    );
-
-    if (canStart) {
-      startGame(ctx, { gameId });
-    }
+    await Promise.all([
+      ctx.redis.hset(`game.${gameId}`, {
+        players: serializedPlayers,
+      }),
+      ctx.pubsub.publish(`game_changed.${gameId}`, {
+        ongoingGameStateChange: {
+          players: updatedGame.players,
+        },
+      }),
+    ]);
 
     return gqlSerializeGame(game);
   }

@@ -6,9 +6,11 @@ fragment OngoingGame on OngoingGame {
   players {
     score
     userId
+    ready
   }
   currentTurn
   startedAt
+  startsIn
 }
 
 fragment OngoingGameStateChange on OngoingGameStateChange {
@@ -19,6 +21,7 @@ fragment OngoingGameStateChange on OngoingGameStateChange {
   players {
     score
     userId
+    ready
   }
   currentTurn
   startsIn
@@ -38,6 +41,12 @@ mutation JoinGame($ongoingGameId: ID!) {
 
 mutation PlayMove($ongoingGameId: ID!, $move: String!) {
   playTurn(ongoingGameId: $ongoingGameId, json: $move) {
+    ...OngoingGame
+  }
+}
+
+mutation ToggleReady($ongoingGameId: ID!, $ready: Boolean!) {
+  toggleReady(ongoingGameId: $ongoingGameId, ready: $ready) {
     ...OngoingGame
   }
 }

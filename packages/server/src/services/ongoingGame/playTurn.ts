@@ -27,11 +27,12 @@ const playTurn = authenticatedService<
   if (!newState) {
     throw new Error("Invalid move");
   }
+  const gqlSerialized = gqlSerializeGame(newState);
 
   await Promise.all([
     saveGameToRedis(ctx, newState),
     ctx.pubsub.publish(`game_changed.${gameId}`, {
-      ongoingGameStateChange: newState,
+      ongoingGameStateChange: gqlSerialized,
     }),
   ]);
 
@@ -39,7 +40,7 @@ const playTurn = authenticatedService<
     return finishGame(ctx, { game: newState });
   }
 
-  return gqlSerializeGame(newState);
+  return gqlSerialized;
 });
 
 export default playTurn;

@@ -13,7 +13,9 @@ const createGame = authenticatedService<{ gameType: GameType }, OngoingGame>(
     // Join the game automatically
     const initialState = R.evolve(
       {
-        players: R.concat([{ score: 0, userId: ctx.user._id.toString() }]),
+        players: R.concat([
+          { score: 0, userId: ctx.user._id.toString(), ready: false },
+        ]),
       },
       settings.initialState()
     );

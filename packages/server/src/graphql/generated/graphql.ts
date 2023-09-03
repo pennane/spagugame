@@ -38,6 +38,7 @@ export type Mutation = {
   createOngoingGame: OngoingGame;
   joinOngoingGame: OngoingGame;
   playTurn: OngoingGame;
+  toggleReady: OngoingGame;
   updateUser: User;
 };
 
@@ -58,6 +59,12 @@ export type MutationPlayTurnArgs = {
 };
 
 
+export type MutationToggleReadyArgs = {
+  ongoingGameId: Scalars['ID']['input'];
+  ready: Scalars['Boolean']['input'];
+};
+
+
 export type MutationUpdateUserArgs = {
   userInput?: InputMaybe<UserInput>;
 };
@@ -71,10 +78,12 @@ export type OngoingGame = {
   players: Array<OngoingGamePlayer>;
   processState: OngoingGameProcessState;
   startedAt?: Maybe<Scalars['Float']['output']>;
+  startsIn?: Maybe<Scalars['Int']['output']>;
 };
 
 export type OngoingGamePlayer = {
   __typename?: 'OngoingGamePlayer';
+  ready: Scalars['Boolean']['output'];
   score: Scalars['Int']['output'];
   userId: Scalars['ID']['output'];
 };
@@ -188,7 +197,7 @@ export enum UserRole {
 export type UserStats = {
   __typename?: 'UserStats';
   _id: Scalars['ID']['output'];
-  elo: Scalars['Int']['output'];
+  elo: Scalars['Float']['output'];
   gameType: GameType;
   totalWins: Scalars['Int']['output'];
   userId: Scalars['ID']['output'];
@@ -327,6 +336,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createOngoingGame?: Resolver<ResolversTypes['OngoingGame'], ParentType, ContextType, RequireFields<MutationCreateOngoingGameArgs, 'gameType'>>;
   joinOngoingGame?: Resolver<ResolversTypes['OngoingGame'], ParentType, ContextType, RequireFields<MutationJoinOngoingGameArgs, 'ongoingGameId'>>;
   playTurn?: Resolver<ResolversTypes['OngoingGame'], ParentType, ContextType, RequireFields<MutationPlayTurnArgs, 'json' | 'ongoingGameId'>>;
+  toggleReady?: Resolver<ResolversTypes['OngoingGame'], ParentType, ContextType, RequireFields<MutationToggleReadyArgs, 'ongoingGameId' | 'ready'>>;
   updateUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, Partial<MutationUpdateUserArgs>>;
 };
 
@@ -338,10 +348,12 @@ export type OngoingGameResolvers<ContextType = any, ParentType extends Resolvers
   players?: Resolver<Array<ResolversTypes['OngoingGamePlayer']>, ParentType, ContextType>;
   processState?: Resolver<ResolversTypes['OngoingGameProcessState'], ParentType, ContextType>;
   startedAt?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  startsIn?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type OngoingGamePlayerResolvers<ContextType = any, ParentType extends ResolversParentTypes['OngoingGamePlayer'] = ResolversParentTypes['OngoingGamePlayer']> = {
+  ready?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   score?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   userId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -398,7 +410,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 
 export type UserStatsResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserStats'] = ResolversParentTypes['UserStats']> = {
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  elo?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  elo?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   gameType?: Resolver<ResolversTypes['GameType'], ParentType, ContextType>;
   totalWins?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   userId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;

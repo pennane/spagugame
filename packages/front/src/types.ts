@@ -35,6 +35,7 @@ export type Mutation = {
   createOngoingGame: OngoingGame;
   joinOngoingGame: OngoingGame;
   playTurn: OngoingGame;
+  toggleReady: OngoingGame;
   updateUser: User;
 };
 
@@ -55,6 +56,12 @@ export type MutationPlayTurnArgs = {
 };
 
 
+export type MutationToggleReadyArgs = {
+  ongoingGameId: Scalars['ID']['input'];
+  ready: Scalars['Boolean']['input'];
+};
+
+
 export type MutationUpdateUserArgs = {
   userInput?: InputMaybe<UserInput>;
 };
@@ -68,10 +75,12 @@ export type OngoingGame = {
   players: Array<OngoingGamePlayer>;
   processState: OngoingGameProcessState;
   startedAt?: Maybe<Scalars['Float']['output']>;
+  startsIn?: Maybe<Scalars['Int']['output']>;
 };
 
 export type OngoingGamePlayer = {
   __typename?: 'OngoingGamePlayer';
+  ready: Scalars['Boolean']['output'];
   score: Scalars['Int']['output'];
   userId: Scalars['ID']['output'];
 };
@@ -185,7 +194,7 @@ export enum UserRole {
 export type UserStats = {
   __typename?: 'UserStats';
   _id: Scalars['ID']['output'];
-  elo: Scalars['Int']['output'];
+  elo: Scalars['Float']['output'];
   gameType: GameType;
   totalWins: Scalars['Int']['output'];
   userId: Scalars['ID']['output'];
