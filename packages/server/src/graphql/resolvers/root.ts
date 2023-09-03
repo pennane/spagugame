@@ -61,10 +61,12 @@ export const resolvers: Resolvers<TContext> = {
       if (!game) throw new Error("Invalid game id");
       return gqlSerializeGame(game);
     },
-    game: async (_root, { id }, ctx) => {
+    game: async (_root, { gameType }, ctx) => {
+      if (!gameType) return null;
       const game = await get(ctx, "game", {
-        filter: { _id: new ObjectId(id) },
+        filter: { type: gameType },
       });
+
       if (!game) return null;
       return R.modify("_id", (id) => id.toString(), game) as Game;
     },

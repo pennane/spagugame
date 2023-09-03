@@ -100,7 +100,7 @@ type Query {
   user(id: ID!): User
   users(ids: [ID!]!): [User!]!
   currentUser: User
-  game(id: ID!): Game
+  game(gameType: GameType): Game
   games: [Game!]!
   userStats(userId: ID!, gameType: GameType!): UserStats
 }

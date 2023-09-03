@@ -108,13 +108,7 @@ export const TickTackToeSpecification: GameSpecification<TickTackToeState> = {
     if (!state.jsonState)
       throw new Error("MUST HAVE JSON STATE WHEN CHECKING NEXT STATE");
     const [x, y] = move.split("").map((s) => parseInt(s));
-    console.log(
-      x,
-      y,
-      state.jsonState?.[x]?.[y],
-      state.jsonState,
-      typeof state.jsonState
-    );
+
     if (state.jsonState?.[x]?.[y] !== null) {
       throw new Error("Cannot place piece over old placement");
     }
@@ -124,8 +118,6 @@ export const TickTackToeSpecification: GameSpecification<TickTackToeState> = {
     const currentPlayerIndex = newState.players.findIndex(
       (p) => p.userId === newState.currentTurn
     );
-
-    console.log("userIndex", currentPlayerIndex);
 
     const playerSymbol = currentPlayerIndex === 0 ? "x" : "o";
 

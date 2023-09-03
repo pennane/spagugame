@@ -115,14 +115,13 @@ export type Query = {
   games: Array<Game>;
   ongoingGame: OngoingGame;
   user?: Maybe<User>;
-  userActiveGames: Array<OngoingGame>;
   userStats?: Maybe<UserStats>;
   users: Array<User>;
 };
 
 
 export type QueryGameArgs = {
-  id: Scalars['ID']['input'];
+  gameType?: InputMaybe<GameType>;
 };
 
 
@@ -133,11 +132,6 @@ export type QueryOngoingGameArgs = {
 
 export type QueryUserArgs = {
   id: Scalars['ID']['input'];
-};
-
-
-export type QueryUserActiveGamesArgs = {
-  userId: Scalars['ID']['input'];
 };
 
 
@@ -365,11 +359,10 @@ export type PlayedGameResolvers<ContextType = any, ParentType extends ResolversP
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   currentUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  game?: Resolver<Maybe<ResolversTypes['Game']>, ParentType, ContextType, RequireFields<QueryGameArgs, 'id'>>;
+  game?: Resolver<Maybe<ResolversTypes['Game']>, ParentType, ContextType, Partial<QueryGameArgs>>;
   games?: Resolver<Array<ResolversTypes['Game']>, ParentType, ContextType>;
   ongoingGame?: Resolver<ResolversTypes['OngoingGame'], ParentType, ContextType, RequireFields<QueryOngoingGameArgs, 'ongoingGameId'>>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
-  userActiveGames?: Resolver<Array<ResolversTypes['OngoingGame']>, ParentType, ContextType, RequireFields<QueryUserActiveGamesArgs, 'userId'>>;
   userStats?: Resolver<Maybe<ResolversTypes['UserStats']>, ParentType, ContextType, RequireFields<QueryUserStatsArgs, 'gameType' | 'userId'>>;
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUsersArgs, 'ids'>>;
 };

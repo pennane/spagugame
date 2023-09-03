@@ -57,7 +57,7 @@ const createAndDropIndexes = async (
       );
 
       if (!isIndexDesired) {
-        console.log(
+        console.info(
           `Dropping unwanted "${settings.name}" index: ${index.name}`
         );
         await collection.dropIndex(index.name);
