@@ -87,6 +87,12 @@ export const resolvers: Resolvers<TContext> = {
       const modified: UserStats = R.modify("_id", (id) => id.toString(), stats);
       return modified;
     },
+    usersStats: async (_root, { gameType, userIds }, ctx) => {
+      const stats = await find(ctx, "userStats", {
+        filter: { gameType, userId: { $in: userIds } },
+      });
+      return R.map((g) => R.modify("_id", (id) => id.toString(), g), stats);
+    },
   },
   Subscription: {
     ongoingGameStateChange: {

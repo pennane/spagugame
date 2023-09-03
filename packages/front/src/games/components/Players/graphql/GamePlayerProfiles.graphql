@@ -1,0 +1,21 @@
+fragment OngoingGameUserStats on UserStats {
+  _id
+  userId
+  gameType
+  elo
+}
+
+fragment OngoingGamePlayerProfile on User {
+  _id
+  githubId
+  userName
+}
+
+query GamePlayerProfiles($userIds: [ID!]!, $gameType: GameType!) {
+  users(ids: $userIds) {
+    ...OngoingGamePlayerProfile
+  }
+  usersStats(gameType: $gameType, userIds: $userIds) {
+    ...OngoingGameUserStats
+  }
+}

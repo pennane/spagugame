@@ -1,0 +1,49 @@
+fragment OngoingGame on OngoingGame {
+  _id
+  gameType
+  processState
+  jsonState
+  players {
+    score
+    userId
+  }
+  currentTurn
+  startedAt
+}
+
+fragment OngoingGameStateChange on OngoingGameStateChange {
+  _id
+  gameType
+  processState
+  jsonState
+  players {
+    score
+    userId
+  }
+  currentTurn
+  startsIn
+}
+
+query GetOngoingGame($ongoingGameId: ID!) {
+  ongoingGame(ongoingGameId: $ongoingGameId) {
+    ...OngoingGame
+  }
+}
+
+mutation JoinGame($ongoingGameId: ID!) {
+  joinOngoingGame(ongoingGameId: $ongoingGameId) {
+    ...OngoingGame
+  }
+}
+
+mutation PlayMove($ongoingGameId: ID!, $move: String!) {
+  playTurn(ongoingGameId: $ongoingGameId, json: $move) {
+    ...OngoingGame
+  }
+}
+
+subscription SubscribeOngoingGame($ongoingGameId: ID!) {
+  ongoingGameStateChange(ongoingGameId: $ongoingGameId) {
+    ...OngoingGameStateChange
+  }
+}

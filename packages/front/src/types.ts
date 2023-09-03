@@ -19,6 +19,8 @@ export type Game = {
   __typename?: 'Game';
   _id: Scalars['ID']['output'];
   description: Scalars['String']['output'];
+  maxPlayers: Scalars['Int']['output'];
+  minPlayers: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   ongoingGameIds: Array<Scalars['ID']['output']>;
   type: GameType;
@@ -65,7 +67,7 @@ export type OngoingGame = {
   jsonState: Scalars['String']['output'];
   players: Array<OngoingGamePlayer>;
   processState: OngoingGameProcessState;
-  startedAt?: Maybe<Scalars['Int']['output']>;
+  startedAt?: Maybe<Scalars['Float']['output']>;
 };
 
 export type OngoingGamePlayer = {
@@ -112,14 +114,14 @@ export type Query = {
   games: Array<Game>;
   ongoingGame: OngoingGame;
   user?: Maybe<User>;
-  userActiveGames: Array<OngoingGame>;
   userStats?: Maybe<UserStats>;
   users: Array<User>;
+  usersStats: Array<UserStats>;
 };
 
 
 export type QueryGameArgs = {
-  id: Scalars['ID']['input'];
+  gameType?: InputMaybe<GameType>;
 };
 
 
@@ -133,11 +135,6 @@ export type QueryUserArgs = {
 };
 
 
-export type QueryUserActiveGamesArgs = {
-  userId: Scalars['ID']['input'];
-};
-
-
 export type QueryUserStatsArgs = {
   gameType: GameType;
   userId: Scalars['ID']['input'];
@@ -146,6 +143,12 @@ export type QueryUserStatsArgs = {
 
 export type QueryUsersArgs = {
   ids: Array<Scalars['ID']['input']>;
+};
+
+
+export type QueryUsersStatsArgs = {
+  gameType: GameType;
+  userIds: Array<Scalars['ID']['input']>;
 };
 
 export type Subscription = {

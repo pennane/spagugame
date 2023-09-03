@@ -1,0 +1,14 @@
+fragment Game on Game {
+  _id
+  type
+  name
+  description
+  ongoingGameIds
+  maxPlayers
+  minPlayers
+}
+query Games {
+  games {
+    ...Game
+  }
+}

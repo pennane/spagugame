@@ -9,7 +9,7 @@ export interface IGame extends Omit<Game, "_id" | "ongoingGameIds"> {
 }
 
 const seedDocuments: IGame[] = [TickTackToeSpecification].map(
-  R.pick(["name", "description", "type", "_id"])
+  R.pick(["name", "description", "type", "_id", "minPlayers", "maxPlayers"])
 );
 
 export const GAME_COLLECTION_SETTINGS: CollectionSettings<IGame> = {

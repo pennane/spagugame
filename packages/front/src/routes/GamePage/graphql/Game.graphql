@@ -1,0 +1,11 @@
+query Game($gameType: GameType!) {
+  game(gameType: $gameType) {
+    ...Game
+  }
+}
+
+mutation NewGame($gameType: GameType!) {
+  createOngoingGame(gameType: $gameType) {
+    ...OngoingGame
+  }
+}

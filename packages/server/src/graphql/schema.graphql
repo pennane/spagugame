@@ -45,6 +45,8 @@ type Game {
   name: String!
   description: String!
   ongoingGameIds: [ID!]!
+  minPlayers: Int!
+  maxPlayers: Int!
 }
 
 ## PlayedGame
@@ -82,7 +84,7 @@ type OngoingGame {
   jsonState: String!
   players: [OngoingGamePlayer!]!
   currentTurn: ID
-  startedAt: Int
+  startedAt: Float
 }
 
 type OngoingGameStateChange {
@@ -103,6 +105,7 @@ type Query {
   game(gameType: GameType): Game
   games: [Game!]!
   userStats(userId: ID!, gameType: GameType!): UserStats
+  usersStats(userIds: [ID!]!, gameType: GameType!): [UserStats!]!
 }
 
 type Subscription {

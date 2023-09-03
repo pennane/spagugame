@@ -19,6 +19,9 @@ import { ErrorPage } from './routes/ErrorPage'
 import { LandingPage } from './routes/LandingPage'
 import { Root } from './routes/Root'
 import { CurrentUserContextProvider } from './hooks/useCurrentUser/context'
+import { OperationTypeNode } from 'graphql'
+import { GamePage } from './routes/GamePage'
+import { OngoingGamePage } from './routes/OngoingGamePage'
 
 const httpLink = new HttpLink({
   uri: 'http://localhost:3000/graphql',
@@ -36,7 +39,7 @@ const splitLink = split(
     const definition = getMainDefinition(query)
     return (
       definition.kind === 'OperationDefinition' &&
-      definition.operation === 'subscription'
+      definition.operation === OperationTypeNode.SUBSCRIPTION
     )
   },
   wsLink,
@@ -53,7 +56,14 @@ const router = createBrowserRouter([
     path: '/',
     element: <Root />,
     errorElement: <ErrorPage />,
-    children: [{ path: '', element: <LandingPage /> }]
+    children: [
+      { path: '', element: <LandingPage /> },
+      {
+        path: 'game/:gameType',
+        element: <GamePage />
+      },
+      { path: 'game/:gameType/:gameId', element: <OngoingGamePage /> }
+    ]
   }
 ])
 

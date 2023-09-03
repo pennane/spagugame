@@ -9,11 +9,19 @@ import { isNilOrEmpty } from "../../../lib/fp";
 
 export const gqlSerializeGame = <T>(
   game: DeserializedGame<T>
-): GqlSerializedGame => R.evolve({ jsonState: (s) => JSON.stringify(s) }, game);
+): GqlSerializedGame =>
+  R.evolve(
+    { jsonState: (s) => JSON.stringify(s), startedAt: (s) => parseInt(s) },
+    game
+  );
 
 export const serializeGame = <T>(game: DeserializedGame<T>): SerializedGame =>
   R.evolve(
-    { jsonState: (s) => JSON.stringify(s), players: (p) => JSON.stringify(p) },
+    {
+      jsonState: (s) => JSON.stringify(s),
+      players: (p) => JSON.stringify(p),
+      startedAt: (s) => s.toString(),
+    },
     game
   );
 
@@ -21,7 +29,11 @@ export const deserializeGame = <T>(
   game: Record<string, string>
 ): DeserializedGame<T> =>
   R.evolve(
-    { jsonState: (s) => JSON.parse(s), players: (p) => JSON.parse(p) },
+    {
+      jsonState: (s) => JSON.parse(s),
+      players: (p) => JSON.parse(p),
+      startedAt: (s) => parseInt(s),
+    },
     game
   ) as unknown as DeserializedGame<T>;
 
