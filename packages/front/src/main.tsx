@@ -25,6 +25,7 @@ import { OngoingGamePage } from './routes/OngoingGamePage'
 import { ThemeProvider } from 'styled-components'
 import { theme } from './theme'
 import { GamesPage } from './routes/GamesPage'
+import { ProfilePage } from './routes/ProfilePage'
 
 const httpLink = new HttpLink({
   uri: 'http://localhost:3000/graphql',
@@ -69,7 +70,8 @@ const router = createBrowserRouter([
         path: 'game/:gameType',
         element: <GamePage />
       },
-      { path: 'game/:gameType/:gameId', element: <OngoingGamePage /> }
+      { path: 'game/:gameType/:gameId', element: <OngoingGamePage /> },
+      { path: 'profile/:userId?', element: <ProfilePage /> }
     ]
   }
 ])
