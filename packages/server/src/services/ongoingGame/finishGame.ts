@@ -86,10 +86,7 @@ const finishGame = authenticatedService<
     }))
     .sort((a, b) => b.score - a.score);
 
-  console.log(eloPlayersInWinningOrder);
   const newEloPlayers = calculateNewElos(eloPlayersInWinningOrder);
-  console.log("and new");
-  console.log(newEloPlayers);
 
   await Promise.all(
     newEloPlayers.map((p) =>

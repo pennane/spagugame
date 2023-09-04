@@ -70,8 +70,6 @@ export const RenderedGame: FC<GameRenderedProps> = ({ ongoingGameId }) => {
           variables: { ongoingGameId: ongoingGame?._id }
         },
         (data) => {
-          console.log('merging', updatedFields)
-
           const merged = { ...data.ongoingGame, ...updatedFields }
           return { ongoingGame: merged }
         }

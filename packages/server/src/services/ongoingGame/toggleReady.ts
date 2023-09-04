@@ -42,7 +42,6 @@ const playTurn = authenticatedService<
   );
 
   const serializedGameUsers = JSON.stringify(updatedGame.players);
-  console.log(serializedGameUsers);
 
   await Promise.all([
     ctx.pubsub.publish(`game_changed.${gameId}`, {
@@ -58,8 +57,6 @@ const playTurn = authenticatedService<
   const canStart = GAME_SPECIFICATIONS_MAP[updatedGame.gameType].canStart(
     updatedGame as any
   );
-
-  console.log(canStart);
 
   if (canStart) {
     startGame(ctx, { gameId });

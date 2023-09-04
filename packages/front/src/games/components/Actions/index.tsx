@@ -54,7 +54,6 @@ export const Actions: FC<ActionsProps> = ({ ongoingGame, game }) => {
   const hasJoined = !!gamePlayer
 
   const canJoin = canTakeNewPlayers && !hasJoined
-  console.log(hasJoined)
 
   const handleToggleReady = async () => {
     toggleReady({
