@@ -1,5 +1,9 @@
 import { useRouteError } from 'react-router-dom'
 import styled from 'styled-components'
+import { Heading } from '../../components/Heading'
+
+import { P } from '../../components/P'
+import { theme } from '../../theme'
 
 type RouteError = {
   statusText?: string
@@ -13,7 +17,13 @@ const isRouteError = (e: unknown): e is RouteError => {
   return false
 }
 
-const StyledErrorPage = styled.div``
+const StyledErrorPage = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 8vw;
+`
 
 export const ErrorPage = () => {
   const error = useRouteError()
@@ -26,11 +36,11 @@ export const ErrorPage = () => {
 
   return (
     <StyledErrorPage>
-      <h1>Oops!</h1>
-      <p>Sorry, an unexpected error has occurred.</p>
-      <p>
+      <Heading.H1>Oops!</Heading.H1>
+      <P.DefaultText>Sorry, an unexpected error has occurred.</P.DefaultText>
+      <P.SmallText style={{ color: theme.colors.foreground.danger }}>
         <i>{errorMessage}</i>
-      </p>
+      </P.SmallText>
     </StyledErrorPage>
   )
 }

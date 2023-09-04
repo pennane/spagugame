@@ -1,10 +1,36 @@
 import styled from 'styled-components'
 import { useGameQuery, useNewGameMutation } from './graphql/Game.generated'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { GameType } from '../../types'
 import { Button } from '../../components/Button'
+import { Heading } from '../../components/Heading'
+import { P } from '../../components/P'
 
-const StyledGamePage = styled.div``
+import { Pill } from '../../components/Pill'
+import { OngoingGameItem } from './components/OngoingGame'
+
+const StyledGamePage = styled.div`
+  border: 1px solid ${({ theme }) => theme.colors.foreground.danger};
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-bottom: 10rem;
+`
+
+const StyledGameDescription = styled.section`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`
+const StyledGameActions = styled.section``
+const StyledGameOngoingGames = styled.section`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`
 
 const isGameType = (gameType?: string): gameType is GameType =>
   Object.values(GameType).includes(gameType as GameType)
@@ -38,41 +64,37 @@ export const GamePage = () => {
 
   return (
     <StyledGamePage>
-      <h1>{game.name}</h1>
-      <h2>
-        {' '}
+      <StyledGameDescription>
+        <Heading.H1>{game.name}</Heading.H1>
+
         {game.maxPlayers === game.minPlayers && (
-          <p>For {game.maxPlayers} players</p>
+          <Pill color="info">{game.maxPlayers} players</Pill>
         )}
         {game.maxPlayers !== game.minPlayers && (
-          <p>
-            For {game.minPlayers}-${game.maxPlayers} players
-          </p>
+          <Pill color="primary">{game.maxPlayers} players</Pill>
         )}
-      </h2>
-      <p>{game.description}</p>
 
-      <Button onClick={handleCreateNewGame}>Create new game</Button>
-
-      <h2>Currently going games:</h2>
-      {hasOngoingGames && (
-        <ul>
-          {game.ongoingGames.map((ongoingGame) => (
-            <Link
+        <P.SmallText>{game.description}</P.SmallText>
+      </StyledGameDescription>
+      <StyledGameActions>
+        <Button onClick={handleCreateNewGame}>Create new game</Button>
+      </StyledGameActions>
+      <StyledGameOngoingGames>
+        <Heading.H2>Currently going games:</Heading.H2>
+        {hasOngoingGames &&
+          game.ongoingGames.map((ongoingGame) => (
+            <OngoingGameItem
               key={ongoingGame._id}
-              to={`/game/${game.type}/${ongoingGame._id}`}
-            >
-              <p>
-                {game.name} ({ongoingGame.players.length} / {game.maxPlayers}{' '}
-                players)
-              </p>
-            </Link>
+              game={game}
+              ongoingGame={ongoingGame}
+            />
           ))}
-        </ul>
-      )}
-      {!hasOngoingGames && (
-        <p>No ongoing games. You could create one instead.</p>
-      )}
+        {!hasOngoingGames && (
+          <P.DefaultText>
+            No ongoing games. You could create one instead.
+          </P.DefaultText>
+        )}
+      </StyledGameOngoingGames>
     </StyledGamePage>
   )
 }

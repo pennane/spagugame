@@ -6,14 +6,31 @@ const StyledRoot = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  margin: 1rem;
+`
+
+const StyledContentWrapper = styled.div`
+  margin: 0 2rem;
+  margin-bottom: 10rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+`
+
+const StyledContent = styled.div`
+  max-width: 800px;
+  width: 100%;
 `
 
 export const Root = () => {
   return (
     <StyledRoot>
       <Navbar />
-      <Outlet />
+      <StyledContentWrapper>
+        <StyledContent>
+          <Outlet />
+        </StyledContent>
+      </StyledContentWrapper>
     </StyledRoot>
   )
 }

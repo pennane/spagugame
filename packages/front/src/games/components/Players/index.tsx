@@ -10,6 +10,7 @@ import {
   OngoingGameUserStatsFragment,
   useGamePlayerProfilesQuery
 } from './graphql/GamePlayerProfiles.generated'
+import { Span } from '../../../components/Span'
 
 type PlayersProps = {
   game: OngoingGame
@@ -59,10 +60,17 @@ export const Players: FC<PlayersProps> = ({ game }) => {
     <StyledPlayers>
       {users.map((player) => (
         <StyledPlayer key={player.userId}>
-          {player.userName || player.userId}{' '}
-          {player.elo ? `(${player.elo}) ` : ''}
-          {player.userId === currentTurnPlayerId && '⚡'}
-          {showReadyState && (player.ready ? '✅' : '❌')}
+          <Span.SmallText color="inverted">
+            {player.userName || player.userId}{' '}
+            {player.elo ? `(${player.elo})` : ''}
+          </Span.SmallText>
+          <Span.SmallText>
+            {' '}
+            {player.userId === currentTurnPlayerId && '⚡'}
+          </Span.SmallText>
+          <Span.SmallText>
+            {showReadyState && (player.ready ? '✅' : '❌')}
+          </Span.SmallText>
         </StyledPlayer>
       ))}
     </StyledPlayers>

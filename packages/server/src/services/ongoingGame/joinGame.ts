@@ -53,7 +53,7 @@ const joinGame = authenticatedService<{ gameId: string }, OngoingGame>(
       }),
     ]);
 
-    return gqlSerializeGame(game);
+    return gqlSerializeGame(updatedGame);
   }
 );
 

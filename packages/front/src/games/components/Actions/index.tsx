@@ -3,13 +3,23 @@ import { OngoingGame, OngoingGameProcessState } from '../../../types'
 import styled from 'styled-components'
 import { useCurrentUser } from '../../../hooks/useCurrentUser'
 import { Button } from '../../../components/Button'
-import { useToggleReadyMutation } from '../../graphql/OngoingGame.generated'
+import {
+  useJoinGameMutation,
+  useToggleReadyMutation
+} from '../../graphql/OngoingGame.generated'
+import { GameFragment } from '../../../routes/LandingPage/graphql/Games.generated'
 
 const StyledActions = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  height: 3rem;
+  border: 1px solid ${({ theme }) => theme.colors.foreground.info};
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+  justify-content: space-around;
 `
+
 const StyledAction = styled.div`
   display: flex;
   justify-content: center;
@@ -18,37 +28,59 @@ const StyledAction = styled.div`
 `
 
 type ActionsProps = {
-  game: OngoingGame
+  ongoingGame: OngoingGame
+  game: GameFragment
 }
 
-export const Actions: FC<ActionsProps> = ({ game }) => {
+export const Actions: FC<ActionsProps> = ({ ongoingGame, game }) => {
   const [toggleReady] = useToggleReadyMutation()
+  const [joinGame] = useJoinGameMutation()
 
-  console.log(1)
   const currentUser = useCurrentUser()
-  if (!currentUser) return null
-  console.log(2, game.processState)
-  if (game.processState !== OngoingGameProcessState.NotStarted) return null
-  console.log(3)
-  const gamePlayer = game.players.find(
+  if (!currentUser) return <StyledActions />
+
+  if (ongoingGame.processState !== OngoingGameProcessState.NotStarted)
+    return <StyledActions />
+
+  const gamePlayer = ongoingGame.players.find(
     (player) => player.userId === currentUser._id
   )
 
-  if (!gamePlayer) return null
-  console.log(4)
+  const canTakeNewPlayers =
+    ongoingGame.processState === OngoingGameProcessState.NotStarted &&
+    game?.maxPlayers &&
+    game.maxPlayers > ongoingGame.players.length
+
+  const hasJoined = !!gamePlayer
+
+  const canJoin = canTakeNewPlayers && !hasJoined
+  console.log(hasJoined)
 
   const handleToggleReady = async () => {
     toggleReady({
-      variables: { ongoingGameId: game._id, ready: !gamePlayer?.ready }
+      variables: { ongoingGameId: ongoingGame._id, ready: !gamePlayer?.ready }
     })
+  }
+
+  const handleJoinGame = () => {
+    if (!ongoingGame._id) return
+    joinGame({ variables: { ongoingGameId: ongoingGame._id } })
   }
 
   return (
     <StyledActions>
-      <StyledAction>
-        <Button onClick={handleToggleReady}>Toggle ready</Button>
-        {gamePlayer.ready ? '✅' : '❌'}
-      </StyledAction>
+      {canJoin && (
+        <StyledAction>
+          <Button onClick={handleJoinGame}>Join game</Button>
+        </StyledAction>
+      )}
+      {hasJoined && (
+        <StyledAction>
+          <Button onClick={handleToggleReady}>
+            Toggle ready {!gamePlayer.ready ? '✅' : '❌'}
+          </Button>
+        </StyledAction>
+      )}
     </StyledActions>
   )
 }

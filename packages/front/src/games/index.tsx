@@ -3,25 +3,42 @@ import { FC } from 'react'
 import {
   GetOngoingGameDocument,
   useGetOngoingGameQuery,
-  useJoinGameMutation,
   usePlayMoveMutation,
   useSubscribeOngoingGameSubscription
 } from './graphql/OngoingGame.generated'
 import { Players } from './components/Players'
 import { State } from './components/State'
 import { useGameQuery } from '../routes/GamePage/graphql/Game.generated'
-import { OngoingGameProcessState } from '../types'
-import { Button } from '../components/Button'
-import { useCurrentUser } from '../hooks/useCurrentUser'
 import { filter, isNotNil, omit } from 'ramda'
 import { Actions } from './components/Actions'
+import styled from 'styled-components'
+import { P } from '../components/P'
+
+const StyledGame = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  background: #d6e8d3;
+  border-radius: 0.25rem;
+  padding: 2rem;
+`
+
+const StyledGameLeft = styled.div`
+  width: 15rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: column;
+`
+
+const StyledGameRight = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: column;
+`
 
 type GameRenderedProps = {
   ongoingGameId: string | undefined
 }
 export const RenderedGame: FC<GameRenderedProps> = ({ ongoingGameId }) => {
-  const currentUser = useCurrentUser()
-
   const { data: ongoingGameData, loading: ongoingGameLoading } =
     useGetOngoingGameQuery({
       variables: { ongoingGameId: ongoingGameId! },
@@ -29,26 +46,20 @@ export const RenderedGame: FC<GameRenderedProps> = ({ ongoingGameId }) => {
     })
 
   const ongoingGame = ongoingGameData?.ongoingGame
-  console.log(ongoingGameId)
+
+  const { data: gameData } = useGameQuery({
+    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+    variables: { gameType: ongoingGame?.gameType! },
+    skip: !ongoingGame?.gameType
+  })
+
+  const game = gameData?.game
 
   useSubscribeOngoingGameSubscription({
     variables: { ongoingGameId: ongoingGameId! },
     skip: !ongoingGameId,
-    onSubscriptionComplete: () => {
-      console.log('subi ok')
-    },
-    onError: (e) => {
-      console.error('subi error', e)
-    },
-    onComplete: () => {
-      console.log('subi complete')
-    },
-    onSubscriptionData: () => {
-      console.log('on data')
-    },
     onData: ({ client, data }) => {
       const game = data.data?.ongoingGameStateChange
-      console.log('new data')
       if (!game || !ongoingGame?._id) return
 
       const updatedFields = omit(['_id', '__typename'], filter(isNotNil, game))
@@ -68,47 +79,29 @@ export const RenderedGame: FC<GameRenderedProps> = ({ ongoingGameId }) => {
     }
   })
 
-  const { data: gameData } = useGameQuery({
-    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-    variables: { gameType: ongoingGame?.gameType! },
-    skip: !ongoingGame?.gameType
-  })
-
-  const [joinGame] = useJoinGameMutation()
   const [playMove] = usePlayMoveMutation()
-
-  const handleJoinGame = () => {
-    if (!ongoingGameId) return
-    joinGame({ variables: { ongoingGameId } })
-  }
 
   const handlePlayMove = (move: string) => {
     if (!ongoingGameId) return
     playMove({ variables: { ongoingGameId, move } })
   }
 
-  const game = gameData?.game
+  if (ongoingGameLoading) return <P.DefaultText>loading ...</P.DefaultText>
 
-  if (ongoingGameLoading) return <div>loading...</div>
-
-  if (!ongoingGame) return <div>Game does not exist or has ended already</div>
-
-  const canTakeNewPlayers =
-    ongoingGame.processState === OngoingGameProcessState.NotStarted &&
-    game?.maxPlayers &&
-    game.maxPlayers > ongoingGame.players.length
+  if (!ongoingGame || !game)
+    return (
+      <P.DefaultText>Game does not exist or has ended already</P.DefaultText>
+    )
 
   return (
-    <>
-      {!currentUser && canTakeNewPlayers && <div>Log in to join</div>}
-      {currentUser &&
-        canTakeNewPlayers &&
-        ongoingGame.players.every((p) => p.userId !== currentUser._id) && (
-          <Button onClick={handleJoinGame}>Join</Button>
-        )}
-      <Players game={ongoingGame} />
-      <State game={ongoingGame} playMove={handlePlayMove} />
-      <Actions game={ongoingGame} />
-    </>
+    <StyledGame>
+      <StyledGameLeft>
+        <Players game={ongoingGame} />
+      </StyledGameLeft>
+      <StyledGameRight>
+        <State game={ongoingGame} playMove={handlePlayMove} />
+        <Actions ongoingGame={ongoingGame} game={game} />
+      </StyledGameRight>
+    </StyledGame>
   )
 }

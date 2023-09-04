@@ -22,6 +22,9 @@ import { CurrentUserContextProvider } from './hooks/useCurrentUser/context'
 import { OperationTypeNode } from 'graphql'
 import { GamePage } from './routes/GamePage'
 import { OngoingGamePage } from './routes/OngoingGamePage'
+import { ThemeProvider } from 'styled-components'
+import { theme } from './theme'
+import { GamesPage } from './routes/GamesPage'
 
 const httpLink = new HttpLink({
   uri: 'http://localhost:3000/graphql',
@@ -59,6 +62,10 @@ const router = createBrowserRouter([
     children: [
       { path: '', element: <LandingPage /> },
       {
+        path: 'game',
+        element: <GamesPage />
+      },
+      {
         path: 'game/:gameType',
         element: <GamePage />
       },
@@ -71,7 +78,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ApolloProvider client={client}>
       <CurrentUserContextProvider>
-        <RouterProvider router={router} />
+        <ThemeProvider theme={theme}>
+          <RouterProvider router={router} />
+        </ThemeProvider>
       </CurrentUserContextProvider>
     </ApolloProvider>
   </React.StrictMode>

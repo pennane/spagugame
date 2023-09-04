@@ -11,6 +11,7 @@ fragment OngoingGame on OngoingGame {
   currentTurn
   startedAt
   startsIn
+  isPrivate
 }
 
 fragment OngoingGameStateChange on OngoingGameStateChange {
