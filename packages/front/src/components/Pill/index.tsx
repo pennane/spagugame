@@ -4,13 +4,19 @@ import styled from 'styled-components'
 
 type PillProps = {
   color: keyof typeof theme.colors.foreground
+  onlyBorder?: boolean
   children: React.ReactNode
-}
+} & React.HTMLAttributes<HTMLDivElement>
 
 const StyledPill = styled.div<{
   $color: keyof typeof theme.colors.foreground
+  $onlyBorder?: boolean
 }>`
-  background-color: ${({ $color, theme }) => theme.colors.foreground[$color]};
+  background-color: ${({ $color, theme, $onlyBorder }) =>
+    $onlyBorder ? 'transparent' : theme.colors.foreground[$color]};
+  border: 1px solid
+    ${({ $color, theme, $onlyBorder }) =>
+      $onlyBorder ? theme.colors.foreground[$color] : 'transparent'};
   color: white;
   width: fit-content;
   padding: 0.1rem 0.25rem;
@@ -18,6 +24,15 @@ const StyledPill = styled.div<{
   border-radius: 0.5rem;
 `
 
-export const Pill: FC<PillProps> = ({ color, children }) => {
-  return <StyledPill $color={color}>{children}</StyledPill>
+export const Pill: FC<PillProps> = ({
+  color,
+  children,
+  onlyBorder,
+  ...rest
+}) => {
+  return (
+    <StyledPill $color={color} $onlyBorder={onlyBorder} {...rest}>
+      {children}
+    </StyledPill>
+  )
 }

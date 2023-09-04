@@ -1,0 +1,32 @@
+fragment ProfilePageUserStats on UserStats {
+  _id
+  userId
+  gameType
+  totalWins
+  elo
+}
+
+fragment ProfilePageUserPlayedGame on PlayedGame {
+  _id
+  gameType
+  playerIds
+  playerScores
+  playerElosBefore
+  playerElosAfter
+  startedAt
+  finishedAt
+}
+
+query ProfilePageUser($userId: ID!) {
+  user(id: $userId) {
+    _id
+    githubId
+    userName
+    stats {
+      ...ProfilePageUserStats
+    }
+    playedGames {
+      ...ProfilePageUserPlayedGame
+    }
+  }
+}

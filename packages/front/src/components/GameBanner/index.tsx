@@ -2,23 +2,15 @@ import { FC } from 'react'
 import { GamesQuery } from '../../routes/LandingPage/graphql/Games.generated'
 import styled from 'styled-components'
 import { OngoingGameProcessState } from '../../types'
-import { Link } from 'react-router-dom'
+
 import { Span } from '../Span'
 import { Heading } from '../Heading'
 import { theme } from '../../theme'
+import { CustomLink } from '../CustomLink'
 
 type GameBannerProps = {
   game: GamesQuery['games'][0]
 }
-
-const StyledLink = styled(Link)`
-  color: inherit;
-  text-decoration: none;
-  &:hover {
-    color: inherit;
-    text-decoration: none;
-  }
-`
 
 const StyledGameBanner = styled.section`
   display: flex;
@@ -51,7 +43,7 @@ export const GameBanner: FC<GameBannerProps> = ({ game }) => {
   )
 
   return (
-    <StyledLink to={`/game/${game.type}`}>
+    <CustomLink to={`/game/${game.type}`}>
       <StyledGameBanner>
         <Heading.H3 style={{ color: theme.colors.foreground.danger }}>
           {game.name}
@@ -64,6 +56,6 @@ export const GameBanner: FC<GameBannerProps> = ({ game }) => {
           {joinableGames.length} games waiting for players
         </StyledGameBannerInfoText>
       </StyledGameBanner>
-    </StyledLink>
+    </CustomLink>
   )
 }

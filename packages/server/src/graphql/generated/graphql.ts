@@ -114,8 +114,8 @@ export type PlayedGame = {
   _id: Scalars['ID']['output'];
   finishedAt: Scalars['Date']['output'];
   gameType: GameType;
-  playerElosAfter: Array<Scalars['Int']['output']>;
-  playerElosBefore: Array<Scalars['Int']['output']>;
+  playerElosAfter: Array<Scalars['Float']['output']>;
+  playerElosBefore: Array<Scalars['Float']['output']>;
   playerIds: Array<Scalars['ID']['output']>;
   playerScores: Array<Scalars['Int']['output']>;
   startedAt: Scalars['Date']['output'];
@@ -127,8 +127,8 @@ export type Query = {
   game?: Maybe<Game>;
   games: Array<Game>;
   ongoingGame: OngoingGame;
+  playedGame?: Maybe<PlayedGame>;
   user?: Maybe<User>;
-  userStats?: Maybe<UserStats>;
   users: Array<User>;
   usersStats: Array<UserStats>;
 };
@@ -144,14 +144,13 @@ export type QueryOngoingGameArgs = {
 };
 
 
-export type QueryUserArgs = {
+export type QueryPlayedGameArgs = {
   id: Scalars['ID']['input'];
 };
 
 
-export type QueryUserStatsArgs = {
-  gameType: GameType;
-  userId: Scalars['ID']['input'];
+export type QueryUserArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -182,8 +181,21 @@ export type User = {
   description?: Maybe<Scalars['String']['output']>;
   githubId: Scalars['ID']['output'];
   joinedAt: Scalars['Date']['output'];
+  playedGames: Array<PlayedGame>;
   roles: Array<UserRole>;
+  stats: Array<UserStats>;
   userName: Scalars['String']['output'];
+};
+
+
+export type UserPlayedGamesArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  gameTypes?: InputMaybe<Array<GameType>>;
+};
+
+
+export type UserStatsArgs = {
+  gameTypes?: InputMaybe<Array<GameType>>;
 };
 
 export type UserInput = {
@@ -377,8 +389,8 @@ export type PlayedGameResolvers<ContextType = any, ParentType extends ResolversP
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   finishedAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   gameType?: Resolver<ResolversTypes['GameType'], ParentType, ContextType>;
-  playerElosAfter?: Resolver<Array<ResolversTypes['Int']>, ParentType, ContextType>;
-  playerElosBefore?: Resolver<Array<ResolversTypes['Int']>, ParentType, ContextType>;
+  playerElosAfter?: Resolver<Array<ResolversTypes['Float']>, ParentType, ContextType>;
+  playerElosBefore?: Resolver<Array<ResolversTypes['Float']>, ParentType, ContextType>;
   playerIds?: Resolver<Array<ResolversTypes['ID']>, ParentType, ContextType>;
   playerScores?: Resolver<Array<ResolversTypes['Int']>, ParentType, ContextType>;
   startedAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
@@ -390,8 +402,8 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   game?: Resolver<Maybe<ResolversTypes['Game']>, ParentType, ContextType, Partial<QueryGameArgs>>;
   games?: Resolver<Array<ResolversTypes['Game']>, ParentType, ContextType>;
   ongoingGame?: Resolver<ResolversTypes['OngoingGame'], ParentType, ContextType, RequireFields<QueryOngoingGameArgs, 'ongoingGameId'>>;
+  playedGame?: Resolver<Maybe<ResolversTypes['PlayedGame']>, ParentType, ContextType, RequireFields<QueryPlayedGameArgs, 'id'>>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
-  userStats?: Resolver<Maybe<ResolversTypes['UserStats']>, ParentType, ContextType, RequireFields<QueryUserStatsArgs, 'gameType' | 'userId'>>;
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUsersArgs, 'ids'>>;
   usersStats?: Resolver<Array<ResolversTypes['UserStats']>, ParentType, ContextType, RequireFields<QueryUsersStatsArgs, 'gameType' | 'userIds'>>;
 };
@@ -406,7 +418,9 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   githubId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   joinedAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
+  playedGames?: Resolver<Array<ResolversTypes['PlayedGame']>, ParentType, ContextType, Partial<UserPlayedGamesArgs>>;
   roles?: Resolver<Array<ResolversTypes['UserRole']>, ParentType, ContextType>;
+  stats?: Resolver<Array<ResolversTypes['UserStats']>, ParentType, ContextType, Partial<UserStatsArgs>>;
   userName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };

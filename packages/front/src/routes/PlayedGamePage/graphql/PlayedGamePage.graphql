@@ -1,0 +1,5 @@
+query PlayedGamePagePlayedGame($id: ID!) {
+  playedGame(id: $id) {
+    ...ProfilePageUserPlayedGame
+  }
+}

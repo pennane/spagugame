@@ -18,6 +18,8 @@ type User {
   githubId: ID!
   userName: String!
   description: String
+  stats(gameTypes: [GameType!]): [UserStats!]!
+  playedGames(gameTypes: [GameType!], first: Int): [PlayedGame!]!
   roles: [UserRole!]!
   joinedAt: Date!
 }
@@ -56,8 +58,8 @@ type PlayedGame {
   gameType: GameType!
   playerIds: [ID!]!
   playerScores: [Int!]!
-  playerElosBefore: [Int!]!
-  playerElosAfter: [Int!]!
+  playerElosBefore: [Float!]!
+  playerElosAfter: [Float!]!
   startedAt: Date!
   finishedAt: Date!
 }
@@ -107,8 +109,8 @@ type Query {
   currentUser: User
   game(gameType: GameType): Game
   games: [Game!]!
-  userStats(userId: ID!, gameType: GameType!): UserStats
   usersStats(userIds: [ID!]!, gameType: GameType!): [UserStats!]!
+  playedGame(id: ID!): PlayedGame
 }
 
 type Subscription {

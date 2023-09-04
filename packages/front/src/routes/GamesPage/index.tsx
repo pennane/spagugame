@@ -12,7 +12,7 @@ const StyledGamesPage = styled.div`
 export const GamesPage: FC = () => {
   return (
     <StyledGamesPage>
-      <Heading.H2>Games</Heading.H2>
+      <Heading.H1>Games</Heading.H1>
       <Games />
     </StyledGamesPage>
   )

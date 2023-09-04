@@ -10,7 +10,8 @@ export const theme = {
       warning: '#F7934C',
       success: '#79B473',
       info: '#5299D3',
-      inverted: '#021710'
+      inverted: '#021710',
+      invertedSecondary: '#060F0D'
     }
   }
 } as const

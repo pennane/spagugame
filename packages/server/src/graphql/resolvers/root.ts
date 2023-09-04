@@ -9,12 +9,47 @@ import {
   getGameFromRedis,
   gqlSerializeGame,
 } from "../../services/ongoingGame/lib/serialize";
-import { Game, Resolvers, User, UserStats } from "../generated/graphql";
+import { Game, GameType, Resolvers, User } from "../generated/graphql";
 import { dateScalar } from "../scalars/Date/Date";
 import playTurn from "../../services/ongoingGame/playTurn";
 import toggleReady from "../../services/ongoingGame/toggleReady";
 
 export const resolvers: Resolvers<TContext> = {
+  User: {
+    stats: async (user, { gameTypes = [] }, ctx) => {
+      const stats = await find(ctx, "userStats", {
+        filter: {
+          userId: user._id,
+          ...(R.isEmpty(gameTypes)
+            ? {}
+            : { gameType: { $in: gameTypes as GameType[] } }),
+        },
+      });
+      return R.map(
+        R.modify<"_id", ObjectId, string>("_id", (id) => id.toString()),
+        stats
+      );
+    },
+    playedGames: async (user, { gameTypes = [], first }, ctx) => {
+      const limit = first || 10;
+      const stats = await find(ctx, "playedGame", {
+        filter: {
+          playerIds: { $in: [user._id] },
+          ...(R.isEmpty(gameTypes)
+            ? {}
+            : { gameType: { $in: gameTypes as GameType[] } }),
+        },
+        options: {
+          sort: { finishedAt: -1, gameType: 1 },
+          limit,
+        },
+      });
+      return R.map(
+        R.modify<"_id", ObjectId, string>("_id", (id) => id.toString()),
+        stats
+      );
+    },
+  },
   Game: {
     ongoingGames: async (game, _args, ctx) => {
       const ongoingGameIds = await ctx.redis.lrange(
@@ -84,19 +119,20 @@ export const resolvers: Resolvers<TContext> = {
         games
       ) as Game[];
     },
-    userStats: async (_root, { gameType, userId }, ctx) => {
-      const stats = await get(ctx, "userStats", {
-        filter: { gameType, userId },
-      });
-      if (!stats) return null;
-      const modified: UserStats = R.modify("_id", (id) => id.toString(), stats);
-      return modified;
-    },
     usersStats: async (_root, { gameType, userIds }, ctx) => {
       const stats = await find(ctx, "userStats", {
         filter: { gameType, userId: { $in: userIds } },
       });
       return R.map((g) => R.modify("_id", (id) => id.toString(), g), stats);
+    },
+    playedGame: async (_root, { id }, ctx) => {
+      const game = await get(ctx, "playedGame", {
+        filter: {
+          _id: new ObjectId(id),
+        },
+      });
+      if (!game) return null;
+      return R.modify("_id", (id) => id.toString(), game);
     },
   },
   Subscription: {

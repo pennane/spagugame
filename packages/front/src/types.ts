@@ -111,8 +111,8 @@ export type PlayedGame = {
   _id: Scalars['ID']['output'];
   finishedAt: Scalars['Date']['output'];
   gameType: GameType;
-  playerElosAfter: Array<Scalars['Int']['output']>;
-  playerElosBefore: Array<Scalars['Int']['output']>;
+  playerElosAfter: Array<Scalars['Float']['output']>;
+  playerElosBefore: Array<Scalars['Float']['output']>;
   playerIds: Array<Scalars['ID']['output']>;
   playerScores: Array<Scalars['Int']['output']>;
   startedAt: Scalars['Date']['output'];
@@ -124,8 +124,8 @@ export type Query = {
   game?: Maybe<Game>;
   games: Array<Game>;
   ongoingGame: OngoingGame;
+  playedGame?: Maybe<PlayedGame>;
   user?: Maybe<User>;
-  userStats?: Maybe<UserStats>;
   users: Array<User>;
   usersStats: Array<UserStats>;
 };
@@ -141,14 +141,13 @@ export type QueryOngoingGameArgs = {
 };
 
 
-export type QueryUserArgs = {
+export type QueryPlayedGameArgs = {
   id: Scalars['ID']['input'];
 };
 
 
-export type QueryUserStatsArgs = {
-  gameType: GameType;
-  userId: Scalars['ID']['input'];
+export type QueryUserArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -179,8 +178,21 @@ export type User = {
   description?: Maybe<Scalars['String']['output']>;
   githubId: Scalars['ID']['output'];
   joinedAt: Scalars['Date']['output'];
+  playedGames: Array<PlayedGame>;
   roles: Array<UserRole>;
+  stats: Array<UserStats>;
   userName: Scalars['String']['output'];
+};
+
+
+export type UserPlayedGamesArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  gameTypes?: InputMaybe<Array<GameType>>;
+};
+
+
+export type UserStatsArgs = {
+  gameTypes?: InputMaybe<Array<GameType>>;
 };
 
 export type UserInput = {

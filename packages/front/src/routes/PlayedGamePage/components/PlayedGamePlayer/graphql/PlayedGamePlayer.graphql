@@ -1,0 +1,7 @@
+query PlayedGamePlayer($userId: ID!) {
+  user(id: $userId) {
+    _id
+    userName
+    githubId
+  }
+}
