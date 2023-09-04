@@ -19,11 +19,23 @@ const calculateElo = (
 const calculateNewElos = (
   players: { _id: string; elo: number; score: number }[]
 ) => {
+  const maxScore = Math.max(...players.map((p) => p.score));
+  const normalizedPlayers = players.map((p) => ({
+    ...p,
+    score: p.score / maxScore,
+  }));
+
   const updated = [];
-  const totalElo = players.reduce((sum, player) => sum + player.elo, 0);
-  for (const player of players) {
+
+  const totalElo = normalizedPlayers.reduce(
+    (sum, player) => sum + player.elo,
+    0
+  );
+  for (const player of normalizedPlayers) {
     const avgOtherElo = (totalElo - player.elo) / (players.length - 1);
-    const newElo = calculateElo(player.elo, avgOtherElo, player.score);
+    const newElo = Math.round(
+      calculateElo(player.elo, avgOtherElo, player.score)
+    );
 
     updated.push({
       ...player,
@@ -74,7 +86,10 @@ const finishGame = authenticatedService<
     }))
     .sort((a, b) => b.score - a.score);
 
+  console.log(eloPlayersInWinningOrder);
   const newEloPlayers = calculateNewElos(eloPlayersInWinningOrder);
+  console.log("and new");
+  console.log(newEloPlayers);
 
   await Promise.all(
     newEloPlayers.map((p) =>
