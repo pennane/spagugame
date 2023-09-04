@@ -43,3 +43,11 @@ The project is organized as a monorepo for clarity and scalability. Here are the
 
 - automatic index creation and dropping
   - indexes are automatically kept upto date
+
+## Images of the current prototype
+
+![Alt text](<docs/images/Näyttökuva 2023-9-4 kello 15.07.43.png>)
+![Alt text](<docs/images/Näyttökuva 2023-9-4 kello 15.07.46.png>)
+![Alt text](<docs/images/Näyttökuva 2023-9-4 kello 15.08.28.png>)
+![Alt text](<docs/images/Näyttökuva 2023-9-4 kello 15.08.42.png>)
+![Alt text](<docs/images/Näyttökuva 2023-9-4 kello 15.09.10.png>)
