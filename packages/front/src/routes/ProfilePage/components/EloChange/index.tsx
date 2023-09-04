@@ -23,7 +23,7 @@ export const EloChange: FC<EloChangeProps> = ({ eloChange }) => {
         }}
       >
         {eloChange > 0 ? '+' : '-'}
-        {Math.abs(eloChange)}
+        {Math.round(Math.abs(eloChange))}
       </Span.SmallText>
     </Pill>
   )
