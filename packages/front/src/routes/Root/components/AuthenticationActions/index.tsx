@@ -17,11 +17,11 @@ export const AuthenticationActions: FC = () => {
   const user = useCurrentUser()
 
   const handleLogin = () => {
-    window.open('http://localhost:3000/auth/github', '_self')
+    window.open(`${import.meta.env.VITE_SERVER_BASE_URL}/auth/github`, '_self')
   }
 
   const handleLogout = () => {
-    window.open('http://localhost:3000/auth/logout', '_self')
+    window.open(`${import.meta.env.VITE_SERVER_BASE_URL}/auth/logout`, '_self')
   }
 
   return (

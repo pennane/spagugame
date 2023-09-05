@@ -30,13 +30,13 @@ import { PlayedGamesPage } from './routes/PlayedGamesPage'
 import { PlayedGamePage } from './routes/PlayedGamePage'
 
 const httpLink = new HttpLink({
-  uri: 'http://localhost:3000/graphql',
+  uri: `${import.meta.env.VITE_SERVER_BASE_URL}/graphql`,
   credentials: 'include'
 })
 
 const wsLink = new GraphQLWsLink(
   createClient({
-    url: 'ws://localhost:3000/graphql'
+    url: `${import.meta.env.VITE_WS_BASE_URL}/graphql`
   })
 )
 
