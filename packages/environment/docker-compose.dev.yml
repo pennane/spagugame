@@ -15,7 +15,7 @@ services:
       - backend_network
 
   redis:
-    image: redis:7.2
+    image: redis:6.2.6
     command: ['redis-server', '--notify-keyspace-events', 'Ex']
     container_name: redis_container
     ports:
