@@ -12,6 +12,9 @@ const StyledPill = styled.div<{
   $color: keyof typeof theme.colors.foreground
   $onlyBorder?: boolean
 }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: ${({ $color, theme, $onlyBorder }) =>
     $onlyBorder ? 'transparent' : theme.colors.foreground[$color]};
   border: 1px solid ${({ $color, theme }) => theme.colors.foreground[$color]};

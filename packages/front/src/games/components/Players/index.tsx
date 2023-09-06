@@ -22,7 +22,11 @@ const StyledPlayers = styled.div`
   flex-direction: column;
 `
 
-const StyledPlayer = styled.div``
+const StyledPlayer = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+`
 
 type MergedUser = Partial<
   OngoingGamePlayer &
@@ -68,10 +72,8 @@ export const Players: FC<PlayersProps> = ({ game }) => {
     <StyledPlayers>
       {players.map((player) => (
         <StyledPlayer key={player.userId}>
-          <Span.SmallText>
-            {player.userName || player.userId}{' '}
-            {player.elo ? <Pill color="info">{player.elo}</Pill> : ''}
-          </Span.SmallText>
+          <Span.SmallText>{player.userName || player.userId} </Span.SmallText>
+          {player.elo ? <Pill color="info">{player.elo}</Pill> : ''}
           <Span.SmallText>
             {' '}
             {player.userId === currentTurnPlayerId && '⚡'}
