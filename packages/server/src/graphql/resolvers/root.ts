@@ -134,6 +134,24 @@ export const resolvers: Resolvers<TContext> = {
       if (!game) return null;
       return R.modify("_id", (id) => id.toString(), game);
     },
+    playedGames: async (_root, { gameTypes = [], first }, ctx) => {
+      const limit = first || 10;
+      const stats = await find(ctx, "playedGame", {
+        filter: {
+          ...(R.isEmpty(gameTypes)
+            ? {}
+            : { gameType: { $in: gameTypes as GameType[] } }),
+        },
+        options: {
+          sort: { finishedAt: -1, gameType: 1 },
+          limit,
+        },
+      });
+      return R.map(
+        R.modify<"_id", ObjectId, string>("_id", (id) => id.toString()),
+        stats
+      );
+    },
   },
   Subscription: {
     ongoingGameStateChange: {

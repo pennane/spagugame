@@ -14,6 +14,7 @@ export type GameQuery = { __typename?: 'Query', game?: { __typename?: 'Game', _i
 
 export type NewGameMutationVariables = Types.Exact<{
   gameType: Types.GameType;
+  private: Types.Scalars['Boolean']['input'];
 }>;
 
 
@@ -56,8 +57,8 @@ export type GameQueryHookResult = ReturnType<typeof useGameQuery>;
 export type GameLazyQueryHookResult = ReturnType<typeof useGameLazyQuery>;
 export type GameQueryResult = Apollo.QueryResult<GameQuery, GameQueryVariables>;
 export const NewGameDocument = gql`
-    mutation NewGame($gameType: GameType!) {
-  createOngoingGame(gameType: $gameType) {
+    mutation NewGame($gameType: GameType!, $private: Boolean!) {
+  createOngoingGame(gameType: $gameType, isPrivate: $private) {
     ...OngoingGame
   }
 }
@@ -78,6 +79,7 @@ export type NewGameMutationFn = Apollo.MutationFunction<NewGameMutation, NewGame
  * const [newGameMutation, { data, loading, error }] = useNewGameMutation({
  *   variables: {
  *      gameType: // value for 'gameType'
+ *      private: // value for 'private'
  *   },
  * });
  */

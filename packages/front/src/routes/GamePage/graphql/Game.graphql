@@ -4,8 +4,8 @@ query Game($gameType: GameType!) {
   }
 }
 
-mutation NewGame($gameType: GameType!) {
-  createOngoingGame(gameType: $gameType) {
+mutation NewGame($gameType: GameType!, $private: Boolean!) {
+  createOngoingGame(gameType: $gameType, isPrivate: $private) {
     ...OngoingGame
   }
 }

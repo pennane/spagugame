@@ -111,6 +111,7 @@ type Query {
   games: [Game!]!
   usersStats(userIds: [ID!]!, gameType: GameType!): [UserStats!]!
   playedGame(id: ID!): PlayedGame
+  playedGames(gameTypes: [GameType!], first: Int): [PlayedGame!]!
 }
 
 type Subscription {

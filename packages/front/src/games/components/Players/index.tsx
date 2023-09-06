@@ -11,6 +11,7 @@ import {
   useGamePlayerProfilesQuery
 } from './graphql/GamePlayerProfiles.generated'
 import { Span } from '../../../components/Span'
+import { Pill } from '../../../components/Pill'
 
 type PlayersProps = {
   game: OngoingGame
@@ -40,14 +41,21 @@ export const Players: FC<PlayersProps> = ({ game }) => {
   const dataUsers = data?.users
   const dataUserStats = data?.usersStats
 
-  const users = (
+  const players = (
     !dataUsers || !dataUserStats
       ? game.players
-      : game.players.map((player) => ({
-          ...player,
-          ...dataUsers.find((user) => user._id === player.userId),
-          ...dataUserStats.find((userStats) => userStats._id === player.userId)
-        }))
+      : game.players.map((player) => {
+          const user = dataUsers.find((user) => user._id === player.userId)
+          const stats = dataUserStats.find(
+            (userStats) => userStats.userId === player.userId
+          )
+          console.log(stats)
+          return {
+            ...player,
+            ...user,
+            ...stats
+          }
+        })
   ) as MergedUser[]
 
   const currentTurnPlayerId = game.currentTurn
@@ -58,11 +66,11 @@ export const Players: FC<PlayersProps> = ({ game }) => {
 
   return (
     <StyledPlayers>
-      {users.map((player) => (
+      {players.map((player) => (
         <StyledPlayer key={player.userId}>
-          <Span.SmallText color="inverted">
+          <Span.SmallText>
             {player.userName || player.userId}{' '}
-            {player.elo ? `(${player.elo})` : ''}
+            {player.elo ? <Pill color="info">{player.elo}</Pill> : ''}
           </Span.SmallText>
           <Span.SmallText>
             {' '}

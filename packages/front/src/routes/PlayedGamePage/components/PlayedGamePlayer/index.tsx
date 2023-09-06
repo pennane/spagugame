@@ -39,13 +39,14 @@ export const PlayedGamePlayer: FC<PlayedGamePlayerProps> = ({ player }) => {
   return (
     <StyledPlayedGamePlayer>
       <Heading.H3>{user?.userName || player.id}</Heading.H3>
+      <Pill color="info">{player.eloBefore}</Pill>
+
+      <EloChange eloChange={player.eloAfter - player.eloBefore} />
+
       <Pill color="invertedSecondary">
         <P.SmallText>Final score: {player.score}</P.SmallText>
       </Pill>
 
-      <Pill color="invertedSecondary">
-        <EloChange eloChange={player.eloAfter - player.eloBefore} />
-      </Pill>
       <CustomLink color="info" to={`/profile/${player.id}`}>
         Profile
       </CustomLink>

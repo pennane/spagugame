@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import { Outlet } from 'react-router-dom'
 import { Navbar } from './components/Navbar'
+import { Footer } from './components/Footer'
 
 const StyledRoot = styled.div`
   display: flex;
@@ -31,6 +32,7 @@ export const Root = () => {
           <Outlet />
         </StyledContent>
       </StyledContentWrapper>
+      <Footer />
     </StyledRoot>
   )
 }

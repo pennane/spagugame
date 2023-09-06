@@ -14,9 +14,7 @@ const StyledPill = styled.div<{
 }>`
   background-color: ${({ $color, theme, $onlyBorder }) =>
     $onlyBorder ? 'transparent' : theme.colors.foreground[$color]};
-  border: 1px solid
-    ${({ $color, theme, $onlyBorder }) =>
-      $onlyBorder ? theme.colors.foreground[$color] : 'transparent'};
+  border: 1px solid ${({ $color, theme }) => theme.colors.foreground[$color]};
   color: white;
   width: fit-content;
   padding: 0.1rem 0.25rem;

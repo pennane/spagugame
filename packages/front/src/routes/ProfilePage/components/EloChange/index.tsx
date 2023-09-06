@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { Span } from '../../../../components/Span'
+
 import { theme } from '../../../../theme'
 import { Pill } from '../../../../components/Pill'
 
@@ -17,14 +17,14 @@ export const EloChange: FC<EloChangeProps> = ({ eloChange }) => {
   const color = getEloChangeColor(eloChange)
   return (
     <Pill color={color} onlyBorder>
-      <Span.SmallText
+      <span
         style={{
           color: theme.colors.foreground[color]
         }}
       >
         {eloChange > 0 ? '+' : '-'}
         {Math.round(Math.abs(eloChange))}
-      </Span.SmallText>
+      </span>
     </Pill>
   )
 }

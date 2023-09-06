@@ -125,6 +125,7 @@ export type Query = {
   games: Array<Game>;
   ongoingGame: OngoingGame;
   playedGame?: Maybe<PlayedGame>;
+  playedGames: Array<PlayedGame>;
   user?: Maybe<User>;
   users: Array<User>;
   usersStats: Array<UserStats>;
@@ -143,6 +144,12 @@ export type QueryOngoingGameArgs = {
 
 export type QueryPlayedGameArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type QueryPlayedGamesArgs = {
+  first?: InputMaybe<Scalars['Int']['input']>;
+  gameTypes?: InputMaybe<Array<GameType>>;
 };
 
 

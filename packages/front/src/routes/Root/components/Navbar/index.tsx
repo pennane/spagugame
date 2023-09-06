@@ -40,7 +40,7 @@ const StyledNavLink = styled(NavLink)`
 
   &:hover {
     font-weight: 300;
-    letter-spacing: 0.02rem;
+    letter-spacing: 0.018rem;
   }
 `
 
@@ -52,6 +52,7 @@ export const Navbar = () => {
         <StyledNavLinks>
           <StyledNavLink to="/">Home</StyledNavLink>
           <StyledNavLink to="/game">Games</StyledNavLink>
+          <StyledNavLink to="/played">Recent matches</StyledNavLink>
           {currentUser && <StyledNavLink to="/profile">Profile</StyledNavLink>}
         </StyledNavLinks>
 

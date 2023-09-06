@@ -17,7 +17,9 @@ import { P } from '../components/P'
 const StyledGame = styled.div`
   display: flex;
   gap: 0.5rem;
-  background: #d6e8d3;
+  border: 1px solid ${({ theme }) => theme.colors.foreground.info};
+  border-radius: 0.5rem;
+  padding: 0.5rem;
   border-radius: 0.25rem;
   padding: 2rem;
 `
