@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "cross-env NODE_ENV=development nodemon src/index.ts",
     "gen:schema": "graphql-codegen --config codegen.schema.yml",
-    "seed-db": "ts-node src/scripts/seedDb.ts"
+    "seed-db": "ts-node src/scripts/seedDb.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
   },
   "keywords": [],
   "author": "Arttu Pennanen <arttu.pennanen@metropolia.fi>",

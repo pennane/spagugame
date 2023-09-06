@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  spagugame_redis:
+    image: redis:7.2
+    command: ['redis-server', '--notify-keyspace-events', 'Ex']
+    container_name: spagugame_redis_container
+    networks:
+      - spagugame_backend_network
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 1s
+      timeout: 2s
+      retries: 10
+
+  spagugame_server:
+    build: ../server
+    container_name: spagugame_server_container
+    ports:
+      - '30123:3000'
+    networks:
+      - spagugame_backend_network
+    depends_on:
+      - spagugame_redis
+
+networks:
+  spagugame_backend_network:
+    driver: bridge
