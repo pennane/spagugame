@@ -25,7 +25,7 @@ const calculateNewElos = (
 
   const totalElo = players.reduce((sum, player) => sum + player.elo, 0);
   for (const player of players) {
-    const normalizedScore = player.score / maxScore;
+    const normalizedScore = maxScore === 0 ? 0 : player.score / maxScore;
     const avgOtherElo = (totalElo - player.elo) / (players.length - 1);
     const newElo = Math.round(
       calculateElo(player.elo, avgOtherElo, normalizedScore)
