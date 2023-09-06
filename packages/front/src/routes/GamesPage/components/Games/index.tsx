@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import { GameBanner } from '../../../../components/GameBanner'
 
 import { useGamesQuery } from '../../../LandingPage/graphql/Games.generated'
+import { P } from '../../../../components/P'
 
 const StyledGameBannerContainer = styled.div`
   display: flex;
@@ -15,8 +16,10 @@ export const Games = () => {
 
   return (
     <StyledGameBannerContainer>
-      {loading && 'loading...'}
-      {!loading && !games && 'no data'}
+      {loading && <P.DefaultText>loading...</P.DefaultText>}
+      {!loading && !games && (
+        <P.DefaultText>no games, spagu-server might be off</P.DefaultText>
+      )}
       {!loading &&
         games &&
         games.map((game) => <GameBanner key={game._id} game={game} />)}

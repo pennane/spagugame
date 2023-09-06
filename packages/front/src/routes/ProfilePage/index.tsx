@@ -43,7 +43,7 @@ const StyledRecentMatch = styled.div`
 
 type ProfileImageProps = {
   githubId: string
-}
+} & React.HTMLAttributes<HTMLDivElement>
 
 const StyledProfileImageContainer = styled.div`
   width: 10rem;
@@ -57,9 +57,9 @@ const StyledProfileImage = styled.img`
   object-fit: contain;
 `
 
-const ProfileImage: FC<ProfileImageProps> = ({ githubId }) => {
+export const ProfileImage: FC<ProfileImageProps> = ({ githubId, ...rest }) => {
   return (
-    <StyledProfileImageContainer>
+    <StyledProfileImageContainer {...rest}>
       <StyledProfileImage
         src={`https://avatars.githubusercontent.com/u/${githubId}?v=4`}
       />

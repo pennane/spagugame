@@ -22,6 +22,10 @@ const StyledNavbar = styled.nav`
   align-items: center;
 
   padding: 1rem 2rem;
+
+  @media (max-width: 700px) {
+    padding: 1rem 1rem;
+  }
 `
 
 const StyledNavLinks = styled.div`
@@ -36,7 +40,6 @@ const StyledNavLink = styled(NavLink)`
   text-decoration: none;
   font-weight: 600;
   font-size: 0.875rem;
-  height: 1.5rem;
 
   &:hover {
     font-weight: 300;
@@ -46,13 +49,14 @@ const StyledNavLink = styled(NavLink)`
 
 export const Navbar = () => {
   const currentUser = useCurrentUser()
+
   return (
     <StyledNavbarContainer>
       <StyledNavbar>
         <StyledNavLinks>
           <StyledNavLink to="/">Home</StyledNavLink>
           <StyledNavLink to="/game">Games</StyledNavLink>
-          <StyledNavLink to="/played">Recent matches</StyledNavLink>
+          <StyledNavLink to="/played">Matches</StyledNavLink>
           {currentUser && <StyledNavLink to="/profile">Profile</StyledNavLink>}
         </StyledNavLinks>
 
