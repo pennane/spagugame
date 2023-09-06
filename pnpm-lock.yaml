@@ -87,9 +87,6 @@ importers:
       '@graphql-tools/schema':
         specifier: ^10.0.0
         version: 10.0.0(graphql@16.8.0)
-      '@types/ws':
-        specifier: ^8.5.5
-        version: 8.5.5
       body-parser:
         specifier: ^1.20.2
         version: 1.20.2
@@ -187,6 +184,9 @@ importers:
       '@types/ramda':
         specifier: ^0.29.3
         version: 0.29.3
+      '@types/ws':
+        specifier: ^8.5.5
+        version: 8.5.5
       '@typescript-eslint/eslint-plugin':
         specifier: ^6.0.0
         version: 6.0.0(@typescript-eslint/parser@6.0.0)(eslint@8.45.0)(typescript@5.1.6)
@@ -3169,6 +3169,7 @@ packages:
     resolution: {integrity: sha512-lwhs8hktwxSjf9UaZ9tG5M03PGogvFaH8gUgLNbN9HKIg0dvv6q+gkSuJ8HN4/VbyxkuLzCjlN7GquQ0gUJfIg==}
     dependencies:
       '@types/node': 20.5.3
+    dev: true
 
   /@typescript-eslint/eslint-plugin@6.0.0(@typescript-eslint/parser@6.0.0)(eslint@8.45.0)(typescript@5.0.2):
     resolution: {integrity: sha512-xuv6ghKGoiq856Bww/yVYnXGsKa588kY3M0XK7uUW/3fJNNULKRfZfSBkMTSpqGG/8ZCXCadfh8G/z/B4aqS/A==}
