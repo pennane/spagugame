@@ -13,6 +13,7 @@ import { filter, isNotNil, omit } from 'ramda'
 import { Actions } from './components/Actions'
 import styled from 'styled-components'
 import { P } from '../components/P'
+import { MOBILE_WIDTHS } from '../hooks/useIsMobile'
 
 const StyledGame = styled.div`
   display: flex;
@@ -22,6 +23,9 @@ const StyledGame = styled.div`
   padding: 0.5rem;
   border-radius: 0.25rem;
   padding: 2rem;
+  @media (max-width: ${MOBILE_WIDTHS.small}px) {
+    flex-direction: column;
+  }
 `
 
 const StyledGameLeft = styled.div`

@@ -35,8 +35,10 @@ export const PlayedGamePage: FC = () => {
 
   return (
     <StyledPlayedGamePage>
-      <Heading.H1>{gameType} played game</Heading.H1>
-      <Heading.H3>{gameId}</Heading.H3>
+      <Heading.H1 style={{ wordBreak: 'break-word' }}>
+        {gameType} played game
+      </Heading.H1>
+      <Heading.H3 style={{ wordBreak: 'break-word' }}>{gameId}</Heading.H3>
       <P.DefaultText>
         Played at {dateToFinnishLocale(parseDate(game.finishedAt))}
       </P.DefaultText>

@@ -6,6 +6,7 @@ import { P } from '../../../../components/P'
 import { EloChange } from '../../../ProfilePage/components/EloChange'
 import { Pill } from '../../../../components/Pill'
 import { CustomLink } from '../../../../components/CustomLink'
+import { MOBILE_WIDTHS } from '../../../../hooks/useIsMobile'
 
 type PlayedGamePlayer = {
   id: string
@@ -19,10 +20,17 @@ const StyledPlayedGamePlayer = styled.div`
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   padding: 1rem;
   border-radius: 0.5rem;
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: 1fr;
+  justify-content: flex-start;
   align-items: center;
   gap: 0.5rem;
+
+  @media (max-width: ${MOBILE_WIDTHS.small}px) {
+    display: flex;
+    flex-wrap: wrap;
+  }
 `
 
 type PlayedGamePlayerProps = {

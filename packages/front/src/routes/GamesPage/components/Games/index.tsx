@@ -8,6 +8,7 @@ const StyledGameBannerContainer = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  gap: 1rem;
 `
 
 export const Games = () => {
@@ -22,7 +23,7 @@ export const Games = () => {
       )}
       {!loading &&
         games &&
-        games.map((game) => <GameBanner key={game._id} game={game} />)}
+        games.map((game, i) => <GameBanner key={i} game={game} />)}
     </StyledGameBannerContainer>
   )
 }

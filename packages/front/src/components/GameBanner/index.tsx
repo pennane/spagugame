@@ -16,7 +16,8 @@ const StyledGameBanner = styled.section`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  width: 20rem;
+  width: 100%;
+  max-width: 20rem;
 
   /* background-color: ${({ theme }) => theme.colors.foreground.danger}; */
   border: 1px solid ${({ theme }) => theme.colors.foreground.danger};

@@ -12,6 +12,8 @@ import { GameType } from '../../types'
 import { Pill } from '../../components/Pill'
 import { P } from '../../components/P'
 import { CustomLink } from '../../components/CustomLink'
+import { MOBILE_WIDTHS, useIsMobile } from '../../hooks/useIsMobile'
+import { EloChange } from '../ProfilePage/components/EloChange'
 
 const StyledPlayedGamesPage = styled.div`
   display: flex;
@@ -22,27 +24,50 @@ const StyledPlayedGamesPage = styled.div`
 const StyledPlayedGame = styled.div`
   border-bottom: 1px solid #ff5666;
   padding: 0.75rem 1rem;
-
-  display: flex;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 8rem 13.5rem 1fr 2fr;
   gap: 0.5rem;
   justify-content: flex-start;
   align-items: center;
+  justify-items: flex-start;
+
+  @media (max-width: ${MOBILE_WIDTHS.default}px) {
+    grid-auto-columns: 8rem 2fr 1fr;
+  }
 `
-const PlayedGame: FC<{ game: PlayedGamesQuery['playedGames'][number] }> = ({
-  game
-}) => {
+export const PlayedGame: FC<{
+  game: PlayedGamesQuery['playedGames'][number]
+  profilePage?: boolean
+  eloChange?: number
+}> = ({ game, profilePage, eloChange }) => {
+  const isMobile = useIsMobile()
+
   return (
     <StyledPlayedGame key={game._id}>
       <P.DefaultText>{game.gameType}</P.DefaultText>
-      <P.SmallText>({game._id})</P.SmallText>
-      <Pill color="info">{game.playerIds.length} players</Pill>
-      <Pill color="success">
-        Average elo{' '}
-        {Math.round(
-          game.playerElosBefore.reduce((acc, elo) => acc + elo, 0) /
-            game.playerIds.length
-        )}
-      </Pill>
+      {!isMobile && <P.SmallText>({game._id})</P.SmallText>}
+
+      {profilePage && (
+        <>
+          <EloChange eloChange={eloChange} />
+        </>
+      )}
+      {!profilePage && (
+        <>
+          {!isMobile && (
+            <Pill color="info">{game.playerIds.length} players</Pill>
+          )}
+          <Pill color="success">
+            Avg. elo{' '}
+            {Math.round(
+              game.playerElosBefore.reduce((acc, elo) => acc + elo, 0) /
+                game.playerIds.length
+            )}
+          </Pill>
+        </>
+      )}
+
       <CustomLink to={`/played/${game.gameType}/${game._id}`}>
         View game
       </CustomLink>

@@ -30,6 +30,7 @@ const StyledGameDescription = styled.section`
 `
 const StyledGameActions = styled.section`
   display: flex;
+  flex-wrap: wrap;
 
   gap: 0.5rem;
 `

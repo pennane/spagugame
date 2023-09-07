@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import { Outlet } from 'react-router-dom'
 import { Navbar } from './components/Navbar'
 import { Footer } from './components/Footer'
+import { MOBILE_WIDTHS } from '../../hooks/useIsMobile'
 
 const StyledRoot = styled.div`
   display: flex;
@@ -16,6 +17,9 @@ const StyledContentWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  @media (max-width: ${MOBILE_WIDTHS.small}px) {
+    margin: 0 1rem;
+  }
 `
 
 const StyledContent = styled.div`

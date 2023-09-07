@@ -2,6 +2,7 @@ import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 import { AuthenticationActions } from '../AuthenticationActions'
 import { useCurrentUser } from '../../../../hooks/useCurrentUser'
+import { MOBILE_WIDTHS } from '../../../../hooks/useIsMobile'
 
 const StyledNavbarContainer = styled.div``
 
@@ -23,7 +24,7 @@ const StyledNavbar = styled.nav`
 
   padding: 1rem 2rem;
 
-  @media (max-width: 700px) {
+  @media (max-width: ${MOBILE_WIDTHS.default}px) {
     padding: 1rem 1rem;
   }
 `

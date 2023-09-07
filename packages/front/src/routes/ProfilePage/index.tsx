@@ -6,8 +6,7 @@ import styled from 'styled-components'
 import { useProfilePageUserQuery } from './graphql/ProfilePage.generated'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { P } from '../../components/P'
-import { EloChange } from './components/EloChange'
-import { CustomLink } from '../../components/CustomLink'
+import { PlayedGame } from '../PlayedGamesPage'
 
 const StyledProfilePage = styled.div`
   display: flex;
@@ -29,16 +28,6 @@ const StyledRecentMatches = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-`
-
-const StyledRecentMatch = styled.div`
-  border-bottom: 1px solid #ff5666;
-  padding: 0.75rem 1rem;
-
-  display: flex;
-  gap: 0.5rem;
-  justify-content: flex-start;
-  align-items: center;
 `
 
 type ProfileImageProps = {
@@ -103,23 +92,20 @@ export const ProfilePage: FC = () => {
             (p) => p === profileUser._id
           )
           const eloChange =
-            playerIndex !== -1 &&
-            Math.floor(
-              game.playerElosAfter[playerIndex] -
-                game.playerElosBefore[playerIndex]
-            )
+            playerIndex !== -1
+              ? Math.floor(
+                  game.playerElosAfter[playerIndex] -
+                    game.playerElosBefore[playerIndex]
+                )
+              : undefined
 
           return (
-            <StyledRecentMatch key={game._id}>
-              <P.DefaultText>{game.gameType}</P.DefaultText>
-              <P.SmallText>({game._id})</P.SmallText>
-              <P.DefaultText>
-                {eloChange !== false && <EloChange eloChange={eloChange} />}
-              </P.DefaultText>
-              <CustomLink to={`/played/${game.gameType}/${game._id}`}>
-                View game
-              </CustomLink>
-            </StyledRecentMatch>
+            <PlayedGame
+              key={game._id}
+              game={game}
+              profilePage
+              eloChange={eloChange}
+            />
           )
         })}
       </StyledRecentMatches>

@@ -3,8 +3,8 @@ import styled from 'styled-components'
 import { useCurrentUser } from '../../../../hooks/useCurrentUser'
 import { Button } from '../../../../components/Button'
 import { Span } from '../../../../components/Span'
-import { useWindowDimensions } from '../../../../hooks/useWindowDimensions'
 import { ProfileImage } from '../../../ProfilePage'
+import { useIsMobile } from '../../../../hooks/useIsMobile'
 
 const StyledAuthenticationActions = styled.div`
   color: ${({ theme }) => theme.colors.foreground.success};
@@ -24,7 +24,7 @@ const MiniProfileImage = styled(ProfileImage)`
 
 export const AuthenticationActions: FC = () => {
   const user = useCurrentUser()
-  const { width } = useWindowDimensions()
+  const isMobile = useIsMobile()
 
   const handleLogin = () => {
     window.open(`${import.meta.env.VITE_SERVER_BASE_URL}/auth/github`, '_self')
@@ -39,10 +39,10 @@ export const AuthenticationActions: FC = () => {
       {!user && <Button onClick={handleLogin}>Login with Github</Button>}
       {user && (
         <>
-          {width > 700 && (
+          {!isMobile && (
             <Span.SmallText>Logged in as {user.userName}</Span.SmallText>
           )}
-          {width <= 700 && <MiniProfileImage githubId={user.githubId} />}
+          {isMobile && <MiniProfileImage githubId={user.githubId} />}
 
           <Button onClick={handleLogout}>Logout</Button>
         </>

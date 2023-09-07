@@ -13,6 +13,7 @@ type GameRenderedProps = {
 const StyledState = styled.div`
   position: relative;
   width: fit-content;
+  align-self: center;
 `
 
 const StyledStartsIn = styled.div`
