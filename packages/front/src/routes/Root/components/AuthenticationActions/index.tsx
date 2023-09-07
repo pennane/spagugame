@@ -5,6 +5,7 @@ import { Button } from '../../../../components/Button'
 import { Span } from '../../../../components/Span'
 import { ProfileImage } from '../../../ProfilePage'
 import { useIsMobile } from '../../../../hooks/useIsMobile'
+import { Link } from 'react-router-dom'
 
 const StyledAuthenticationActions = styled.div`
   color: ${({ theme }) => theme.colors.foreground.success};
@@ -42,7 +43,11 @@ export const AuthenticationActions: FC = () => {
           {!isMobile && (
             <Span.SmallText>Logged in as {user.userName}</Span.SmallText>
           )}
-          {isMobile && <MiniProfileImage githubId={user.githubId} />}
+          {isMobile && (
+            <Link to="/profile">
+              <MiniProfileImage githubId={user.githubId} />
+            </Link>
+          )}
 
           <Button onClick={handleLogout}>Logout</Button>
         </>

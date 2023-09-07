@@ -6,7 +6,7 @@ type ButtonProps = {
   children: ReactNode
   onClick?: MouseEventHandler<HTMLButtonElement> | undefined
   color?: keyof typeof theme.colors.foreground
-}
+} & React.HTMLAttributes<HTMLButtonElement>
 
 const StyledButton = styled.button<{
   $color: keyof typeof theme.colors.foreground
@@ -29,9 +29,14 @@ const StyledButton = styled.button<{
   }
 `
 
-export const Button: FC<ButtonProps> = ({ children, onClick, color }) => {
+export const Button: FC<ButtonProps> = ({
+  children,
+  onClick,
+  color,
+  ...rest
+}) => {
   return (
-    <StyledButton $color={color || 'success'} onClick={onClick}>
+    <StyledButton $color={color || 'success'} onClick={onClick} {...rest}>
       {children}
     </StyledButton>
   )

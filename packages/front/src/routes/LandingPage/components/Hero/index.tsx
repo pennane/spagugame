@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import { Heading } from '../../../../components/Heading'
 import { P } from '../../../../components/P'
 import { MOBILE_WIDTHS } from '../../../../hooks/useIsMobile'
+import { useLayoutEffect, useRef } from 'react'
 
 const StyledHeroHeading = styled(Heading.H1)`
   font-size: 16vw;
@@ -38,11 +39,89 @@ const StyledHero = styled.div`
   }
 `
 
+const FPS = 24
+const SPEED = 0.01
+const RESOLUTION = 48
+
+let lastTimestamp = 0
+
+let ctx: CanvasRenderingContext2D
+
+const col = (x: number, y: number, r: number, g: number, b: number) => {
+  if (!ctx) return
+  ctx.fillStyle = 'rgb(' + r + ',' + g + ',' + b + ')'
+  ctx.fillRect(x, y, 1, 1)
+}
+const R = (x: number, y: number, t: number) => {
+  return Math.floor(192 + 64 * Math.cos((x * x - y * y) / 300 + t))
+}
+
+const G = (x: number, y: number, t: number) => {
+  return Math.floor(
+    192 +
+      64 * Math.sin((x * x * Math.cos(t / 4) + y * y * Math.sin(t / 3)) / 300)
+  )
+}
+
+const B = (x: number, y: number, t: number) => {
+  return Math.floor(
+    192 +
+      64 *
+        Math.sin(
+          5 * Math.sin(t / 9) +
+            ((x - 100) * (x - 100) + (y - 100) * (y - 100)) / 1100
+        )
+  )
+}
+
+let t = 0
+
+const run = (timeStamp: number) => {
+  requestAnimationFrame(run)
+  if (timeStamp - lastTimestamp < 1000 / FPS) return
+  for (let x = 0; x <= RESOLUTION; x++) {
+    for (let y = 0; y <= RESOLUTION; y++) {
+      col(x, y, R(x, y, t), G(x, y, t), B(x, y, t))
+    }
+  }
+  t = t + SPEED
+  lastTimestamp = timeStamp
+}
+
+run(0)
+
+const StyledCanvas = styled.canvas`
+  pointer-events: none;
+  width: 100%;
+  height: clamp(20rem, 60vw, 35rem);
+  z-index: -2;
+  inset: 0;
+  position: absolute;
+  mix-blend-mode: overlay;
+  /* filter: contrast(5); */
+  -webkit-mask-image: linear-gradient(to top, transparent 0%, black 100%);
+  mask-image: linear-gradient(to top, transparent 0%, black 100%);
+`
+
 export const Hero = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+
+  useLayoutEffect(() => {
+    if (canvasRef.current) {
+      ctx = canvasRef.current.getContext('2d')!
+    }
+  }, [canvasRef])
+
   return (
     <StyledHero>
       <StyledHeroHeading>Spagugame</StyledHeroHeading>
       <StyledHeroSubHeading>da future of social gaming</StyledHeroSubHeading>
+      <StyledCanvas
+        height={RESOLUTION}
+        width={RESOLUTION}
+        ref={canvasRef}
+        id="hero-canvas"
+      ></StyledCanvas>
     </StyledHero>
   )
 }

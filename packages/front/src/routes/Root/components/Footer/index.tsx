@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import { CustomLink } from '../../../../components/CustomLink'
 
 const StyledFooter = styled.footer`
-  background-color: ${({ theme }) => theme.colors.primary};
   display: flex;
   justify-content: center;
   align-items: center;
