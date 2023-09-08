@@ -56,6 +56,7 @@ type Game {
 
 type PlayedGame {
   _id: ID!
+  ongoingGameId: ID!
   gameType: GameType!
   playerIds: [ID!]!
   playerScores: [Int!]!
@@ -63,6 +64,7 @@ type PlayedGame {
   playerElosAfter: [Float!]!
   startedAt: Date!
   finishedAt: Date!
+  finalState: String!
 }
 
 # Ongoing game types
@@ -117,6 +119,7 @@ type Query {
 
 type Subscription {
   ongoingGameStateChange(ongoingGameId: ID!): OngoingGameStateChange!
+  newOngoingGame(gameType: GameType): OngoingGame!
 }
 
 type Mutation {

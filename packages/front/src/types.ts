@@ -110,8 +110,10 @@ export type OngoingGameStateChange = {
 export type PlayedGame = {
   __typename?: 'PlayedGame';
   _id: Scalars['ID']['output'];
+  finalState: Scalars['String']['output'];
   finishedAt: Scalars['Date']['output'];
   gameType: GameType;
+  ongoingGameId: Scalars['ID']['output'];
   playerElosAfter: Array<Scalars['Float']['output']>;
   playerElosBefore: Array<Scalars['Float']['output']>;
   playerIds: Array<Scalars['ID']['output']>;
@@ -171,7 +173,13 @@ export type QueryUsersStatsArgs = {
 
 export type Subscription = {
   __typename?: 'Subscription';
+  newOngoingGame: OngoingGame;
   ongoingGameStateChange: OngoingGameStateChange;
+};
+
+
+export type SubscriptionNewOngoingGameArgs = {
+  gameType?: InputMaybe<GameType>;
 };
 
 

@@ -108,6 +108,8 @@ const finishGame = authenticatedService<
   // save to mongo
   await create(ctx, "playedGame", {
     finishedAt: new Date(now),
+    ongoingGameId: game._id,
+    finalState: JSON.stringify(game.jsonState),
     gameType: game.gameType,
     startedAt: new Date(game.startedAt || now - TWENTY_MIN_IN_MS),
     playerIds: R.pluck("_id", newEloPlayers),

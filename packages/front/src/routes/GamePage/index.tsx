@@ -11,6 +11,7 @@ import { OngoingGameItem } from './components/OngoingGame'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { isGameType } from '../../lib/schema'
 import { theme } from '../../theme'
+import { useSubscribeGameTypeOngoingGames } from '../../hooks/useSubscribeNewOngoingGames'
 
 const StyledGamePage = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.foreground.danger};
@@ -47,10 +48,13 @@ export const GamePage = () => {
 
   const { gameType: rawGameType } = useParams()
   const gameType = isGameType(rawGameType) ? rawGameType : undefined
+
+  useSubscribeGameTypeOngoingGames({ gameType: gameType!, skip: !gameType })
+
   const { data, loading } = useGameQuery({
     variables: { gameType: gameType as GameType },
     skip: !gameType,
-    pollInterval: 5000
+    pollInterval: 10000
   })
 
   const [createNewGame] = useNewGameMutation()
@@ -68,7 +72,7 @@ export const GamePage = () => {
   if (loading) return <div>loading...</div>
   const game = data?.game
 
-  if (!game) return <div>Game does not exist</div>
+  if (!game) return <P.DefaultText>Game does not exist</P.DefaultText>
 
   const hasOngoingGames = game.ongoingGames.length > 0
 

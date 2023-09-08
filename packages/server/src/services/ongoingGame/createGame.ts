@@ -21,12 +21,20 @@ const createGame = authenticatedService<
     },
     settings.initialState({ isPrivate })
   );
+
+  const gqlSerialized = gqlSerializeGame(initialState);
+
   await Promise.all([
     saveGameToRedis(ctx, initialState),
     ctx.redis.lpush(`games.${gameType}`, initialState._id),
+    isPrivate
+      ? null
+      : ctx.pubsub.publish(`game_created.${gameType}`, {
+          newOngoingGame: gqlSerialized,
+        }),
   ]);
 
-  return gqlSerializeGame(initialState);
+  return gqlSerialized;
 });
 
 export default createGame;

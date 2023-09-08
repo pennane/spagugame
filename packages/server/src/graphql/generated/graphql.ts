@@ -113,8 +113,10 @@ export type OngoingGameStateChange = {
 export type PlayedGame = {
   __typename?: 'PlayedGame';
   _id: Scalars['ID']['output'];
+  finalState: Scalars['String']['output'];
   finishedAt: Scalars['Date']['output'];
   gameType: GameType;
+  ongoingGameId: Scalars['ID']['output'];
   playerElosAfter: Array<Scalars['Float']['output']>;
   playerElosBefore: Array<Scalars['Float']['output']>;
   playerIds: Array<Scalars['ID']['output']>;
@@ -174,7 +176,13 @@ export type QueryUsersStatsArgs = {
 
 export type Subscription = {
   __typename?: 'Subscription';
+  newOngoingGame: OngoingGame;
   ongoingGameStateChange: OngoingGameStateChange;
+};
+
+
+export type SubscriptionNewOngoingGameArgs = {
+  gameType?: InputMaybe<GameType>;
 };
 
 
@@ -394,8 +402,10 @@ export type OngoingGameStateChangeResolvers<ContextType = any, ParentType extend
 
 export type PlayedGameResolvers<ContextType = any, ParentType extends ResolversParentTypes['PlayedGame'] = ResolversParentTypes['PlayedGame']> = {
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  finalState?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   finishedAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   gameType?: Resolver<ResolversTypes['GameType'], ParentType, ContextType>;
+  ongoingGameId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   playerElosAfter?: Resolver<Array<ResolversTypes['Float']>, ParentType, ContextType>;
   playerElosBefore?: Resolver<Array<ResolversTypes['Float']>, ParentType, ContextType>;
   playerIds?: Resolver<Array<ResolversTypes['ID']>, ParentType, ContextType>;
@@ -417,6 +427,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 };
 
 export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
+  newOngoingGame?: SubscriptionResolver<ResolversTypes['OngoingGame'], "newOngoingGame", ParentType, ContextType, Partial<SubscriptionNewOngoingGameArgs>>;
   ongoingGameStateChange?: SubscriptionResolver<ResolversTypes['OngoingGameStateChange'], "ongoingGameStateChange", ParentType, ContextType, RequireFields<SubscriptionOngoingGameStateChangeArgs, 'ongoingGameId'>>;
 };
 

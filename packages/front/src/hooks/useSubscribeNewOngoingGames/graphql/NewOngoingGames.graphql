@@ -1,0 +1,5 @@
+subscription NewOngoingGames($gameType: GameType) {
+  newOngoingGame(gameType: $gameType) {
+    ...OngoingGame
+  }
+}

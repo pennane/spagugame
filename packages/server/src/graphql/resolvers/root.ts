@@ -162,6 +162,14 @@ export const resolvers: Resolvers<TContext> = {
         };
       },
     },
+    newOngoingGame: {
+      subscribe: async (_root, { gameType }, ctx) => {
+        return {
+          [Symbol.asyncIterator]: () =>
+            ctx.pubsub.asyncIterator(`game_created.${gameType || "*"}`),
+        };
+      },
+    },
   },
   Mutation: {
     createOngoingGame: async (_root, { gameType, isPrivate }, ctx) =>
