@@ -40,7 +40,7 @@ const StyledHero = styled.div`
 `
 
 const FPS = 24
-const SPEED = 0.01
+const SPEED = 0.03
 const RESOLUTION = 48
 
 let lastTimestamp = 0

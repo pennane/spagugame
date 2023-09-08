@@ -116,7 +116,6 @@ type Query {
 
 type Subscription {
   ongoingGameStateChange(ongoingGameId: ID!): OngoingGameStateChange!
-  testCounter: Int!
 }
 
 type Mutation {

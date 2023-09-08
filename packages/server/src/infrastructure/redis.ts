@@ -19,10 +19,6 @@ export const initializeRedis = async () => {
     publisher,
   });
 
-  let i = 0;
-
-  setInterval(() => pubsub.publish("test_counter", { testCounter: i++ }), 1000);
-
   // magical no-op subscription to allow pubsub listening inside server
   subscriber.psubscribe("__key*__:*", async () => {});
 

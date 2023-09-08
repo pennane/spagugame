@@ -174,7 +174,6 @@ export type QueryUsersStatsArgs = {
 export type Subscription = {
   __typename?: 'Subscription';
   ongoingGameStateChange: OngoingGameStateChange;
-  testCounter: Scalars['Int']['output'];
 };
 
 
@@ -418,7 +417,6 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 
 export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
   ongoingGameStateChange?: SubscriptionResolver<ResolversTypes['OngoingGameStateChange'], "ongoingGameStateChange", ParentType, ContextType, RequireFields<SubscriptionOngoingGameStateChangeArgs, 'ongoingGameId'>>;
-  testCounter?: SubscriptionResolver<ResolversTypes['Int'], "testCounter", ParentType, ContextType>;
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
