@@ -2,13 +2,13 @@ import * as R from "ramda";
 import { ObjectId } from "mongodb";
 import { Game } from "../graphql/generated/graphql";
 import { CollectionSettings } from "./models";
-import { TickTackToeSpecification } from "../games/TickTackToe/TickTackToe";
+import { GAME_SPECIFICATIONS_MAP } from "../games/models";
 
 export interface IGame extends Omit<Game, "_id" | "ongoingGames"> {
   _id: ObjectId;
 }
 
-const seedDocuments: IGame[] = [TickTackToeSpecification].map(
+const seedDocuments: IGame[] = Object.values(GAME_SPECIFICATIONS_MAP).map(
   R.pick(["name", "description", "type", "_id", "minPlayers", "maxPlayers"])
 );
 

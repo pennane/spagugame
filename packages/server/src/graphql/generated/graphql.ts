@@ -30,6 +30,7 @@ export type Game = {
 };
 
 export enum GameType {
+  FindFour = 'FIND_FOUR',
   TickTackToe = 'TICK_TACK_TOE'
 }
 

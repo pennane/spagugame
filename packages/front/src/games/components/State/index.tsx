@@ -4,6 +4,7 @@ import { OngoingGame, OngoingGameProcessState } from '../../../types'
 import { GAME_TYPE_TO_SPECIFICATION } from '../../constants'
 import styled from 'styled-components'
 import { isNotNil } from 'ramda'
+import { GameSpecification } from '../../models'
 
 type GameRenderedProps = {
   game: OngoingGame
@@ -48,7 +49,7 @@ export const State: FC<GameRenderedProps> = ({ game, playMove }) => {
   const startsIn = game.startsIn
 
   const specification = useMemo(
-    () => GAME_TYPE_TO_SPECIFICATION[gameType],
+    () => GAME_TYPE_TO_SPECIFICATION[gameType] as GameSpecification<unknown>,
     [gameType]
   )
 

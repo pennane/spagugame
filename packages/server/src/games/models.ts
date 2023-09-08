@@ -5,6 +5,7 @@ import {
   GameType,
 } from "../graphql/generated/graphql";
 import { TickTackToeSpecification } from "./TickTackToe/TickTackToe";
+import { FindFourSpecification } from "./FindFour/FindFour";
 
 type InitialStateOptions = {
   isPrivate: boolean;
@@ -25,6 +26,7 @@ export type GameSpecification<T> = {
 
 export const GAME_SPECIFICATIONS_MAP = {
   [GameType.TickTackToe]: TickTackToeSpecification,
+  [GameType.FindFour]: FindFourSpecification,
 } satisfies Record<GameType, GameSpecification<any>>;
 
 export type GqlSerializedGame = Omit<OngoingGame, "jsonState"> & {

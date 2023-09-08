@@ -1,6 +1,7 @@
 scalar Date
 
 enum GameType {
+  FIND_FOUR
   TICK_TACK_TOE
 }
 

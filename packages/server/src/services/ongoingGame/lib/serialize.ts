@@ -7,15 +7,17 @@ import {
 import { TContext } from "../../../infrastructure/context";
 import { isNilOrEmpty } from "../../../lib/fp";
 
-export const gqlSerializeGame = <T>(
-  game: DeserializedGame<T>
+export const gqlSerializeGame = (
+  game: DeserializedGame<unknown>
 ): GqlSerializedGame =>
   R.evolve(
     { jsonState: (s) => JSON.stringify(s), startedAt: (s) => parseInt(s) },
     game
   );
 
-export const serializeGame = <T>(game: DeserializedGame<T>): SerializedGame =>
+export const serializeGame = (
+  game: DeserializedGame<unknown>
+): SerializedGame =>
   R.evolve(
     {
       jsonState: (s) => JSON.stringify(s),

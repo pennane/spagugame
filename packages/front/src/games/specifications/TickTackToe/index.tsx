@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { GameSpecification } from '../../models'
 
 export type TickTackToeState = [
   [null | 'o' | 'x', null | 'o' | 'x', null | 'o' | 'x'],
@@ -88,4 +89,8 @@ const renderState = (
   )
 }
 
-export const TickTackToe = { validateState, parseState, renderState }
+export const TickTackToe: GameSpecification<TickTackToeState> = {
+  validateState,
+  parseState,
+  renderState
+}

@@ -13,11 +13,11 @@ type GameBannerProps = {
 }
 
 const StyledGameBanner = styled.section`
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: 0.5rem;
   width: 100%;
   max-width: 20rem;
+  height: 16rem;
 
   /* background-color: ${({ theme }) => theme.colors.foreground.danger}; */
   border: 1px solid ${({ theme }) => theme.colors.foreground.danger};
