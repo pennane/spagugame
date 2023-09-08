@@ -14,6 +14,7 @@ import { Actions } from './components/Actions'
 import styled from 'styled-components'
 import { P } from '../components/P'
 import { MOBILE_WIDTHS } from '../hooks/useIsMobile'
+import { useCurrentUser } from '../hooks/useCurrentUser'
 
 const StyledGame = styled.div`
   display: flex;
@@ -50,6 +51,7 @@ export const RenderedGame: FC<GameRenderedProps> = ({ ongoingGameId }) => {
       variables: { ongoingGameId: ongoingGameId! },
       skip: !ongoingGameId
     })
+  const currentUser = useCurrentUser()
 
   const ongoingGame = ongoingGameData?.ongoingGame
 
@@ -60,6 +62,10 @@ export const RenderedGame: FC<GameRenderedProps> = ({ ongoingGameId }) => {
   })
 
   const game = gameData?.game
+
+  const playingThisGame = ongoingGame?.players.some(
+    (p) => p.userId === currentUser?._id
+  )
 
   useSubscribeOngoingGameSubscription({
     variables: { ongoingGameId: ongoingGameId! },
@@ -86,7 +92,7 @@ export const RenderedGame: FC<GameRenderedProps> = ({ ongoingGameId }) => {
   const [playMove] = usePlayMoveMutation()
 
   const handlePlayMove = (move: string) => {
-    if (!ongoingGameId) return
+    if (!ongoingGameId || !playingThisGame) return
     playMove({ variables: { ongoingGameId, move } })
   }
 
