@@ -128,7 +128,6 @@ export const FindFourSpecification: GameSpecification<FindFourState> = {
     if (!state.jsonState[x]) {
       throw new Error("Invalid move - outside of board");
     }
-    console.log(state.jsonState, x, state.jsonState[x]);
 
     if (state.jsonState[x]?.[0] !== null) {
       throw new Error("Cannot place piece over old placement");
@@ -143,11 +142,7 @@ export const FindFourSpecification: GameSpecification<FindFourState> = {
     const playerSymbol = currentPlayerIndex === 0 ? "1" : "2";
 
     for (const y of R.range(0, HEIGHT).reverse()) {
-      console.log("trying", y);
-
       if (newState.jsonState[x][y] === null) {
-        console.log("setting to", x, y);
-
         newState.jsonState[x][y] = playerSymbol;
         break;
       }

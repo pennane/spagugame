@@ -53,7 +53,6 @@ export const Players: FC<PlayersProps> = ({ game }) => {
           const stats = dataUserStats.find(
             (userStats) => userStats.userId === player.userId
           )
-          console.log(stats)
           return {
             ...player,
             ...user,
