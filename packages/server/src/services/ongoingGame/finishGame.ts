@@ -20,12 +20,12 @@ const calculateNewElos = (
   players: { _id: string; elo: number; score: number }[]
 ) => {
   const maxScore = Math.max(...players.map((p) => p.score));
+  const totalElo = players.reduce((sum, player) => sum + player.elo, 0);
 
   const updated = [];
 
-  const totalElo = players.reduce((sum, player) => sum + player.elo, 0);
   for (const player of players) {
-    const normalizedScore = maxScore === 0 ? 0 : player.score / maxScore;
+    const normalizedScore = maxScore === 0 ? 0.5 : player.score / maxScore;
     const avgOtherElo = (totalElo - player.elo) / (players.length - 1);
     const newElo = Math.round(
       calculateElo(player.elo, avgOtherElo, normalizedScore)
