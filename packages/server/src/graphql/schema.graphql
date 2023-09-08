@@ -64,7 +64,7 @@ type PlayedGame {
   playerElosAfter: [Float!]!
   startedAt: Date!
   finishedAt: Date!
-  finalState: String!
+  finalState: String
 }
 
 # Ongoing game types

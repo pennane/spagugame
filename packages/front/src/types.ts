@@ -110,7 +110,7 @@ export type OngoingGameStateChange = {
 export type PlayedGame = {
   __typename?: 'PlayedGame';
   _id: Scalars['ID']['output'];
-  finalState: Scalars['String']['output'];
+  finalState?: Maybe<Scalars['String']['output']>;
   finishedAt: Scalars['Date']['output'];
   gameType: GameType;
   ongoingGameId: Scalars['ID']['output'];

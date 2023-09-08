@@ -18,13 +18,13 @@ import { useCurrentUser } from '../hooks/useCurrentUser'
 
 const StyledGame = styled.div`
   display: flex;
-  gap: 0.5rem;
+  gap: 1rem;
   border: 1px solid ${({ theme }) => theme.colors.foreground.info};
   border-radius: 0.5rem;
   padding: 0.5rem;
   border-radius: 0.25rem;
   padding: 2rem;
-  @media (max-width: ${MOBILE_WIDTHS.small}px) {
+  @media (max-width: ${MOBILE_WIDTHS.default}px) {
     flex-direction: column;
   }
 `
@@ -40,6 +40,7 @@ const StyledGameRight = styled.div`
   display: flex;
   gap: 0.5rem;
   flex-direction: column;
+  flex: 1;
 `
 
 type GameRenderedProps = {

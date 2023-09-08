@@ -31,7 +31,7 @@ const StyledRecentMatches = styled.div`
 `
 
 type ProfileImageProps = {
-  githubId: string
+  githubId?: string
 } & React.HTMLAttributes<HTMLDivElement>
 
 const StyledProfileImageContainer = styled.div`

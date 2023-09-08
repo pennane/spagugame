@@ -9,7 +9,7 @@ export type PlayedGamePagePlayedGameQueryVariables = Types.Exact<{
 }>;
 
 
-export type PlayedGamePagePlayedGameQuery = { __typename?: 'Query', playedGame?: { __typename?: 'PlayedGame', _id: string, gameType: Types.GameType, playerIds: Array<string>, playerScores: Array<number>, playerElosBefore: Array<number>, playerElosAfter: Array<number>, startedAt: Date, finishedAt: Date } | null };
+export type PlayedGamePagePlayedGameQuery = { __typename?: 'Query', playedGame?: { __typename?: 'PlayedGame', _id: string, gameType: Types.GameType, playerIds: Array<string>, playerScores: Array<number>, playerElosBefore: Array<number>, playerElosAfter: Array<number>, startedAt: Date, finishedAt: Date, finalState?: string | null } | null };
 
 
 export const PlayedGamePagePlayedGameDocument = gql`

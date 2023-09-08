@@ -113,7 +113,7 @@ export type OngoingGameStateChange = {
 export type PlayedGame = {
   __typename?: 'PlayedGame';
   _id: Scalars['ID']['output'];
-  finalState: Scalars['String']['output'];
+  finalState?: Maybe<Scalars['String']['output']>;
   finishedAt: Scalars['Date']['output'];
   gameType: GameType;
   ongoingGameId: Scalars['ID']['output'];
@@ -402,7 +402,7 @@ export type OngoingGameStateChangeResolvers<ContextType = any, ParentType extend
 
 export type PlayedGameResolvers<ContextType = any, ParentType extends ResolversParentTypes['PlayedGame'] = ResolversParentTypes['PlayedGame']> = {
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  finalState?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  finalState?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   finishedAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   gameType?: Resolver<ResolversTypes['GameType'], ParentType, ContextType>;
   ongoingGameId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;

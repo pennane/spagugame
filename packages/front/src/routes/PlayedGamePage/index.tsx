@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { Heading } from '../../components/Heading'
 import { P } from '../../components/P'
@@ -8,11 +8,37 @@ import { usePlayedGamePagePlayedGameQuery } from './graphql/PlayedGamePage.gener
 import { PlayedGamePlayer } from './components/PlayedGamePlayer'
 import { dateToFinnishLocale, parseDate } from '../../lib/date'
 
+import { GAME_TYPE_TO_SPECIFICATION } from '../../games/constants'
+import { GameType } from '../../types'
+
 const StyledPlayedGamePage = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
 `
+
+const StyledStateWrapper = styled.div`
+  align-self: flex-start;
+`
+
+const OldState: FC<{ state?: string; gameType: GameType }> = ({
+  state,
+  gameType
+}) => {
+  const rendered = useMemo(
+    () =>
+      state &&
+      GAME_TYPE_TO_SPECIFICATION[gameType].renderState(
+        GAME_TYPE_TO_SPECIFICATION[gameType].parseState(state) as any,
+        () => {}
+      ),
+    [gameType, state]
+  )
+
+  if (!rendered) return null
+
+  return <StyledStateWrapper>{rendered}</StyledStateWrapper>
+}
 
 export const PlayedGamePage: FC = () => {
   const { gameType, gameId } = useParams()
@@ -20,6 +46,7 @@ export const PlayedGamePage: FC = () => {
     variables: { id: gameId! },
     skip: !gameId
   })
+
   if (loading) return <P.DefaultText>Loading...</P.DefaultText>
   const game = data?.playedGame
   if (!game) return <P.DefaultText>Game not found</P.DefaultText>
@@ -42,6 +69,9 @@ export const PlayedGamePage: FC = () => {
       <P.DefaultText>
         Played at {dateToFinnishLocale(parseDate(game.finishedAt))}
       </P.DefaultText>
+      {game.finalState && (
+        <OldState gameType={game.gameType} state={game.finalState} />
+      )}
       <Heading.H2>Players</Heading.H2>
       {players.map((player) => (
         <PlayedGamePlayer key={player.id} player={player} />
