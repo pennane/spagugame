@@ -83,6 +83,10 @@ export const PlayedGamesPage: FC = () => {
     [GameType.TickTackToe]: usePlayedGamesQuery({
       variables: { gameType: GameType.TickTackToe },
       skip: parsedGameType && parsedGameType !== GameType.TickTackToe
+    }),
+    [GameType.FindFour]: usePlayedGamesQuery({
+      variables: { gameType: GameType.FindFour },
+      skip: parsedGameType && parsedGameType !== GameType.FindFour
     })
   }
 

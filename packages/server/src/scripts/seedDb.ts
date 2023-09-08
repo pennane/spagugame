@@ -17,6 +17,6 @@ initializeMongo().then(async ({ collectionSettings, db }) => {
       );
     }
   }
-  console.log("Done");
+  console.info("Done");
   process.exit(0);
 });

@@ -14,7 +14,7 @@ services:
       retries: 10
 
   spagugame_server:
-    build: ../server
+    build: ../../
     container_name: spagugame_server_container
     ports:
       - '30123:3000'
