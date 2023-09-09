@@ -18,7 +18,7 @@ type PlayersProps = {
   game: OngoingGame
 }
 
-const MiniProfileImage = styled(ProfileImage)`
+export const MiniProfileImage = styled(ProfileImage)`
   width: 1.5rem;
   height: 1.5rem;
   border-radius: 100%;

@@ -35,6 +35,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   createOngoingGame: OngoingGame;
   joinOngoingGame: OngoingGame;
+  leaveOngoingGame: OngoingGame;
   playTurn: OngoingGame;
   toggleReady: OngoingGame;
   updateUser: User;
@@ -48,6 +49,11 @@ export type MutationCreateOngoingGameArgs = {
 
 
 export type MutationJoinOngoingGameArgs = {
+  ongoingGameId: Scalars['ID']['input'];
+};
+
+
+export type MutationLeaveOngoingGameArgs = {
   ongoingGameId: Scalars['ID']['input'];
 };
 

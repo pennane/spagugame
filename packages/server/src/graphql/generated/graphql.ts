@@ -38,6 +38,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   createOngoingGame: OngoingGame;
   joinOngoingGame: OngoingGame;
+  leaveOngoingGame: OngoingGame;
   playTurn: OngoingGame;
   toggleReady: OngoingGame;
   updateUser: User;
@@ -51,6 +52,11 @@ export type MutationCreateOngoingGameArgs = {
 
 
 export type MutationJoinOngoingGameArgs = {
+  ongoingGameId: Scalars['ID']['input'];
+};
+
+
+export type MutationLeaveOngoingGameArgs = {
   ongoingGameId: Scalars['ID']['input'];
 };
 
@@ -364,6 +370,7 @@ export type GameResolvers<ContextType = any, ParentType extends ResolversParentT
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createOngoingGame?: Resolver<ResolversTypes['OngoingGame'], ParentType, ContextType, RequireFields<MutationCreateOngoingGameArgs, 'gameType'>>;
   joinOngoingGame?: Resolver<ResolversTypes['OngoingGame'], ParentType, ContextType, RequireFields<MutationJoinOngoingGameArgs, 'ongoingGameId'>>;
+  leaveOngoingGame?: Resolver<ResolversTypes['OngoingGame'], ParentType, ContextType, RequireFields<MutationLeaveOngoingGameArgs, 'ongoingGameId'>>;
   playTurn?: Resolver<ResolversTypes['OngoingGame'], ParentType, ContextType, RequireFields<MutationPlayTurnArgs, 'json' | 'ongoingGameId'>>;
   toggleReady?: Resolver<ResolversTypes['OngoingGame'], ParentType, ContextType, RequireFields<MutationToggleReadyArgs, 'ongoingGameId' | 'ready'>>;
   updateUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, Partial<MutationUpdateUserArgs>>;

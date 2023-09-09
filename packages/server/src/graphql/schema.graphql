@@ -125,6 +125,7 @@ type Subscription {
 type Mutation {
   createOngoingGame(gameType: GameType!, isPrivate: Boolean): OngoingGame!
   joinOngoingGame(ongoingGameId: ID!): OngoingGame!
+  leaveOngoingGame(ongoingGameId: ID!): OngoingGame!
   playTurn(ongoingGameId: ID!, json: String!): OngoingGame!
   toggleReady(ongoingGameId: ID!, ready: Boolean!): OngoingGame!
   updateUser(userInput: UserInput): User!

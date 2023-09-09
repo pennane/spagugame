@@ -6,8 +6,9 @@ import {
 } from "../../graphql/generated/graphql";
 import { authenticatedService } from "../lib";
 
-import { getGameFromRedis, gqlSerializeGame } from "./lib/serialize";
+import { gqlSerializeGame } from "./lib/serialize";
 import startGame from "./startGame";
+import { getGameFromRedis, publishGameChange } from "./lib/publish";
 
 const playTurn = authenticatedService<
   { gameId: string; ready: boolean },
@@ -41,18 +42,12 @@ const playTurn = authenticatedService<
     game
   );
 
-  const serializedGameUsers = JSON.stringify(updatedGame.players);
-
-  await Promise.all([
-    ctx.pubsub.publish(`game_changed.${gameId}`, {
-      ongoingGameStateChange: {
-        players: updatedGame.players,
-      },
-    }),
-    ctx.redis.hset(`game.${gameId}`, {
-      players: serializedGameUsers,
-    }),
-  ]);
+  await publishGameChange(
+    ctx,
+    gameId,
+    { players: updatedGame.players },
+    { updateExpiration: true }
+  );
 
   const canStart = GAME_SPECIFICATIONS_MAP[updatedGame.gameType].canStart(
     updatedGame as any

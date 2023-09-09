@@ -1,10 +1,11 @@
 import styled from 'styled-components'
 import { useGameQuery, useNewGameMutation } from './graphql/Game.generated'
 import { useNavigate, useParams } from 'react-router-dom'
-import { GameType } from '../../types'
+import { GameType, OngoingGameProcessState } from '../../types'
 import { Button } from '../../components/Button'
 import { Heading } from '../../components/Heading'
 import { P } from '../../components/P'
+import { toast } from 'react-toastify'
 
 import { Pill } from '../../components/Pill'
 import { OngoingGameItem } from './components/OngoingGame'
@@ -61,12 +62,21 @@ export const GamePage = () => {
 
   const handleCreateNewGame = (isPrivate: boolean) => {
     if (!gameType) return
-    createNewGame({ variables: { gameType, private: isPrivate } }).then(
-      (res) => {
+    createNewGame({ variables: { gameType, private: isPrivate } })
+      .then((res) => {
         res.data?.createOngoingGame._id &&
           navigate(`/game/${gameType}/${res.data.createOngoingGame._id}`)
-      }
-    )
+      })
+      .catch((e) => {
+        if (
+          typeof e.message === 'string' &&
+          e.message.includes('Cannot join multiple games at the same time')
+        ) {
+          toast(
+            'You are already in a game. You must leave the old game before joining  new.'
+          )
+        }
+      })
   }
 
   if (loading) return <div>loading...</div>
@@ -114,12 +124,17 @@ export const GamePage = () => {
         <Heading.H2>Currently going games:</Heading.H2>
         {hasOngoingGames &&
           game.ongoingGames
-            .filter((g) => !g.isPrivate)
+            .filter(
+              (g) =>
+                !g.isPrivate &&
+                g.processState !== OngoingGameProcessState.Finished
+            )
             .map((ongoingGame) => (
               <OngoingGameItem
                 key={ongoingGame._id}
                 game={game}
                 ongoingGame={ongoingGame}
+                currentUser={currentUser}
               />
             ))}
         {!hasOngoingGames && (

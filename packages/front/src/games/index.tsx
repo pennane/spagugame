@@ -1,4 +1,5 @@
-import { FC } from 'react'
+import { FC, useCallback } from 'react'
+import { useBeforeUnload } from 'react-router-dom'
 
 import {
   GetOngoingGameDocument,
@@ -47,6 +48,9 @@ type GameRenderedProps = {
   ongoingGameId: string | undefined
 }
 export const RenderedGame: FC<GameRenderedProps> = ({ ongoingGameId }) => {
+  useBeforeUnload(
+    useCallback(() => console.log('Are you sure you want to leave?'), [])
+  )
   const { data: ongoingGameData, loading: ongoingGameLoading } =
     useGetOngoingGameQuery({
       variables: { ongoingGameId: ongoingGameId! },
@@ -64,10 +68,6 @@ export const RenderedGame: FC<GameRenderedProps> = ({ ongoingGameId }) => {
 
   const game = gameData?.game
 
-  const playingThisGame = ongoingGame?.players.some(
-    (p) => p.userId === currentUser?._id
-  )
-
   useSubscribeOngoingGameSubscription({
     variables: { ongoingGameId: ongoingGameId! },
     skip: !ongoingGameId,
@@ -75,6 +75,7 @@ export const RenderedGame: FC<GameRenderedProps> = ({ ongoingGameId }) => {
       const game = data.data?.ongoingGameStateChange
       if (!game || !ongoingGame?._id) return
 
+      console.log(game)
       const updatedFields = omit(['_id', '__typename'], filter(isNotNil, game))
 
       client.cache.updateQuery(
@@ -93,7 +94,13 @@ export const RenderedGame: FC<GameRenderedProps> = ({ ongoingGameId }) => {
   const [playMove] = usePlayMoveMutation()
 
   const handlePlayMove = (move: string) => {
-    if (!ongoingGameId || !playingThisGame) return
+    if (!ongoingGameId) {
+      return
+    }
+
+    if (ongoingGame?.currentTurn !== currentUser?._id) {
+      return
+    }
     playMove({ variables: { ongoingGameId, move } })
   }
 

@@ -5,14 +5,17 @@ import { find, get } from "../../collections/lib";
 import { TContext } from "../../infrastructure/context";
 import createGame from "../../services/ongoingGame/createGame";
 import joinGame from "../../services/ongoingGame/joinGame";
-import {
-  getGameFromRedis,
-  gqlSerializeGame,
-} from "../../services/ongoingGame/lib/serialize";
+import { gqlSerializeGame } from "../../services/ongoingGame/lib/serialize";
 import { Game, GameType, Resolvers, User } from "../generated/graphql";
 import { dateScalar } from "../scalars/Date/Date";
 import playTurn from "../../services/ongoingGame/playTurn";
 import toggleReady from "../../services/ongoingGame/toggleReady";
+import {
+  getGameChangedKey,
+  getGameCreatedKey,
+  getGameFromRedis,
+} from "../../services/ongoingGame/lib/publish";
+import leaveGame from "../../services/ongoingGame/leaveGame";
 
 export const resolvers: Resolvers<TContext> = {
   User: {
@@ -158,7 +161,7 @@ export const resolvers: Resolvers<TContext> = {
       subscribe: async (_root, { ongoingGameId }, ctx) => {
         return {
           [Symbol.asyncIterator]: () =>
-            ctx.pubsub.asyncIterator(`game_changed.${ongoingGameId}`),
+            ctx.pubsub.asyncIterator(getGameChangedKey(ongoingGameId)),
         };
       },
     },
@@ -166,7 +169,7 @@ export const resolvers: Resolvers<TContext> = {
       subscribe: async (_root, { gameType }, ctx) => {
         return {
           [Symbol.asyncIterator]: () =>
-            ctx.pubsub.asyncIterator(`game_created.${gameType || "*"}`),
+            ctx.pubsub.asyncIterator(getGameCreatedKey(gameType || "*")),
         };
       },
     },
@@ -176,6 +179,8 @@ export const resolvers: Resolvers<TContext> = {
       createGame(ctx, { gameType, isPrivate: isPrivate ?? false }),
     joinOngoingGame: async (_root, { ongoingGameId }, ctx) =>
       joinGame(ctx, { gameId: ongoingGameId }),
+    leaveOngoingGame: async (_root, { ongoingGameId }, ctx) =>
+      leaveGame(ctx, { gameId: ongoingGameId }),
     playTurn: async (_root, { json, ongoingGameId }, ctx) =>
       playTurn(ctx, { gameId: ongoingGameId, json }),
     toggleReady: async (_root, { ready, ongoingGameId }, ctx) =>

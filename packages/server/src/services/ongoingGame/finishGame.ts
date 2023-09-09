@@ -1,10 +1,18 @@
 import * as R from "ramda";
-import { OngoingGame } from "../../graphql/generated/graphql";
+import {
+  OngoingGame,
+  OngoingGameProcessState,
+} from "../../graphql/generated/graphql";
 
 import { authenticatedService } from "../lib";
 import { DeserializedGame } from "../../games/models";
 import { gqlSerializeGame } from "./lib/serialize";
 import { create } from "../../collections/lib";
+import {
+  getUserGameKey,
+  publishGameChange,
+  removeGameFromRedis,
+} from "./lib/publish";
 
 const calculateElo = (
   a: number,
@@ -43,11 +51,7 @@ const finishGame = authenticatedService<
   { game: DeserializedGame<unknown> },
   OngoingGame
 >(async (ctx, { game }) => {
-  // remove from redis
-  await Promise.all([
-    ctx.redis.lrem(`games.${game.gameType}`, 0, game._id),
-    ctx.redis.del(`game.${game._id}`),
-  ]);
+  await removeGameFromRedis(ctx, game._id, game.gameType);
 
   const statsBefore = (
     await Promise.all(
@@ -82,30 +86,55 @@ const finishGame = authenticatedService<
 
   const newEloPlayers = calculateNewElos(eloPlayersInWinningOrder);
 
+  const updatedGame = R.evolve(
+    {
+      players: () =>
+        newEloPlayers.map((p) => ({
+          userId: p._id,
+          score: p.score,
+          ready: true,
+        })),
+      processState: () => OngoingGameProcessState.Finished,
+    },
+    game
+  );
+
   await Promise.all(
     newEloPlayers.map((p) =>
-      ctx.collections.userStats.findOneAndUpdate(
-        {
-          userId: p._id,
-          gameType: game.gameType,
-        },
-        {
-          $set: {
-            elo: p.newElo,
+      Promise.all([
+        publishGameChange(
+          ctx,
+          game._id,
+          {
+            players: updatedGame.players,
+            processState: updatedGame.processState,
           },
-          ...(eloPlayersInWinningOrder[0]._id === p._id &&
-          eloPlayersInWinningOrder[0].score !==
-            eloPlayersInWinningOrder[1].score
-            ? { $inc: { totalWins: 1 } }
-            : {}),
-        }
-      )
+          { onlyPublish: true }
+        ),
+        ctx.redis.del(getUserGameKey(ctx.user._id.toString())),
+        ctx.collections.userStats.findOneAndUpdate(
+          {
+            userId: p._id,
+            gameType: game.gameType,
+          },
+          {
+            $set: {
+              elo: p.newElo,
+            },
+            ...(eloPlayersInWinningOrder[0]._id === p._id &&
+            eloPlayersInWinningOrder[0].score !==
+              eloPlayersInWinningOrder[1].score
+              ? { $inc: { totalWins: 1 } }
+              : {}),
+          }
+        ),
+      ])
     )
   );
 
   const now = Date.now();
   const TWENTY_MIN_IN_MS = 1000 * 60 * 20;
-  // save to mongo
+
   await create(ctx, "playedGame", {
     finishedAt: new Date(now),
     ongoingGameId: game._id,
@@ -118,10 +147,8 @@ const finishGame = authenticatedService<
     playerElosAfter: R.pluck("newElo", newEloPlayers),
   });
 
-  // update elo
-
   // return final state
-  return gqlSerializeGame(game);
+  return gqlSerializeGame(updatedGame);
 });
 
 export default finishGame;

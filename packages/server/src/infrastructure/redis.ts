@@ -2,6 +2,7 @@ import { RedisPubSub } from "graphql-redis-subscriptions";
 import Redis, { RedisOptions } from "ioredis";
 import { CONFIG_OBJECT } from "./config";
 import { GameType } from "../graphql/generated/graphql";
+import { getGamesKey } from "../services/ongoingGame/lib/publish";
 
 export const initializeRedis = async () => {
   const redisOptions = {
@@ -30,12 +31,14 @@ export const initializeRedis = async () => {
     }
 
     // shape of key is game.758299cc-a674-4c84-825a-bc06ff2a70be
-    const id = key.split(".")[1];
-    await Promise.all(
-      Object.values(GameType).map(async (gameType) =>
-        redis.lrem(`games.${gameType}`, 0, id)
-      )
-    );
+    const [base, id] = key.split(".");
+    if (base === "game") {
+      await Promise.all(
+        Object.values(GameType).map(async (gameType) =>
+          redis.lrem(getGamesKey(gameType), 0, id)
+        )
+      );
+    }
   });
 
   return {

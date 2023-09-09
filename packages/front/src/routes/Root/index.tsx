@@ -3,6 +3,8 @@ import { Outlet } from 'react-router-dom'
 import { Navbar } from './components/Navbar'
 import { Footer } from './components/Footer'
 import { MOBILE_WIDTHS } from '../../hooks/useIsMobile'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const StyledRoot = styled.div`
   display: flex;
@@ -37,6 +39,17 @@ export const Root = () => {
         </StyledContent>
       </StyledContentWrapper>
       <Footer />
+      <ToastContainer
+        {...{
+          position: 'top-center',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false,
+          theme: 'dark'
+        }}
+      />
     </StyledRoot>
   )
 }

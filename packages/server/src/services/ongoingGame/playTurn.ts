@@ -5,11 +5,8 @@ import {
 } from "../../graphql/generated/graphql";
 import { authenticatedService } from "../lib";
 import finishGame from "./finishGame";
-import {
-  getGameFromRedis,
-  gqlSerializeGame,
-  saveGameToRedis,
-} from "./lib/serialize";
+import { getGameFromRedis, publishGameChange } from "./lib/publish";
+import { gqlSerializeGame } from "./lib/serialize";
 
 const playTurn = authenticatedService<
   { gameId: string; json: string },
@@ -27,20 +24,14 @@ const playTurn = authenticatedService<
   if (!newState) {
     throw new Error("Invalid move");
   }
-  const gqlSerialized = gqlSerializeGame(newState);
 
-  await Promise.all([
-    saveGameToRedis(ctx, newState),
-    ctx.pubsub.publish(`game_changed.${gameId}`, {
-      ongoingGameStateChange: gqlSerialized,
-    }),
-  ]);
+  await publishGameChange(ctx, gameId, newState, { updateExpiration: true });
 
   if (newState.processState === OngoingGameProcessState.Finished) {
     return finishGame(ctx, { game: newState });
   }
 
-  return gqlSerialized;
+  return gqlSerializeGame(newState);
 });
 
 export default playTurn;

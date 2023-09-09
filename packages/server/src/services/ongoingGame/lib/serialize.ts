@@ -5,19 +5,19 @@ import {
   SerializedGame,
 } from "../../../games/models";
 import { TContext } from "../../../infrastructure/context";
-import { isNilOrEmpty } from "../../../lib/fp";
+import { getGameKey } from "./publish";
 
-export const gqlSerializeGame = (
-  game: DeserializedGame<unknown>
-): GqlSerializedGame =>
+export const gqlSerializeGame = <T extends keyof DeserializedGame<unknown>>(
+  game: Pick<DeserializedGame<unknown>, T>
+): Pick<GqlSerializedGame, T> =>
   R.evolve(
     { jsonState: (s) => JSON.stringify(s), startedAt: (s) => parseInt(s) },
     game
-  );
+  ) as unknown as Pick<GqlSerializedGame, T>;
 
-export const serializeGame = (
-  game: DeserializedGame<unknown>
-): SerializedGame =>
+export const serializeGame = <T extends keyof SerializedGame>(
+  game: Pick<DeserializedGame<unknown>, T>
+): Pick<SerializedGame, T> =>
   R.evolve(
     {
       jsonState: (s) => JSON.stringify(s),
@@ -28,9 +28,9 @@ export const serializeGame = (
     game
   );
 
-export const deserializeGame = <T>(
-  game: Record<string, string>
-): DeserializedGame<T> =>
+export const deserializeGame = <T extends keyof SerializedGame>(
+  game: Record<T, string>
+): Pick<DeserializedGame<unknown>, T> =>
   R.evolve(
     {
       jsonState: (s) => JSON.parse(s),
@@ -41,27 +41,7 @@ export const deserializeGame = <T>(
     game
   ) as unknown as DeserializedGame<T>;
 
-export const getGameFromRedis = async (
-  ctx: TContext,
-  gameId: string
-): Promise<DeserializedGame<unknown> | null> => {
-  const data = await ctx.redis.hgetall(`game.${gameId}`);
-  if (isNilOrEmpty(data)) return null;
-  return deserializeGame(data);
-};
-
-export const saveGameToRedis = async (
-  ctx: TContext,
-  game: DeserializedGame<unknown>
-) => {
-  const serialized = serializeGame(game);
-
-  await ctx.redis.hset(`game.${serialized._id}`, serialized);
-  await ctx.redis.expire(`game.${serialized._id}`, 600);
-  return serialized;
-};
-
 export const isGameInRedis = async (ctx: TContext, gameId: string) => {
-  const exists = await ctx.redis.exists(`game.${gameId}`);
+  const exists = await ctx.redis.exists(getGameKey(gameId));
   return exists === 1;
 };

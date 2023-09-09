@@ -6,10 +6,22 @@ import {
 
 import { authenticatedService } from "../lib";
 import { GAME_SPECIFICATIONS_MAP } from "../../games/models";
-import { gqlSerializeGame, getGameFromRedis } from "./lib/serialize";
+import { gqlSerializeGame } from "./lib/serialize";
+import {
+  getGameFromRedis,
+  getUserGameKey,
+  hasGameActive,
+  publishGameChange,
+} from "./lib/publish";
 
 const joinGame = authenticatedService<{ gameId: string }, OngoingGame>(
   async (ctx, { gameId }) => {
+    if (await hasGameActive(ctx, ctx.user._id.toString())) {
+      throw new Error(
+        "Cannot join multiple games at the same time. Leave old game first"
+      );
+    }
+
     const game = await getGameFromRedis(ctx, gameId);
     if (!game) throw new Error("Game does not exist");
 
@@ -27,6 +39,8 @@ const joinGame = authenticatedService<{ gameId: string }, OngoingGame>(
       throw new Error("Cannot join a game that is already full");
     }
 
+    await ctx.redis.set(getUserGameKey(ctx.user._id.toString()), game._id);
+
     const updatedGame = R.evolve(
       {
         players: R.concat([
@@ -40,18 +54,7 @@ const joinGame = authenticatedService<{ gameId: string }, OngoingGame>(
       game
     );
 
-    const serializedPlayers = JSON.stringify(updatedGame.players);
-
-    await Promise.all([
-      ctx.redis.hset(`game.${gameId}`, {
-        players: serializedPlayers,
-      }),
-      ctx.pubsub.publish(`game_changed.${gameId}`, {
-        ongoingGameStateChange: {
-          players: updatedGame.players,
-        },
-      }),
-    ]);
+    await publishGameChange(ctx, gameId, { players: updatedGame.players });
 
     return gqlSerializeGame(updatedGame);
   }

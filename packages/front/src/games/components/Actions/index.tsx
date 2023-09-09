@@ -1,23 +1,29 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { OngoingGame, OngoingGameProcessState } from '../../../types'
 import styled from 'styled-components'
 import { useCurrentUser } from '../../../hooks/useCurrentUser'
 import { Button } from '../../../components/Button'
 import {
   useJoinGameMutation,
+  useLeaveGameMutation,
   useToggleReadyMutation
 } from '../../graphql/OngoingGame.generated'
 import { GameFragment } from '../../../routes/LandingPage/graphql/Games.generated'
+import { Span } from '../../../components/Span'
+import { Modal } from '../../../components/Modal'
+import { P } from '../../../components/P'
 
 const StyledActions = styled.div`
   display: flex;
-  flex-direction: column;
   gap: 0.5rem;
-  height: 3rem;
+
   border: 1px solid ${({ theme }) => theme.colors.foreground.info};
   border-radius: 0.25rem;
   padding: 0.5rem;
   justify-content: space-around;
+  width: fit-content;
+  align-self: center;
+  flex-wrap: wrap;
 `
 
 const StyledAction = styled.div`
@@ -35,12 +41,19 @@ type ActionsProps = {
 export const Actions: FC<ActionsProps> = ({ ongoingGame, game }) => {
   const [toggleReady] = useToggleReadyMutation()
   const [joinGame] = useJoinGameMutation()
+  const [leaveGame] = useLeaveGameMutation()
+
+  const [showModal, setShowModal] = useState(false)
 
   const currentUser = useCurrentUser()
-  if (!currentUser) return <StyledActions />
-
-  if (ongoingGame.processState !== OngoingGameProcessState.NotStarted)
-    return <StyledActions />
+  if (!currentUser)
+    return (
+      <StyledActions>
+        <Span.DefaultText style={{ textAlign: 'center' }}>
+          You are not logged in. Spectating.
+        </Span.DefaultText>
+      </StyledActions>
+    )
 
   const gamePlayer = ongoingGame.players.find(
     (player) => player.userId === currentUser._id
@@ -66,6 +79,11 @@ export const Actions: FC<ActionsProps> = ({ ongoingGame, game }) => {
     joinGame({ variables: { ongoingGameId: ongoingGame._id } })
   }
 
+  const handleLeaveGame = () => {
+    if (!ongoingGame._id) return
+    leaveGame({ variables: { ongoingGameId: ongoingGame._id } })
+  }
+
   return (
     <StyledActions>
       {canJoin && (
@@ -73,13 +91,35 @@ export const Actions: FC<ActionsProps> = ({ ongoingGame, game }) => {
           <Button onClick={handleJoinGame}>Join game</Button>
         </StyledAction>
       )}
-      {hasJoined && (
-        <StyledAction>
-          <Button onClick={handleToggleReady}>
-            Toggle ready {!gamePlayer.ready ? '✅' : '❌'}
-          </Button>
-        </StyledAction>
-      )}
+      {hasJoined &&
+        ongoingGame.processState === OngoingGameProcessState.NotStarted && (
+          <StyledAction>
+            <Button onClick={handleToggleReady}>
+              Toggle ready {!gamePlayer.ready ? '✅' : '❌'}
+            </Button>
+          </StyledAction>
+        )}
+      {hasJoined &&
+        ongoingGame.processState !== OngoingGameProcessState.Finished && (
+          <StyledAction>
+            {' '}
+            <Button onClick={() => setShowModal(true)}>Leave</Button>
+          </StyledAction>
+        )}
+      <Modal
+        title="Are you sure?"
+        onConfirm={() => {
+          handleLeaveGame()
+          setShowModal(false)
+        }}
+        onCancel={() => setShowModal(false)}
+        show={showModal}
+      >
+        <P.DefaultText>
+          Are you sure you want to leave? If the game is running you will lose
+          elo equivalent to losing the game.
+        </P.DefaultText>
+      </Modal>
     </StyledActions>
   )
 }

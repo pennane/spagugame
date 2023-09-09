@@ -14,6 +14,7 @@ import { P } from '../../components/P'
 import { CustomLink } from '../../components/CustomLink'
 import { MOBILE_WIDTHS, useIsMobile } from '../../hooks/useIsMobile'
 import { EloChange } from '../ProfilePage/components/EloChange'
+import { dateToFinnishLocale, parseDate } from '../../lib/date'
 
 const StyledPlayedGamesPage = styled.div`
   display: flex;
@@ -23,18 +24,18 @@ const StyledPlayedGamesPage = styled.div`
 
 const StyledPlayedGame = styled.div`
   border-bottom: 1px solid #ff5666;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 0;
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: 8rem 13.5rem 1fr 2fr;
+  grid-auto-columns: 9rem 9rem 1fr 2fr;
   gap: 0.5rem;
   justify-content: flex-start;
   align-items: center;
   justify-items: flex-start;
 
-  @media (max-width: ${MOBILE_WIDTHS.default}px) {
-    grid-auto-columns: 8rem 2fr 1fr;
-  }
+  /* @media (max-width: ${MOBILE_WIDTHS.default}px) {
+    grid-auto-columns: 9rem 2fr 1fr;
+  } */
 `
 export const PlayedGame: FC<{
   game: PlayedGamesQuery['playedGames'][number]
@@ -46,7 +47,11 @@ export const PlayedGame: FC<{
   return (
     <StyledPlayedGame key={game._id}>
       <P.DefaultText>{game.gameType}</P.DefaultText>
-      {!isMobile && <P.SmallText>({game._id})</P.SmallText>}
+      {/* {!isMobile && ( */}
+      <P.SmallText>
+        ({dateToFinnishLocale(parseDate(game.finishedAt))})
+      </P.SmallText>
+      {/* )} */}
 
       {profilePage && (
         <>

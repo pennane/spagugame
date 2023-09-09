@@ -37,6 +37,13 @@ export type ToggleReadyMutationVariables = Types.Exact<{
 
 export type ToggleReadyMutation = { __typename?: 'Mutation', toggleReady: { __typename?: 'OngoingGame', _id: string, gameType: Types.GameType, processState: Types.OngoingGameProcessState, jsonState: string, currentTurn?: string | null, startedAt?: number | null, startsIn?: number | null, isPrivate: boolean, players: Array<{ __typename?: 'OngoingGamePlayer', score: number, userId: string, ready: boolean }> } };
 
+export type LeaveGameMutationVariables = Types.Exact<{
+  ongoingGameId: Types.Scalars['ID']['input'];
+}>;
+
+
+export type LeaveGameMutation = { __typename?: 'Mutation', leaveOngoingGame: { __typename?: 'OngoingGame', _id: string, gameType: Types.GameType, processState: Types.OngoingGameProcessState, jsonState: string, currentTurn?: string | null, startedAt?: number | null, startsIn?: number | null, isPrivate: boolean, players: Array<{ __typename?: 'OngoingGamePlayer', score: number, userId: string, ready: boolean }> } };
+
 export type SubscribeOngoingGameSubscriptionVariables = Types.Exact<{
   ongoingGameId: Types.Scalars['ID']['input'];
 }>;
@@ -212,6 +219,39 @@ export function useToggleReadyMutation(baseOptions?: Apollo.MutationHookOptions<
 export type ToggleReadyMutationHookResult = ReturnType<typeof useToggleReadyMutation>;
 export type ToggleReadyMutationResult = Apollo.MutationResult<ToggleReadyMutation>;
 export type ToggleReadyMutationOptions = Apollo.BaseMutationOptions<ToggleReadyMutation, ToggleReadyMutationVariables>;
+export const LeaveGameDocument = gql`
+    mutation LeaveGame($ongoingGameId: ID!) {
+  leaveOngoingGame(ongoingGameId: $ongoingGameId) {
+    ...OngoingGame
+  }
+}
+    ${OngoingGameFragmentDoc}`;
+export type LeaveGameMutationFn = Apollo.MutationFunction<LeaveGameMutation, LeaveGameMutationVariables>;
+
+/**
+ * __useLeaveGameMutation__
+ *
+ * To run a mutation, you first call `useLeaveGameMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLeaveGameMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [leaveGameMutation, { data, loading, error }] = useLeaveGameMutation({
+ *   variables: {
+ *      ongoingGameId: // value for 'ongoingGameId'
+ *   },
+ * });
+ */
+export function useLeaveGameMutation(baseOptions?: Apollo.MutationHookOptions<LeaveGameMutation, LeaveGameMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LeaveGameMutation, LeaveGameMutationVariables>(LeaveGameDocument, options);
+      }
+export type LeaveGameMutationHookResult = ReturnType<typeof useLeaveGameMutation>;
+export type LeaveGameMutationResult = Apollo.MutationResult<LeaveGameMutation>;
+export type LeaveGameMutationOptions = Apollo.BaseMutationOptions<LeaveGameMutation, LeaveGameMutationVariables>;
 export const SubscribeOngoingGameDocument = gql`
     subscription SubscribeOngoingGame($ongoingGameId: ID!) {
   ongoingGameStateChange(ongoingGameId: $ongoingGameId) {

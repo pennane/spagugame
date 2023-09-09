@@ -52,6 +52,12 @@ mutation ToggleReady($ongoingGameId: ID!, $ready: Boolean!) {
   }
 }
 
+mutation LeaveGame($ongoingGameId: ID!) {
+  leaveOngoingGame(ongoingGameId: $ongoingGameId) {
+    ...OngoingGame
+  }
+}
+
 subscription SubscribeOngoingGame($ongoingGameId: ID!) {
   ongoingGameStateChange(ongoingGameId: $ongoingGameId) {
     ...OngoingGameStateChange

@@ -14,8 +14,6 @@ export const useSubscribeGameTypeOngoingGames = ({
     skip,
     variables: { gameType },
     onData: ({ client, data }) => {
-      console.log('NEW GAME!!!')
-
       const game = data.data?.newOngoingGame
       if (!game || !isGameType(gameType)) return
 
@@ -25,8 +23,6 @@ export const useSubscribeGameTypeOngoingGames = ({
           variables: { gameType }
         },
         (data) => {
-          console.log(data)
-
           return {
             game: {
               ...data.game,
