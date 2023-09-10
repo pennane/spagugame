@@ -3,20 +3,21 @@ import * as Types from '../../../types';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type LeaderboardPlayerFragment = { __typename?: 'LeaderboardPlayer', _id: string, githubId?: string | null, userName?: string | null, totalWins: number, totalPlayed: number, elo: number };
+export type LeaderboardPlayerFragment = { __typename?: 'LeaderboardPlayer', _id: string, userId: string, githubId?: string | null, userName?: string | null, totalWins: number, totalPlayed: number, elo: number };
 
-export type LeaderboardsLeaderboardFragment = { __typename?: 'Leaderboard', _id: string, updatedAt: Date, gameType: Types.GameType, players: Array<{ __typename?: 'LeaderboardPlayer', _id: string, githubId?: string | null, userName?: string | null, totalWins: number, totalPlayed: number, elo: number }> };
+export type LeaderboardsLeaderboardFragment = { __typename?: 'Leaderboard', _id: string, updatedAt: Date, gameType: Types.GameType, players: Array<{ __typename?: 'LeaderboardPlayer', _id: string, userId: string, githubId?: string | null, userName?: string | null, totalWins: number, totalPlayed: number, elo: number }> };
 
 export type LeaderboardsQueryVariables = Types.Exact<{
   gameTypes: Array<Types.GameType> | Types.GameType;
 }>;
 
 
-export type LeaderboardsQuery = { __typename?: 'Query', leaderboards: Array<{ __typename?: 'Leaderboard', _id: string, updatedAt: Date, gameType: Types.GameType, players: Array<{ __typename?: 'LeaderboardPlayer', _id: string, githubId?: string | null, userName?: string | null, totalWins: number, totalPlayed: number, elo: number }> }> };
+export type LeaderboardsQuery = { __typename?: 'Query', leaderboards: Array<{ __typename?: 'Leaderboard', _id: string, updatedAt: Date, gameType: Types.GameType, players: Array<{ __typename?: 'LeaderboardPlayer', _id: string, userId: string, githubId?: string | null, userName?: string | null, totalWins: number, totalPlayed: number, elo: number }> }> };
 
 export const LeaderboardPlayerFragmentDoc = gql`
     fragment LeaderboardPlayer on LeaderboardPlayer {
   _id
+  userId
   githubId
   userName
   totalWins

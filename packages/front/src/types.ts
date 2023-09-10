@@ -51,6 +51,7 @@ export type LeaderboardPlayer = {
   githubId?: Maybe<Scalars['ID']['output']>;
   totalPlayed: Scalars['Int']['output'];
   totalWins: Scalars['Int']['output'];
+  userId: Scalars['ID']['output'];
   userName?: Maybe<Scalars['String']['output']>;
 };
 

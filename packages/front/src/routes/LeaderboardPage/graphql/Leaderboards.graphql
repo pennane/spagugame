@@ -1,5 +1,6 @@
 fragment LeaderboardPlayer on LeaderboardPlayer {
   _id
+  userId
   githubId
   userName
   totalWins

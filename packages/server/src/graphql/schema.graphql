@@ -26,6 +26,7 @@ enum UserRole {
 ## Leaderboard
 type LeaderboardPlayer {
   _id: ID!
+  userId: ID!
   githubId: ID
   userName: String
   totalWins: Int!

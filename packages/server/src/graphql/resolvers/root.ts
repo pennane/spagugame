@@ -211,21 +211,24 @@ export const resolvers: Resolvers<TContext> = {
           });
 
           const users = await find(ctx, "user", {
-            filter: { _id: { $in: stats.map((s) => new ObjectId(s.userId)) } },
+            filter: {
+              _id: { $in: stats.map((stat) => new ObjectId(stat.userId)) },
+            },
           });
 
           const leaderboard = {
             _id: gameType,
             gameType,
-            players: stats.map((s) => {
-              const user = users.find((u) => u._id.equals(s.userId));
+            players: stats.map((stat) => {
+              const user = users.find((user) => user._id.equals(stat.userId));
               return {
-                _id: s.userId.toString(),
-                elo: s.elo,
-                totalWins: s.totalWins,
+                _id: stat.userId.toString() + "" + gameType,
+                userId: stat.userId.toString(),
+                elo: stat.elo,
+                totalWins: stat.totalWins,
                 githubId: user?.githubId,
                 userName: user?.userName,
-                totalPlayed: s.totalPlayed,
+                totalPlayed: stat.totalPlayed,
               };
             }),
             updatedAt: now,

@@ -47,12 +47,12 @@ export const GameLeaderboardPlayer: FC<GameLeaderboardPlayerProps> = ({
   rank
 }) => {
   return (
-    <CustomLink boxShadow color="info" to={`/profile/${player._id}`}>
+    <CustomLink boxShadow color="info" to={`/profile/${player.userId}`}>
       <StyledGameLeaderboardPlayer>
         <StyledRank>{rank}.</StyledRank>
         <Pill color="info">{player.elo}</Pill>
         <MiniProfileImage githubId={player.githubId || ''} />
-        <Heading.H3>{player?.userName || player._id}</Heading.H3>
+        <Heading.H3>{player?.userName || player.userId}</Heading.H3>
       </StyledGameLeaderboardPlayer>
     </CustomLink>
   )
