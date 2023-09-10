@@ -49,13 +49,14 @@ pnpm --filter server dev
 ## What kind of games can be added?
 
 - No limit on player count
-- OnlyoOne player can play at a time (sad)
+- Only one player can play at a time (sad)
 - Game must end with each player having a score that can be used to determine who won etc
 
 ## Keeping track of some of the implemented techical features
 
 - automatic index creation and dropping
   - indexes are automatically kept upto date
+- apollo caching for leaderboards (once every 15 minutes)
 
 ## Images of the current prototype
 
