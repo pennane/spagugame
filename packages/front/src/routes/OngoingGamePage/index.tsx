@@ -5,11 +5,11 @@ import { RenderedGame } from '../../games'
 const StyledOngoingGamePage = styled.div``
 
 export const OngoingGamePage = () => {
-  const { gameId } = useParams()
+  const { gameId, gameType } = useParams()
 
   return (
     <StyledOngoingGamePage>
-      <RenderedGame ongoingGameId={gameId} />
+      <RenderedGame ongoingGameId={gameId} gameType={gameType} />
     </StyledOngoingGamePage>
   )
 }

@@ -1,5 +1,5 @@
 import { FC, useCallback } from 'react'
-import { useBeforeUnload } from 'react-router-dom'
+import { Navigate, useBeforeUnload } from 'react-router-dom'
 
 import {
   GetOngoingGameDocument,
@@ -16,6 +16,8 @@ import styled from 'styled-components'
 import { P } from '../components/P'
 import { MOBILE_WIDTHS } from '../hooks/useIsMobile'
 import { useCurrentUser } from '../hooks/useCurrentUser'
+import { isGameType } from '../lib/schema'
+import { GameType } from '../types'
 
 const StyledGame = styled.div`
   display: flex;
@@ -46,8 +48,12 @@ const StyledGameRight = styled.div`
 
 type GameRenderedProps = {
   ongoingGameId: string | undefined
+  gameType: string | undefined
 }
-export const RenderedGame: FC<GameRenderedProps> = ({ ongoingGameId }) => {
+export const RenderedGame: FC<GameRenderedProps> = ({
+  ongoingGameId,
+  gameType
+}) => {
   useBeforeUnload(
     useCallback(() => console.log('Are you sure you want to leave?'), [])
   )
@@ -60,10 +66,10 @@ export const RenderedGame: FC<GameRenderedProps> = ({ ongoingGameId }) => {
 
   const ongoingGame = ongoingGameData?.ongoingGame
 
-  const { data: gameData } = useGameQuery({
+  const { data: gameData, loading: gameLoading } = useGameQuery({
     // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-    variables: { gameType: ongoingGame?.gameType! },
-    skip: !ongoingGame?.gameType
+    variables: { gameType: gameType as GameType },
+    skip: !isGameType(gameType)
   })
 
   const game = gameData?.game
@@ -75,7 +81,6 @@ export const RenderedGame: FC<GameRenderedProps> = ({ ongoingGameId }) => {
       const game = data.data?.ongoingGameStateChange
       if (!game || !ongoingGame?._id) return
 
-      console.log(game)
       const updatedFields = omit(['_id', '__typename'], filter(isNotNil, game))
 
       client.cache.updateQuery(
@@ -104,7 +109,11 @@ export const RenderedGame: FC<GameRenderedProps> = ({ ongoingGameId }) => {
     playMove({ variables: { ongoingGameId, move } })
   }
 
-  if (ongoingGameLoading) return <P.DefaultText>loading ...</P.DefaultText>
+  if (ongoingGameLoading || gameLoading)
+    return <P.DefaultText>loading ...</P.DefaultText>
+
+  if (!ongoingGame)
+    return <Navigate to={`/played/${gameType}/${ongoingGameId}`} />
 
   if (!ongoingGame || !game)
     return (
