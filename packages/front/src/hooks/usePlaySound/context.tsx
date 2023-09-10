@@ -23,7 +23,7 @@ export const SoundContextProvider: FC<SoundContextProviderProps> = ({
   }
 
   return (
-    <SoundContext.Provider value={[wantSound, handleSetWantSound] as const}>
+    <SoundContext.Provider value={[wantSound, handleSetWantSound]}>
       {children}
     </SoundContext.Provider>
   )
