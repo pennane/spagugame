@@ -32,6 +32,7 @@ export type Game = {
 };
 
 export enum GameType {
+  ColorFlood = 'COLOR_FLOOD',
   FindFour = 'FIND_FOUR',
   TickTackToe = 'TICK_TACK_TOE'
 }

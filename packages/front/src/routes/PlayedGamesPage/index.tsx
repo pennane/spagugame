@@ -86,13 +86,17 @@ export const PlayedGamesPage: FC = () => {
   const parsedGameType = isGameType(gameType) ? gameType : undefined
 
   const allData: Record<GameType, ReturnType<typeof usePlayedGamesQuery>> = {
-    [GameType.TickTackToe]: usePlayedGamesQuery({
-      variables: { gameType: GameType.TickTackToe },
-      skip: parsedGameType && parsedGameType !== GameType.TickTackToe
-    }),
     [GameType.FindFour]: usePlayedGamesQuery({
       variables: { gameType: GameType.FindFour },
       skip: parsedGameType && parsedGameType !== GameType.FindFour
+    }),
+    [GameType.ColorFlood]: usePlayedGamesQuery({
+      variables: { gameType: GameType.ColorFlood },
+      skip: parsedGameType && parsedGameType !== GameType.ColorFlood
+    }),
+    [GameType.TickTackToe]: usePlayedGamesQuery({
+      variables: { gameType: GameType.TickTackToe },
+      skip: parsedGameType && parsedGameType !== GameType.TickTackToe
     })
   }
 
