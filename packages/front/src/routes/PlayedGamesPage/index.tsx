@@ -27,15 +27,15 @@ const StyledPlayedGame = styled.div`
   padding: 0.75rem 0;
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: 9rem 9rem 1fr 2fr;
+  grid-auto-columns: 8rem 9rem 1fr 2fr;
   gap: 0.5rem;
   justify-content: flex-start;
   align-items: center;
   justify-items: flex-start;
 
-  /* @media (max-width: ${MOBILE_WIDTHS.default}px) {
-    grid-auto-columns: 9rem 2fr 1fr;
-  } */
+  @media (max-width: ${MOBILE_WIDTHS.default}px) {
+    grid-auto-columns: 8rem 2fr 1fr;
+  }
 `
 export const PlayedGame: FC<{
   game: PlayedGamesQuery['playedGames'][number]
@@ -47,11 +47,12 @@ export const PlayedGame: FC<{
   return (
     <StyledPlayedGame key={game._id}>
       <P.DefaultText>{game.gameType}</P.DefaultText>
-      {/* {!isMobile && ( */}
-      <P.SmallText>
-        ({dateToFinnishLocale(parseDate(game.finishedAt))})
-      </P.SmallText>
-      {/* )} */}
+
+      {!isMobile && (
+        <Pill color="invertedSecondary">
+          {dateToFinnishLocale(parseDate(game.finishedAt))}
+        </Pill>
+      )}
 
       {profilePage && (
         <>

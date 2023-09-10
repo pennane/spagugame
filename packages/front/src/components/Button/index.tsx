@@ -22,8 +22,6 @@ const StyledButton = styled.button<{
   cursor: pointer;
   transition: border-color 0.1s;
   &:hover {
-    box-shadow: 0 0px 5px 0
-      ${({ theme, $color }) => theme.colors.foreground[$color]};
     box-shadow: inset 0 0px 3px 0
       ${({ theme, $color }) => theme.colors.foreground[$color]};
   }
