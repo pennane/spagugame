@@ -25,6 +25,7 @@ import leaveGame from "../../services/ongoingGame/leaveGame";
 import { IUser } from "../../collections/User";
 import { escapeRegex } from "../../lib/common";
 import { apolloCache } from "../../infrastructure/server";
+import { IPlayedGame } from "../../collections/PlayedGame";
 
 export const resolvers: Resolvers<TContext> = {
   User: {
@@ -150,12 +151,25 @@ export const resolvers: Resolvers<TContext> = {
       });
       return R.map((g) => R.modify("_id", (id) => id.toString(), g), stats);
     },
-    playedGame: async (_root, { id }, ctx) => {
-      const game = await get(ctx, "playedGame", {
-        filter: {
-          _id: new ObjectId(id),
-        },
-      });
+    playedGame: async (_root, { id, ongoingGameId }, ctx) => {
+      let game: IPlayedGame | null;
+
+      if (id) {
+        game = await get(ctx, "playedGame", {
+          filter: {
+            _id: new ObjectId(id),
+          },
+        });
+      } else if (ongoingGameId) {
+        game = await get(ctx, "playedGame", {
+          filter: {
+            ongoingGameId,
+          },
+        });
+      } else {
+        throw new Error("Need to speficy id or ongoingGameId");
+      }
+
       if (!game) return null;
       return R.modify("_id", (id) => id.toString(), game);
     },

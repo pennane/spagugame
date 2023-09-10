@@ -3,3 +3,9 @@ query PlayedGamePagePlayedGame($id: ID!) {
     ...ProfilePageUserPlayedGame
   }
 }
+
+query PlayedGamePagePlayedGameByOldId($ongoingGameId: ID!) {
+  playedGame(ongoingGameId: $ongoingGameId) {
+    ...ProfilePageUserPlayedGame
+  }
+}

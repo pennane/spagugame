@@ -1,5 +1,5 @@
-import { FC, useCallback } from 'react'
-import { Navigate, useBeforeUnload } from 'react-router-dom'
+import { FC } from 'react'
+import { Navigate } from 'react-router-dom'
 
 import {
   GetOngoingGameDocument,
@@ -18,6 +18,7 @@ import { MOBILE_WIDTHS } from '../hooks/useIsMobile'
 import { useCurrentUser } from '../hooks/useCurrentUser'
 import { isGameType } from '../lib/schema'
 import { GameType } from '../types'
+import { usePlayedGamePagePlayedGameByOldIdQuery } from '../routes/PlayedGamePage/graphql/PlayedGamePage.generated'
 
 const StyledGame = styled.div`
   display: flex;
@@ -54,15 +55,13 @@ export const RenderedGame: FC<GameRenderedProps> = ({
   ongoingGameId,
   gameType
 }) => {
-  useBeforeUnload(
-    useCallback(() => console.log('Are you sure you want to leave?'), [])
-  )
+  const currentUser = useCurrentUser()
+
   const { data: ongoingGameData, loading: ongoingGameLoading } =
     useGetOngoingGameQuery({
       variables: { ongoingGameId: ongoingGameId! },
       skip: !ongoingGameId
     })
-  const currentUser = useCurrentUser()
 
   const ongoingGame = ongoingGameData?.ongoingGame
 
@@ -70,6 +69,11 @@ export const RenderedGame: FC<GameRenderedProps> = ({
     // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
     variables: { gameType: gameType as GameType },
     skip: !isGameType(gameType)
+  })
+
+  const { data: endedGameData } = usePlayedGamePagePlayedGameByOldIdQuery({
+    variables: { ongoingGameId: ongoingGameId! },
+    skip: ongoingGameLoading || !!ongoingGame || !ongoingGameId
   })
 
   const game = gameData?.game
@@ -112,8 +116,10 @@ export const RenderedGame: FC<GameRenderedProps> = ({
   if (ongoingGameLoading || gameLoading)
     return <P.DefaultText>loading ...</P.DefaultText>
 
-  if (!ongoingGame)
-    return <Navigate to={`/played/${gameType}/${ongoingGameId}`} />
+  if (endedGameData?.playedGame?._id)
+    return (
+      <Navigate to={`/played/${gameType}/${endedGameData?.playedGame?._id}`} />
+    )
 
   if (!ongoingGame || !game)
     return (

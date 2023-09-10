@@ -85,7 +85,7 @@ type Game {
 
 type PlayedGame {
   _id: ID!
-  ongoingGameId: ID!
+  ongoingGameId: ID
   gameType: GameType!
   playerIds: [ID!]!
   playerScores: [Int!]!
@@ -142,7 +142,7 @@ type Query {
   game(gameType: GameType): Game
   games: [Game!]!
   usersStats(userIds: [ID!]!, gameType: GameType!): [UserStats!]!
-  playedGame(id: ID!): PlayedGame
+  playedGame(id: ID, ongoingGameId: ID): PlayedGame
   playedGames(gameTypes: [GameType!], first: Int): [PlayedGame!]!
   leaderboards(gameTypes: [GameType!]!): [Leaderboard!]!
 }

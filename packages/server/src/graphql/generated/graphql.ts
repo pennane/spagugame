@@ -145,7 +145,7 @@ export type PlayedGame = {
   finalState?: Maybe<Scalars['String']['output']>;
   finishedAt: Scalars['Date']['output'];
   gameType: GameType;
-  ongoingGameId: Scalars['ID']['output'];
+  ongoingGameId?: Maybe<Scalars['ID']['output']>;
   playerElosAfter: Array<Scalars['Float']['output']>;
   playerElosBefore: Array<Scalars['Float']['output']>;
   playerIds: Array<Scalars['ID']['output']>;
@@ -184,7 +184,8 @@ export type QueryOngoingGameArgs = {
 
 
 export type QueryPlayedGameArgs = {
-  id: Scalars['ID']['input'];
+  id?: InputMaybe<Scalars['ID']['input']>;
+  ongoingGameId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
@@ -474,7 +475,7 @@ export type PlayedGameResolvers<ContextType = any, ParentType extends ResolversP
   finalState?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   finishedAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   gameType?: Resolver<ResolversTypes['GameType'], ParentType, ContextType>;
-  ongoingGameId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  ongoingGameId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   playerElosAfter?: Resolver<Array<ResolversTypes['Float']>, ParentType, ContextType>;
   playerElosBefore?: Resolver<Array<ResolversTypes['Float']>, ParentType, ContextType>;
   playerIds?: Resolver<Array<ResolversTypes['ID']>, ParentType, ContextType>;
@@ -489,7 +490,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   games?: Resolver<Array<ResolversTypes['Game']>, ParentType, ContextType>;
   leaderboards?: Resolver<Array<ResolversTypes['Leaderboard']>, ParentType, ContextType, RequireFields<QueryLeaderboardsArgs, 'gameTypes'>>;
   ongoingGame?: Resolver<ResolversTypes['OngoingGame'], ParentType, ContextType, RequireFields<QueryOngoingGameArgs, 'ongoingGameId'>>;
-  playedGame?: Resolver<Maybe<ResolversTypes['PlayedGame']>, ParentType, ContextType, RequireFields<QueryPlayedGameArgs, 'id'>>;
+  playedGame?: Resolver<Maybe<ResolversTypes['PlayedGame']>, ParentType, ContextType, Partial<QueryPlayedGameArgs>>;
   playedGames?: Resolver<Array<ResolversTypes['PlayedGame']>, ParentType, ContextType, Partial<QueryPlayedGamesArgs>>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, Partial<QueryUsersArgs>>;

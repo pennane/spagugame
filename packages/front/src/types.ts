@@ -142,7 +142,7 @@ export type PlayedGame = {
   finalState?: Maybe<Scalars['String']['output']>;
   finishedAt: Scalars['Date']['output'];
   gameType: GameType;
-  ongoingGameId: Scalars['ID']['output'];
+  ongoingGameId?: Maybe<Scalars['ID']['output']>;
   playerElosAfter: Array<Scalars['Float']['output']>;
   playerElosBefore: Array<Scalars['Float']['output']>;
   playerIds: Array<Scalars['ID']['output']>;
@@ -181,7 +181,8 @@ export type QueryOngoingGameArgs = {
 
 
 export type QueryPlayedGameArgs = {
-  id: Scalars['ID']['input'];
+  id?: InputMaybe<Scalars['ID']['input']>;
+  ongoingGameId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 

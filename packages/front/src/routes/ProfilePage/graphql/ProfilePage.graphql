@@ -17,6 +17,7 @@ fragment ProfilePageUserPlayedGame on PlayedGame {
   startedAt
   finishedAt
   finalState
+  ongoingGameId
 }
 
 query ProfilePageUser($userId: ID!) {

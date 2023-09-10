@@ -5,14 +5,14 @@ import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type ProfilePageUserStatsFragment = { __typename?: 'UserStats', _id: string, userId: string, gameType: Types.GameType, totalWins: number, totalPlayed: number, elo: number };
 
-export type ProfilePageUserPlayedGameFragment = { __typename?: 'PlayedGame', _id: string, gameType: Types.GameType, playerIds: Array<string>, playerScores: Array<number>, playerElosBefore: Array<number>, playerElosAfter: Array<number>, startedAt: Date, finishedAt: Date, finalState?: string | null };
+export type ProfilePageUserPlayedGameFragment = { __typename?: 'PlayedGame', _id: string, gameType: Types.GameType, playerIds: Array<string>, playerScores: Array<number>, playerElosBefore: Array<number>, playerElosAfter: Array<number>, startedAt: Date, finishedAt: Date, finalState?: string | null, ongoingGameId?: string | null };
 
 export type ProfilePageUserQueryVariables = Types.Exact<{
   userId: Types.Scalars['ID']['input'];
 }>;
 
 
-export type ProfilePageUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', _id: string, githubId: string, userName: string, stats: Array<{ __typename?: 'UserStats', _id: string, userId: string, gameType: Types.GameType, totalWins: number, totalPlayed: number, elo: number }>, playedGames: Array<{ __typename?: 'PlayedGame', _id: string, gameType: Types.GameType, playerIds: Array<string>, playerScores: Array<number>, playerElosBefore: Array<number>, playerElosAfter: Array<number>, startedAt: Date, finishedAt: Date, finalState?: string | null }> } | null };
+export type ProfilePageUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', _id: string, githubId: string, userName: string, stats: Array<{ __typename?: 'UserStats', _id: string, userId: string, gameType: Types.GameType, totalWins: number, totalPlayed: number, elo: number }>, playedGames: Array<{ __typename?: 'PlayedGame', _id: string, gameType: Types.GameType, playerIds: Array<string>, playerScores: Array<number>, playerElosBefore: Array<number>, playerElosAfter: Array<number>, startedAt: Date, finishedAt: Date, finalState?: string | null, ongoingGameId?: string | null }> } | null };
 
 export const ProfilePageUserStatsFragmentDoc = gql`
     fragment ProfilePageUserStats on UserStats {
@@ -35,6 +35,7 @@ export const ProfilePageUserPlayedGameFragmentDoc = gql`
   startedAt
   finishedAt
   finalState
+  ongoingGameId
 }
     `;
 export const ProfilePageUserDocument = gql`
