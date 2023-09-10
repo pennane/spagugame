@@ -6,10 +6,12 @@ type ButtonProps = {
   children: ReactNode
   onClick?: MouseEventHandler<HTMLButtonElement> | undefined
   color?: keyof typeof theme.colors.foreground
+  disabled?: boolean
 } & React.HTMLAttributes<HTMLButtonElement>
 
 const StyledButton = styled.button<{
   $color: keyof typeof theme.colors.foreground
+  $disabled: boolean
 }>`
   border-radius: 0.5rem;
   color: ${({ theme, $color }) => theme.colors.foreground[$color]};
@@ -25,16 +27,24 @@ const StyledButton = styled.button<{
     box-shadow: inset 0 0px 3px 0
       ${({ theme, $color }) => theme.colors.foreground[$color]};
   }
+  ${({ $disabled }) => $disabled && 'opacity: 0.5; cursor: not-allowed;'}
 `
 
 export const Button: FC<ButtonProps> = ({
   children,
   onClick,
   color,
+  disabled,
   ...rest
 }) => {
   return (
-    <StyledButton $color={color || 'success'} onClick={onClick} {...rest}>
+    <StyledButton
+      $color={color || 'success'}
+      $disabled={disabled || false}
+      disabled={disabled}
+      onClick={onClick}
+      {...rest}
+    >
       {children}
     </StyledButton>
   )

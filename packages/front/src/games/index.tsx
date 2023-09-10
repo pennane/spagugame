@@ -83,7 +83,6 @@ export const RenderedGame: FC<GameRenderedProps> = ({
     variables: { ongoingGameId: ongoingGameId! },
     skip: !ongoingGameId,
     onData: ({ client, data }) => {
-      console.log(data)
       const game = data.data?.ongoingGameStateChange
       if (!game || !ongoingGame?._id) return
 

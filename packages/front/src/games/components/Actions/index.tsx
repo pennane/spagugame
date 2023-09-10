@@ -13,6 +13,7 @@ import { Span } from '../../../components/Span'
 import { Modal } from '../../../components/Modal'
 import { P } from '../../../components/P'
 import { CustomLink } from '../../../components/CustomLink'
+import { useFindNewGame } from '../../../hooks/useFindNewGame'
 
 const StyledActions = styled.div`
   display: flex;
@@ -43,6 +44,7 @@ export const Actions: FC<ActionsProps> = ({ ongoingGame, game }) => {
   const [toggleReady] = useToggleReadyMutation()
   const [joinGame] = useJoinGameMutation()
   const [leaveGame] = useLeaveGameMutation()
+  const [findNewGame, searchingNewGame] = useFindNewGame(game.type)
 
   const [showModal, setShowModal] = useState(false)
 
@@ -113,6 +115,13 @@ export const Actions: FC<ActionsProps> = ({ ongoingGame, game }) => {
           >
             <Button>View stats</Button>
           </CustomLink>
+        </StyledAction>
+      )}
+      {ongoingGame.processState === OngoingGameProcessState.Finished && (
+        <StyledAction>
+          <Button disabled={searchingNewGame} onClick={findNewGame}>
+            Find new game
+          </Button>
         </StyledAction>
       )}
       <Modal
