@@ -162,6 +162,12 @@ const MobileNavbar = {
   `
 }
 
+const SpaguNavTitle = styled.span`
+  font-weight: 900;
+  letter-spacing: -0.125rem;
+  font-size: 1.25rem;
+`
+
 export const Navbar = () => {
   const [open, setOpen] = useState(false)
   const isMobile = useIsMobile()
@@ -187,7 +193,9 @@ export const Navbar = () => {
           >
             <Burgir />
           </Button>
-          <StyledNavLink to={navLinks[0][1]}>{navLinks[0][0]}</StyledNavLink>
+          <StyledNavLink to={'/'}>
+            <SpaguNavTitle>Spagu</SpaguNavTitle>
+          </StyledNavLink>
         </StyledThingEiJaksa>
         <MobileNavbar.Wrapper $open={open}>
           <MobileNavbar.Items>
