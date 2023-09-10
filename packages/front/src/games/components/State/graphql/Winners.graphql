@@ -1,0 +1,7 @@
+query Winners($userIds: [ID!]!) {
+  users(ids: $userIds) {
+    githubId
+    _id
+    userName
+  }
+}

@@ -5,6 +5,8 @@ import { GAME_TYPE_TO_SPECIFICATION } from '../../constants'
 import styled from 'styled-components'
 import { isNotNil } from 'ramda'
 import { GameSpecification } from '../../models'
+import { useWinnersQuery } from './graphql/Winners.generated'
+import { MiniProfileImage } from '../Players'
 
 type GameRenderedProps = {
   game: OngoingGame
@@ -43,6 +45,29 @@ const StyledGameFinished = styled.div`
   text-align: center;
 `
 
+const StyledWinners = styled.div`
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / 80%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #5299d3;
+  overflow: hidden;
+  line-height: 1;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+`
+
+const Winner = styled.div`
+  display: flex;
+  gap: 0.25rem;
+  justify-content: center;
+  align-items: center;
+`
+
 export const State: FC<GameRenderedProps> = ({ game, playMove }) => {
   const gameType = game.gameType
   const jsonState = game.jsonState
@@ -52,6 +77,11 @@ export const State: FC<GameRenderedProps> = ({ game, playMove }) => {
     () => GAME_TYPE_TO_SPECIFICATION[gameType] as GameSpecification<unknown>,
     [gameType]
   )
+
+  const { data: winnersData } = useWinnersQuery({
+    variables: { userIds: game.winnerIds! },
+    skip: !game.winnerIds || game.winnerIds.length === 0
+  })
 
   const deserializedState = useMemo(() => {
     return specification.parseState(jsonState)
@@ -64,10 +94,23 @@ export const State: FC<GameRenderedProps> = ({ game, playMove }) => {
     [specification, deserializedState, playMove]
   )
 
+  const hasWinner = game.winnerIds && game.winnerIds.length > 0
+
   return (
     <StyledState>
       {State}
-      {game.processState === OngoingGameProcessState.Finished && (
+      {hasWinner && game.processState === OngoingGameProcessState.Finished && (
+        <StyledWinners>
+          Winner
+          {winnersData &&
+            winnersData.users.map((u) => (
+              <Winner>
+                <MiniProfileImage githubId={u.githubId} /> {u?.userName}
+              </Winner>
+            ))}
+        </StyledWinners>
+      )}
+      {!hasWinner && game.processState === OngoingGameProcessState.Finished && (
         <StyledGameFinished>{'Game finished'}</StyledGameFinished>
       )}
       {isNotNil(startsIn) &&

@@ -12,6 +12,7 @@ import { GameFragment } from '../../../routes/LandingPage/graphql/Games.generate
 import { Span } from '../../../components/Span'
 import { Modal } from '../../../components/Modal'
 import { P } from '../../../components/P'
+import { CustomLink } from '../../../components/CustomLink'
 
 const StyledActions = styled.div`
   display: flex;
@@ -102,10 +103,18 @@ export const Actions: FC<ActionsProps> = ({ ongoingGame, game }) => {
       {hasJoined &&
         ongoingGame.processState !== OngoingGameProcessState.Finished && (
           <StyledAction>
-            {' '}
             <Button onClick={() => setShowModal(true)}>Leave</Button>
           </StyledAction>
         )}
+      {ongoingGame.playedGameId && (
+        <StyledAction>
+          <CustomLink
+            to={`/played/${ongoingGame.gameType}/${ongoingGame.playedGameId}`}
+          >
+            <Button>View stats</Button>
+          </CustomLink>
+        </StyledAction>
+      )}
       <Modal
         title="Are you sure?"
         onConfirm={() => {

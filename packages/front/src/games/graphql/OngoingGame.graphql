@@ -12,6 +12,8 @@ fragment OngoingGame on OngoingGame {
   startedAt
   startsIn
   isPrivate
+  playedGameId
+  winnerIds
 }
 
 fragment OngoingGameStateChange on OngoingGameStateChange {
@@ -26,6 +28,8 @@ fragment OngoingGameStateChange on OngoingGameStateChange {
   }
   currentTurn
   startsIn
+  playedGameId
+  winnerIds
 }
 
 query GetOngoingGame($ongoingGameId: ID!) {

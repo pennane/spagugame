@@ -104,10 +104,12 @@ export type OngoingGame = {
   gameType: GameType;
   isPrivate: Scalars['Boolean']['output'];
   jsonState: Scalars['String']['output'];
+  playedGameId?: Maybe<Scalars['ID']['output']>;
   players: Array<OngoingGamePlayer>;
   processState: OngoingGameProcessState;
   startedAt?: Maybe<Scalars['Float']['output']>;
   startsIn?: Maybe<Scalars['Int']['output']>;
+  winnerIds?: Maybe<Array<Scalars['ID']['output']>>;
 };
 
 export type OngoingGamePlayer = {
@@ -131,9 +133,11 @@ export type OngoingGameStateChange = {
   currentTurn?: Maybe<Scalars['ID']['output']>;
   gameType?: Maybe<GameType>;
   jsonState?: Maybe<Scalars['String']['output']>;
+  playedGameId?: Maybe<Scalars['ID']['output']>;
   players?: Maybe<Array<OngoingGamePlayer>>;
   processState?: Maybe<OngoingGameProcessState>;
   startsIn?: Maybe<Scalars['Int']['output']>;
+  winnerIds?: Maybe<Array<Scalars['ID']['output']>>;
 };
 
 export type PlayedGame = {

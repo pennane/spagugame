@@ -3,23 +3,23 @@ import * as Types from '../../types';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type OngoingGameFragment = { __typename?: 'OngoingGame', _id: string, gameType: Types.GameType, processState: Types.OngoingGameProcessState, jsonState: string, currentTurn?: string | null, startedAt?: number | null, startsIn?: number | null, isPrivate: boolean, players: Array<{ __typename?: 'OngoingGamePlayer', score: number, userId: string, ready: boolean }> };
+export type OngoingGameFragment = { __typename?: 'OngoingGame', _id: string, gameType: Types.GameType, processState: Types.OngoingGameProcessState, jsonState: string, currentTurn?: string | null, startedAt?: number | null, startsIn?: number | null, isPrivate: boolean, playedGameId?: string | null, winnerIds?: Array<string> | null, players: Array<{ __typename?: 'OngoingGamePlayer', score: number, userId: string, ready: boolean }> };
 
-export type OngoingGameStateChangeFragment = { __typename?: 'OngoingGameStateChange', _id?: string | null, gameType?: Types.GameType | null, processState?: Types.OngoingGameProcessState | null, jsonState?: string | null, currentTurn?: string | null, startsIn?: number | null, players?: Array<{ __typename?: 'OngoingGamePlayer', score: number, userId: string, ready: boolean }> | null };
+export type OngoingGameStateChangeFragment = { __typename?: 'OngoingGameStateChange', _id?: string | null, gameType?: Types.GameType | null, processState?: Types.OngoingGameProcessState | null, jsonState?: string | null, currentTurn?: string | null, startsIn?: number | null, playedGameId?: string | null, winnerIds?: Array<string> | null, players?: Array<{ __typename?: 'OngoingGamePlayer', score: number, userId: string, ready: boolean }> | null };
 
 export type GetOngoingGameQueryVariables = Types.Exact<{
   ongoingGameId: Types.Scalars['ID']['input'];
 }>;
 
 
-export type GetOngoingGameQuery = { __typename?: 'Query', ongoingGame: { __typename?: 'OngoingGame', _id: string, gameType: Types.GameType, processState: Types.OngoingGameProcessState, jsonState: string, currentTurn?: string | null, startedAt?: number | null, startsIn?: number | null, isPrivate: boolean, players: Array<{ __typename?: 'OngoingGamePlayer', score: number, userId: string, ready: boolean }> } };
+export type GetOngoingGameQuery = { __typename?: 'Query', ongoingGame: { __typename?: 'OngoingGame', _id: string, gameType: Types.GameType, processState: Types.OngoingGameProcessState, jsonState: string, currentTurn?: string | null, startedAt?: number | null, startsIn?: number | null, isPrivate: boolean, playedGameId?: string | null, winnerIds?: Array<string> | null, players: Array<{ __typename?: 'OngoingGamePlayer', score: number, userId: string, ready: boolean }> } };
 
 export type JoinGameMutationVariables = Types.Exact<{
   ongoingGameId: Types.Scalars['ID']['input'];
 }>;
 
 
-export type JoinGameMutation = { __typename?: 'Mutation', joinOngoingGame: { __typename?: 'OngoingGame', _id: string, gameType: Types.GameType, processState: Types.OngoingGameProcessState, jsonState: string, currentTurn?: string | null, startedAt?: number | null, startsIn?: number | null, isPrivate: boolean, players: Array<{ __typename?: 'OngoingGamePlayer', score: number, userId: string, ready: boolean }> } };
+export type JoinGameMutation = { __typename?: 'Mutation', joinOngoingGame: { __typename?: 'OngoingGame', _id: string, gameType: Types.GameType, processState: Types.OngoingGameProcessState, jsonState: string, currentTurn?: string | null, startedAt?: number | null, startsIn?: number | null, isPrivate: boolean, playedGameId?: string | null, winnerIds?: Array<string> | null, players: Array<{ __typename?: 'OngoingGamePlayer', score: number, userId: string, ready: boolean }> } };
 
 export type PlayMoveMutationVariables = Types.Exact<{
   ongoingGameId: Types.Scalars['ID']['input'];
@@ -27,7 +27,7 @@ export type PlayMoveMutationVariables = Types.Exact<{
 }>;
 
 
-export type PlayMoveMutation = { __typename?: 'Mutation', playTurn: { __typename?: 'OngoingGame', _id: string, gameType: Types.GameType, processState: Types.OngoingGameProcessState, jsonState: string, currentTurn?: string | null, startedAt?: number | null, startsIn?: number | null, isPrivate: boolean, players: Array<{ __typename?: 'OngoingGamePlayer', score: number, userId: string, ready: boolean }> } };
+export type PlayMoveMutation = { __typename?: 'Mutation', playTurn: { __typename?: 'OngoingGame', _id: string, gameType: Types.GameType, processState: Types.OngoingGameProcessState, jsonState: string, currentTurn?: string | null, startedAt?: number | null, startsIn?: number | null, isPrivate: boolean, playedGameId?: string | null, winnerIds?: Array<string> | null, players: Array<{ __typename?: 'OngoingGamePlayer', score: number, userId: string, ready: boolean }> } };
 
 export type ToggleReadyMutationVariables = Types.Exact<{
   ongoingGameId: Types.Scalars['ID']['input'];
@@ -35,21 +35,21 @@ export type ToggleReadyMutationVariables = Types.Exact<{
 }>;
 
 
-export type ToggleReadyMutation = { __typename?: 'Mutation', toggleReady: { __typename?: 'OngoingGame', _id: string, gameType: Types.GameType, processState: Types.OngoingGameProcessState, jsonState: string, currentTurn?: string | null, startedAt?: number | null, startsIn?: number | null, isPrivate: boolean, players: Array<{ __typename?: 'OngoingGamePlayer', score: number, userId: string, ready: boolean }> } };
+export type ToggleReadyMutation = { __typename?: 'Mutation', toggleReady: { __typename?: 'OngoingGame', _id: string, gameType: Types.GameType, processState: Types.OngoingGameProcessState, jsonState: string, currentTurn?: string | null, startedAt?: number | null, startsIn?: number | null, isPrivate: boolean, playedGameId?: string | null, winnerIds?: Array<string> | null, players: Array<{ __typename?: 'OngoingGamePlayer', score: number, userId: string, ready: boolean }> } };
 
 export type LeaveGameMutationVariables = Types.Exact<{
   ongoingGameId: Types.Scalars['ID']['input'];
 }>;
 
 
-export type LeaveGameMutation = { __typename?: 'Mutation', leaveOngoingGame: { __typename?: 'OngoingGame', _id: string, gameType: Types.GameType, processState: Types.OngoingGameProcessState, jsonState: string, currentTurn?: string | null, startedAt?: number | null, startsIn?: number | null, isPrivate: boolean, players: Array<{ __typename?: 'OngoingGamePlayer', score: number, userId: string, ready: boolean }> } };
+export type LeaveGameMutation = { __typename?: 'Mutation', leaveOngoingGame: { __typename?: 'OngoingGame', _id: string, gameType: Types.GameType, processState: Types.OngoingGameProcessState, jsonState: string, currentTurn?: string | null, startedAt?: number | null, startsIn?: number | null, isPrivate: boolean, playedGameId?: string | null, winnerIds?: Array<string> | null, players: Array<{ __typename?: 'OngoingGamePlayer', score: number, userId: string, ready: boolean }> } };
 
 export type SubscribeOngoingGameSubscriptionVariables = Types.Exact<{
   ongoingGameId: Types.Scalars['ID']['input'];
 }>;
 
 
-export type SubscribeOngoingGameSubscription = { __typename?: 'Subscription', ongoingGameStateChange: { __typename?: 'OngoingGameStateChange', _id?: string | null, gameType?: Types.GameType | null, processState?: Types.OngoingGameProcessState | null, jsonState?: string | null, currentTurn?: string | null, startsIn?: number | null, players?: Array<{ __typename?: 'OngoingGamePlayer', score: number, userId: string, ready: boolean }> | null } };
+export type SubscribeOngoingGameSubscription = { __typename?: 'Subscription', ongoingGameStateChange: { __typename?: 'OngoingGameStateChange', _id?: string | null, gameType?: Types.GameType | null, processState?: Types.OngoingGameProcessState | null, jsonState?: string | null, currentTurn?: string | null, startsIn?: number | null, playedGameId?: string | null, winnerIds?: Array<string> | null, players?: Array<{ __typename?: 'OngoingGamePlayer', score: number, userId: string, ready: boolean }> | null } };
 
 export const OngoingGameFragmentDoc = gql`
     fragment OngoingGame on OngoingGame {
@@ -66,6 +66,8 @@ export const OngoingGameFragmentDoc = gql`
   startedAt
   startsIn
   isPrivate
+  playedGameId
+  winnerIds
 }
     `;
 export const OngoingGameStateChangeFragmentDoc = gql`
@@ -81,6 +83,8 @@ export const OngoingGameStateChangeFragmentDoc = gql`
   }
   currentTurn
   startsIn
+  playedGameId
+  winnerIds
 }
     `;
 export const GetOngoingGameDocument = gql`

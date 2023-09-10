@@ -107,10 +107,12 @@ export type OngoingGame = {
   gameType: GameType;
   isPrivate: Scalars['Boolean']['output'];
   jsonState: Scalars['String']['output'];
+  playedGameId?: Maybe<Scalars['ID']['output']>;
   players: Array<OngoingGamePlayer>;
   processState: OngoingGameProcessState;
   startedAt?: Maybe<Scalars['Float']['output']>;
   startsIn?: Maybe<Scalars['Int']['output']>;
+  winnerIds?: Maybe<Array<Scalars['ID']['output']>>;
 };
 
 export type OngoingGamePlayer = {
@@ -134,9 +136,11 @@ export type OngoingGameStateChange = {
   currentTurn?: Maybe<Scalars['ID']['output']>;
   gameType?: Maybe<GameType>;
   jsonState?: Maybe<Scalars['String']['output']>;
+  playedGameId?: Maybe<Scalars['ID']['output']>;
   players?: Maybe<Array<OngoingGamePlayer>>;
   processState?: Maybe<OngoingGameProcessState>;
   startsIn?: Maybe<Scalars['Int']['output']>;
+  winnerIds?: Maybe<Array<Scalars['ID']['output']>>;
 };
 
 export type PlayedGame = {
@@ -445,10 +449,12 @@ export type OngoingGameResolvers<ContextType = any, ParentType extends Resolvers
   gameType?: Resolver<ResolversTypes['GameType'], ParentType, ContextType>;
   isPrivate?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   jsonState?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  playedGameId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   players?: Resolver<Array<ResolversTypes['OngoingGamePlayer']>, ParentType, ContextType>;
   processState?: Resolver<ResolversTypes['OngoingGameProcessState'], ParentType, ContextType>;
   startedAt?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
   startsIn?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  winnerIds?: Resolver<Maybe<Array<ResolversTypes['ID']>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -464,9 +470,11 @@ export type OngoingGameStateChangeResolvers<ContextType = any, ParentType extend
   currentTurn?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   gameType?: Resolver<Maybe<ResolversTypes['GameType']>, ParentType, ContextType>;
   jsonState?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  playedGameId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   players?: Resolver<Maybe<Array<ResolversTypes['OngoingGamePlayer']>>, ParentType, ContextType>;
   processState?: Resolver<Maybe<ResolversTypes['OngoingGameProcessState']>, ParentType, ContextType>;
   startsIn?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  winnerIds?: Resolver<Maybe<Array<ResolversTypes['ID']>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

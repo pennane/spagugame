@@ -122,6 +122,8 @@ type OngoingGame {
   startedAt: Float
   startsIn: Int
   isPrivate: Boolean!
+  playedGameId: ID
+  winnerIds: [ID!]
 }
 
 type OngoingGameStateChange {
@@ -132,6 +134,8 @@ type OngoingGameStateChange {
   players: [OngoingGamePlayer!]
   currentTurn: ID
   startsIn: Int
+  playedGameId: ID
+  winnerIds: [ID!]
 }
 
 type Query {

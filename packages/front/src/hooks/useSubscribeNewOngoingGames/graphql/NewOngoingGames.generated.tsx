@@ -9,7 +9,7 @@ export type NewOngoingGamesSubscriptionVariables = Types.Exact<{
 }>;
 
 
-export type NewOngoingGamesSubscription = { __typename?: 'Subscription', newOngoingGame: { __typename?: 'OngoingGame', _id: string, gameType: Types.GameType, processState: Types.OngoingGameProcessState, jsonState: string, currentTurn?: string | null, startedAt?: number | null, startsIn?: number | null, isPrivate: boolean, players: Array<{ __typename?: 'OngoingGamePlayer', score: number, userId: string, ready: boolean }> } };
+export type NewOngoingGamesSubscription = { __typename?: 'Subscription', newOngoingGame: { __typename?: 'OngoingGame', _id: string, gameType: Types.GameType, processState: Types.OngoingGameProcessState, jsonState: string, currentTurn?: string | null, startedAt?: number | null, startsIn?: number | null, isPrivate: boolean, playedGameId?: string | null, winnerIds?: Array<string> | null, players: Array<{ __typename?: 'OngoingGamePlayer', score: number, userId: string, ready: boolean }> } };
 
 
 export const NewOngoingGamesDocument = gql`

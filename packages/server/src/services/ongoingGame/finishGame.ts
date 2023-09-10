@@ -86,8 +86,28 @@ const finishGame = authenticatedService<
 
   const newEloPlayers = calculateNewElos(eloPlayersInWinningOrder);
 
-  const updatedGame = R.evolve(
-    {
+  const maxScore = Math.max(...newEloPlayers.map((p) => p.score));
+  const winnerIds = newEloPlayers.every((p, _, arr) => p.score === arr[0].score)
+    ? []
+    : newEloPlayers.filter((p) => p.score === maxScore).map((p) => p._id);
+
+  const now = Date.now();
+  const TWENTY_MIN_IN_MS = 1000 * 60 * 20;
+
+  const playedGame = await create(ctx, "playedGame", {
+    finishedAt: new Date(now),
+    ongoingGameId: game._id,
+    finalState: JSON.stringify(game.jsonState),
+    gameType: game.gameType,
+    startedAt: new Date(game.startedAt || now - TWENTY_MIN_IN_MS),
+    playerIds: R.pluck("_id", newEloPlayers),
+    playerScores: R.pluck("score", newEloPlayers),
+    playerElosBefore: R.pluck("elo", newEloPlayers),
+    playerElosAfter: R.pluck("newElo", newEloPlayers),
+  });
+
+  const updatedGame = R.pipe(
+    R.evolve({
       players: () =>
         newEloPlayers.map((p) => ({
           userId: p._id,
@@ -95,9 +115,13 @@ const finishGame = authenticatedService<
           ready: true,
         })),
       processState: () => OngoingGameProcessState.Finished,
-    },
-    game
-  );
+    }),
+    (game) => ({
+      ...game,
+      winnerIds,
+      playedGameId: playedGame.insertedId.toString(),
+    })
+  )(game);
 
   await Promise.all(
     newEloPlayers.map((p) =>
@@ -108,6 +132,8 @@ const finishGame = authenticatedService<
           {
             players: updatedGame.players,
             processState: updatedGame.processState,
+            winnerIds: updatedGame.winnerIds,
+            playedGameId: updatedGame.playedGameId,
           },
           { onlyPublish: true }
         ),
@@ -134,21 +160,6 @@ const finishGame = authenticatedService<
       ])
     )
   );
-
-  const now = Date.now();
-  const TWENTY_MIN_IN_MS = 1000 * 60 * 20;
-
-  await create(ctx, "playedGame", {
-    finishedAt: new Date(now),
-    ongoingGameId: game._id,
-    finalState: JSON.stringify(game.jsonState),
-    gameType: game.gameType,
-    startedAt: new Date(game.startedAt || now - TWENTY_MIN_IN_MS),
-    playerIds: R.pluck("_id", newEloPlayers),
-    playerScores: R.pluck("score", newEloPlayers),
-    playerElosBefore: R.pluck("elo", newEloPlayers),
-    playerElosAfter: R.pluck("newElo", newEloPlayers),
-  });
 
   // return final state
   return gqlSerializeGame(updatedGame);

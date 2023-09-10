@@ -18,7 +18,7 @@ export type NewGameMutationVariables = Types.Exact<{
 }>;
 
 
-export type NewGameMutation = { __typename?: 'Mutation', createOngoingGame: { __typename?: 'OngoingGame', _id: string, gameType: Types.GameType, processState: Types.OngoingGameProcessState, jsonState: string, currentTurn?: string | null, startedAt?: number | null, startsIn?: number | null, isPrivate: boolean, players: Array<{ __typename?: 'OngoingGamePlayer', score: number, userId: string, ready: boolean }> } };
+export type NewGameMutation = { __typename?: 'Mutation', createOngoingGame: { __typename?: 'OngoingGame', _id: string, gameType: Types.GameType, processState: Types.OngoingGameProcessState, jsonState: string, currentTurn?: string | null, startedAt?: number | null, startsIn?: number | null, isPrivate: boolean, playedGameId?: string | null, winnerIds?: Array<string> | null, players: Array<{ __typename?: 'OngoingGamePlayer', score: number, userId: string, ready: boolean }> } };
 
 
 export const GameDocument = gql`
