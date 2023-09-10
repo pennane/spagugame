@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useEffect, useRef } from 'react'
 import { Navigate } from 'react-router-dom'
 
 import {
@@ -17,8 +17,9 @@ import { P } from '../components/P'
 import { MOBILE_WIDTHS } from '../hooks/useIsMobile'
 import { useCurrentUser } from '../hooks/useCurrentUser'
 import { isGameType } from '../lib/schema'
-import { GameType } from '../types'
+import { GameType, OngoingGameProcessState } from '../types'
 import { usePlayedGamePagePlayedGameByOldIdQuery } from '../routes/PlayedGamePage/graphql/PlayedGamePage.generated'
+import { usePlaySound } from '../hooks/usePlaySound'
 
 const StyledGame = styled.div`
   display: flex;
@@ -82,6 +83,7 @@ export const RenderedGame: FC<GameRenderedProps> = ({
     variables: { ongoingGameId: ongoingGameId! },
     skip: !ongoingGameId,
     onData: ({ client, data }) => {
+      console.log(data)
       const game = data.data?.ongoingGameStateChange
       if (!game || !ongoingGame?._id) return
 
@@ -99,6 +101,54 @@ export const RenderedGame: FC<GameRenderedProps> = ({
       )
     }
   })
+
+  const playSound = usePlaySound()
+
+  const oldStateRef = useRef(ongoingGame)
+
+  useEffect(() => {
+    const oldState = oldStateRef.current
+    const newState = ongoingGame
+    if (!oldState) {
+      oldStateRef.current = newState
+
+      return
+    }
+
+    if (!newState) {
+      return
+    }
+
+    if (oldState.players.length > newState.players.length) {
+      playSound('left')
+    } else if (oldState.players.length < newState.players.length) {
+      playSound('join')
+    }
+
+    if (oldState.startsIn !== newState.startsIn) {
+      if (newState.startedAt) {
+        playSound('start')
+      } else {
+        playSound('countdown')
+      }
+    }
+    if (oldState.currentTurn !== newState.currentTurn) {
+      if (newState.currentTurn === currentUser?._id) {
+        playSound('playerPlay')
+      } else {
+        playSound('opponentPlay')
+      }
+    }
+
+    if (
+      oldState.processState !== newState.processState &&
+      newState.processState === OngoingGameProcessState.Finished
+    ) {
+      playSound('finished')
+    }
+
+    oldStateRef.current = ongoingGame
+  }, [ongoingGame, playSound, currentUser])
 
   const [playMove] = usePlayMoveMutation()
 

@@ -29,6 +29,7 @@ import { ProfilePage } from './routes/ProfilePage'
 import { PlayedGamesPage } from './routes/PlayedGamesPage'
 import { PlayedGamePage } from './routes/PlayedGamePage'
 import { LeaderboardPage } from './routes/LeaderboardPage'
+import { SoundContextProvider } from './hooks/usePlaySound/context'
 
 const httpLink = new HttpLink({
   uri: `${import.meta.env.VITE_SERVER_BASE_URL}/graphql`,
@@ -86,9 +87,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ApolloProvider client={client}>
       <CurrentUserContextProvider>
-        <ThemeProvider theme={theme}>
-          <RouterProvider router={router} />
-        </ThemeProvider>
+        <SoundContextProvider>
+          <ThemeProvider theme={theme}>
+            <RouterProvider router={router} />
+          </ThemeProvider>
+        </SoundContextProvider>
       </CurrentUserContextProvider>
     </ApolloProvider>
   </React.StrictMode>
