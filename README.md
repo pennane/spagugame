@@ -33,6 +33,22 @@ The project is organized as a monorepo for clarity and scalability. Here are the
 2. **front**: Houses the frontend React application, components, and client-side logic.
 3. **environment**: Includes Docker configurations for MongoDB and Redis, ensuring a consistent environment setup.
 
+## Development
+
+Docker and pnpm (or npm) is required.
+All three packages can be started in dev mode with following command in monorepo root
+
+```sh
+pnpm run dev
+```
+
+To start specific packages they can be targeted with `--filter <package_name>` option
+e.g.
+
+```sh
+pnpm --filter server dev
+```
+
 ## What kind of games can be added?
 
 - No limit on player count
