@@ -1,0 +1,23 @@
+fragment LeaderboardPlayer on LeaderboardPlayer {
+  _id
+  githubId
+  userName
+  totalWins
+  totalPlayed
+  elo
+}
+
+fragment LeaderboardsLeaderboard on Leaderboard {
+  _id
+  updatedAt
+  gameType
+  players {
+    ...LeaderboardPlayer
+  }
+}
+
+query Leaderboards($gameTypes: [GameType!]!) {
+  leaderboards(gameTypes: $gameTypes) {
+    ...LeaderboardsLeaderboard
+  }
+}

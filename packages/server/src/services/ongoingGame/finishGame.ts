@@ -121,11 +121,14 @@ const finishGame = authenticatedService<
             $set: {
               elo: p.newElo,
             },
-            ...(eloPlayersInWinningOrder[0]._id === p._id &&
-            eloPlayersInWinningOrder[0].score !==
-              eloPlayersInWinningOrder[1].score
-              ? { $inc: { totalWins: 1 } }
-              : {}),
+            $inc: {
+              ...(eloPlayersInWinningOrder[0]._id === p._id &&
+              eloPlayersInWinningOrder[0].score !==
+                eloPlayersInWinningOrder[1].score
+                ? { totalWins: 1 }
+                : {}),
+              totalPlayed: 1,
+            },
           }
         ),
       ])

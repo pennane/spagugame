@@ -68,8 +68,8 @@ export const ProfilePage: FC = () => {
     })
 
   const profileUser = profileUserData?.user
-  if (profileUserLoading) return <div>Loading...</div>
-  if (!profileUser) return <div>Profile not found</div>
+  if (profileUserLoading) return <P.DefaultText>Loading...</P.DefaultText>
+  if (!profileUser) return <P.DefaultText>Profile not found</P.DefaultText>
 
   return (
     <StyledProfilePage>
@@ -83,6 +83,7 @@ export const ProfilePage: FC = () => {
           <Heading.H3>{stat.gameType}</Heading.H3>
           <P.DefaultText>{Math.floor(stat.elo)} elo</P.DefaultText>
           <P.DefaultText>{stat.totalWins} wins</P.DefaultText>
+          <P.DefaultText>{stat.totalPlayed} played</P.DefaultText>
         </StyledGame>
       ))}
       <Heading.H2>Recent matches:</Heading.H2>

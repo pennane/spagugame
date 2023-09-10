@@ -1,0 +1,11 @@
+fragment FindUsersUser on User {
+  _id
+  githubId
+  userName
+}
+
+query FindUsers($nameIncludes: String!) {
+  users(nameIncludes: $nameIncludes) {
+    ...FindUsersUser
+  }
+}

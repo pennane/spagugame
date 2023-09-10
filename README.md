@@ -38,14 +38,11 @@ The project is organized as a monorepo for clarity and scalability. Here are the
 Docker and pnpm (or npm) is required.
 All three packages can be started in dev mode with following command in monorepo root
 
-```sh
-pnpm run dev
-```
-
-To start specific packages they can be targeted with `--filter <package_name>` option
 e.g.
 
 ```sh
+pnpm --filter environment dev
+pnpm --filter front dev
 pnpm --filter server dev
 ```
 

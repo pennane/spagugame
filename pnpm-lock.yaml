@@ -87,6 +87,9 @@ importers:
       '@apollo/server':
         specifier: ^4.9.1
         version: 4.9.1(graphql@16.8.0)
+      '@apollo/utils.keyvaluecache':
+        specifier: ^3.0.0
+        version: 3.0.0
       '@graphql-tools/schema':
         specifier: ^10.0.0
         version: 10.0.0(graphql@16.8.0)
@@ -378,9 +381,22 @@ packages:
       lru-cache: 7.18.3
     dev: false
 
+  /@apollo/utils.keyvaluecache@3.0.0:
+    resolution: {integrity: sha512-tgMpuYU3KvYevCNG+hTemSuSQtZaaWcHGnF/h2ERcw8bodFmbwVsG/jHlhdT0ChlRXgBIqMUFXbQtF6epy+AKA==}
+    engines: {node: '>=16.14'}
+    dependencies:
+      '@apollo/utils.logger': 3.0.0
+      lru-cache: 9.1.2
+    dev: false
+
   /@apollo/utils.logger@2.0.1:
     resolution: {integrity: sha512-YuplwLHaHf1oviidB7MxnCXAdHp3IqYV8n0momZ3JfLniae92eYqMIx+j5qJFX6WKJPs6q7bczmV4lXIsTu5Pg==}
     engines: {node: '>=14'}
+    dev: false
+
+  /@apollo/utils.logger@3.0.0:
+    resolution: {integrity: sha512-M8V8JOTH0F2qEi+ktPfw4RL7MvUycDfKp7aEap2eWXfL5SqWHN6jTLbj5f5fj1cceHpyaUSOZlvlaaryaxZAmg==}
+    engines: {node: '>=16'}
     dev: false
 
   /@apollo/utils.printwithreducedwhitespace@2.0.1(graphql@16.8.0):
@@ -5398,6 +5414,11 @@ packages:
   /lru-cache@7.18.3:
     resolution: {integrity: sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==}
     engines: {node: '>=12'}
+    dev: false
+
+  /lru-cache@9.1.2:
+    resolution: {integrity: sha512-ERJq3FOzJTxBbFjZ7iDs+NiK4VI9Wz+RdrrAB8dio1oV+YvdPzUEE4QNiT2VD51DkIbCYRUUzCRkssXCHqSnKQ==}
+    engines: {node: 14 || >=16.14}
     dev: false
 
   /make-dir@2.1.0:

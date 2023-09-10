@@ -6,7 +6,13 @@ import { TContext } from "../../infrastructure/context";
 import createGame from "../../services/ongoingGame/createGame";
 import joinGame from "../../services/ongoingGame/joinGame";
 import { gqlSerializeGame } from "../../services/ongoingGame/lib/serialize";
-import { Game, GameType, Resolvers, User } from "../generated/graphql";
+import {
+  Game,
+  GameType,
+  Leaderboard,
+  Resolvers,
+  User,
+} from "../generated/graphql";
 import { dateScalar } from "../scalars/Date/Date";
 import playTurn from "../../services/ongoingGame/playTurn";
 import toggleReady from "../../services/ongoingGame/toggleReady";
@@ -16,6 +22,9 @@ import {
   getGameFromRedis,
 } from "../../services/ongoingGame/lib/publish";
 import leaveGame from "../../services/ongoingGame/leaveGame";
+import { IUser } from "../../collections/User";
+import { escapeRegex } from "../../lib/common";
+import { apolloCache } from "../../infrastructure/server";
 
 export const resolvers: Resolvers<TContext> = {
   User: {
@@ -90,10 +99,23 @@ export const resolvers: Resolvers<TContext> = {
         return null;
       }
     },
-    users: async (_root, { ids }, ctx) => {
-      const users = await find(ctx, "user", {
-        filter: { _id: { $in: ids.map((id) => new ObjectId(id)) } },
-      });
+    users: async (_root, { ids, nameIncludes }, ctx) => {
+      let users: IUser[];
+
+      if (ids) {
+        users = await find(ctx, "user", {
+          filter: { _id: { $in: ids.map((id) => new ObjectId(id)) } },
+        });
+      } else if (nameIncludes) {
+        users = await find(ctx, "user", {
+          filter: {
+            userName: { $regex: escapeRegex(nameIncludes), $options: "i" },
+          },
+        });
+      } else {
+        return [];
+      }
+
       return R.map(
         R.modify<"_id", ObjectId, string>("_id", (id) => id.toString()),
         users
@@ -154,6 +176,56 @@ export const resolvers: Resolvers<TContext> = {
         R.modify<"_id", ObjectId, string>("_id", (id) => id.toString()),
         stats
       );
+    },
+    leaderboards: async (_root, { gameTypes }, ctx) => {
+      const now = new Date();
+      const leaderboards: Leaderboard[] = await Promise.all(
+        gameTypes.map(async (gameType) => {
+          const cacheKey = `leaderboards:${gameType}`;
+          const cachedLeaderboard = await apolloCache.get(cacheKey);
+
+          if (cachedLeaderboard) {
+            return cachedLeaderboard;
+          }
+
+          const stats = await find(ctx, "userStats", {
+            filter: { gameType },
+            options: {
+              sort: { elo: -1, totalWins: -1 },
+              limit: 10,
+            },
+          });
+
+          const users = await find(ctx, "user", {
+            filter: { _id: { $in: stats.map((s) => new ObjectId(s.userId)) } },
+          });
+
+          const leaderboard = {
+            _id: gameType,
+            gameType,
+            players: stats.map((s) => {
+              const user = users.find((u) => u._id.equals(s.userId));
+              return {
+                _id: s.userId.toString(),
+                elo: s.elo,
+                totalWins: s.totalWins,
+                githubId: user?.githubId,
+                userName: user?.userName,
+                totalPlayed: s.totalPlayed,
+              };
+            }),
+            updatedAt: now,
+          };
+
+          await apolloCache.set(cacheKey, leaderboard, {
+            ttl: 60 * 15, // seconds
+          });
+
+          return leaderboard;
+        })
+      );
+
+      return leaderboards;
     },
   },
   Subscription: {

@@ -15,6 +15,11 @@ export type Scalars = {
   Date: { input: Date; output: Date; }
 };
 
+export enum CacheControlScope {
+  Private = 'PRIVATE',
+  Public = 'PUBLIC'
+}
+
 export type Game = {
   __typename?: 'Game';
   _id: Scalars['ID']['output'];
@@ -30,6 +35,24 @@ export enum GameType {
   FindFour = 'FIND_FOUR',
   TickTackToe = 'TICK_TACK_TOE'
 }
+
+export type Leaderboard = {
+  __typename?: 'Leaderboard';
+  _id: Scalars['ID']['output'];
+  gameType: GameType;
+  players: Array<LeaderboardPlayer>;
+  updatedAt: Scalars['Date']['output'];
+};
+
+export type LeaderboardPlayer = {
+  __typename?: 'LeaderboardPlayer';
+  _id: Scalars['ID']['output'];
+  elo: Scalars['Float']['output'];
+  githubId?: Maybe<Scalars['ID']['output']>;
+  totalPlayed: Scalars['Int']['output'];
+  totalWins: Scalars['Int']['output'];
+  userName?: Maybe<Scalars['String']['output']>;
+};
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -132,6 +155,7 @@ export type Query = {
   currentUser?: Maybe<User>;
   game?: Maybe<Game>;
   games: Array<Game>;
+  leaderboards: Array<Leaderboard>;
   ongoingGame: OngoingGame;
   playedGame?: Maybe<PlayedGame>;
   playedGames: Array<PlayedGame>;
@@ -143,6 +167,11 @@ export type Query = {
 
 export type QueryGameArgs = {
   gameType?: InputMaybe<GameType>;
+};
+
+
+export type QueryLeaderboardsArgs = {
+  gameTypes: Array<GameType>;
 };
 
 
@@ -168,7 +197,8 @@ export type QueryUserArgs = {
 
 
 export type QueryUsersArgs = {
-  ids: Array<Scalars['ID']['input']>;
+  ids?: InputMaybe<Array<Scalars['ID']['input']>>;
+  nameIncludes?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -231,6 +261,7 @@ export type UserStats = {
   _id: Scalars['ID']['output'];
   elo: Scalars['Float']['output'];
   gameType: GameType;
+  totalPlayed: Scalars['Int']['output'];
   totalWins: Scalars['Int']['output'];
   userId: Scalars['ID']['output'];
 };

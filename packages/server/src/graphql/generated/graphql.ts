@@ -18,6 +18,11 @@ export type Scalars = {
   Date: { input: any; output: any; }
 };
 
+export enum CacheControlScope {
+  Private = 'PRIVATE',
+  Public = 'PUBLIC'
+}
+
 export type Game = {
   __typename?: 'Game';
   _id: Scalars['ID']['output'];
@@ -33,6 +38,24 @@ export enum GameType {
   FindFour = 'FIND_FOUR',
   TickTackToe = 'TICK_TACK_TOE'
 }
+
+export type Leaderboard = {
+  __typename?: 'Leaderboard';
+  _id: Scalars['ID']['output'];
+  gameType: GameType;
+  players: Array<LeaderboardPlayer>;
+  updatedAt: Scalars['Date']['output'];
+};
+
+export type LeaderboardPlayer = {
+  __typename?: 'LeaderboardPlayer';
+  _id: Scalars['ID']['output'];
+  elo: Scalars['Float']['output'];
+  githubId?: Maybe<Scalars['ID']['output']>;
+  totalPlayed: Scalars['Int']['output'];
+  totalWins: Scalars['Int']['output'];
+  userName?: Maybe<Scalars['String']['output']>;
+};
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -135,6 +158,7 @@ export type Query = {
   currentUser?: Maybe<User>;
   game?: Maybe<Game>;
   games: Array<Game>;
+  leaderboards: Array<Leaderboard>;
   ongoingGame: OngoingGame;
   playedGame?: Maybe<PlayedGame>;
   playedGames: Array<PlayedGame>;
@@ -146,6 +170,11 @@ export type Query = {
 
 export type QueryGameArgs = {
   gameType?: InputMaybe<GameType>;
+};
+
+
+export type QueryLeaderboardsArgs = {
+  gameTypes: Array<GameType>;
 };
 
 
@@ -171,7 +200,8 @@ export type QueryUserArgs = {
 
 
 export type QueryUsersArgs = {
-  ids: Array<Scalars['ID']['input']>;
+  ids?: InputMaybe<Array<Scalars['ID']['input']>>;
+  nameIncludes?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -234,6 +264,7 @@ export type UserStats = {
   _id: Scalars['ID']['output'];
   elo: Scalars['Float']['output'];
   gameType: GameType;
+  totalPlayed: Scalars['Int']['output'];
   totalWins: Scalars['Int']['output'];
   userId: Scalars['ID']['output'];
 };
@@ -310,12 +341,15 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  CacheControlScope: CacheControlScope;
   Date: ResolverTypeWrapper<Scalars['Date']['output']>;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   Game: ResolverTypeWrapper<Game>;
   GameType: GameType;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
+  Leaderboard: ResolverTypeWrapper<Leaderboard>;
+  LeaderboardPlayer: ResolverTypeWrapper<LeaderboardPlayer>;
   Mutation: ResolverTypeWrapper<{}>;
   OngoingGame: ResolverTypeWrapper<OngoingGame>;
   OngoingGamePlayer: ResolverTypeWrapper<OngoingGamePlayer>;
@@ -339,6 +373,8 @@ export type ResolversParentTypes = {
   Game: Game;
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
+  Leaderboard: Leaderboard;
+  LeaderboardPlayer: LeaderboardPlayer;
   Mutation: {};
   OngoingGame: OngoingGame;
   OngoingGamePlayer: OngoingGamePlayer;
@@ -352,6 +388,14 @@ export type ResolversParentTypes = {
   UserStats: UserStats;
 };
 
+export type CacheControlDirectiveArgs = {
+  inheritMaxAge?: Maybe<Scalars['Boolean']['input']>;
+  maxAge?: Maybe<Scalars['Int']['input']>;
+  scope?: Maybe<CacheControlScope>;
+};
+
+export type CacheControlDirectiveResolver<Result, Parent, ContextType = any, Args = CacheControlDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
 export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
   name: 'Date';
 }
@@ -364,6 +408,24 @@ export type GameResolvers<ContextType = any, ParentType extends ResolversParentT
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   ongoingGames?: Resolver<Array<ResolversTypes['OngoingGame']>, ParentType, ContextType>;
   type?: Resolver<ResolversTypes['GameType'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type LeaderboardResolvers<ContextType = any, ParentType extends ResolversParentTypes['Leaderboard'] = ResolversParentTypes['Leaderboard']> = {
+  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  gameType?: Resolver<ResolversTypes['GameType'], ParentType, ContextType>;
+  players?: Resolver<Array<ResolversTypes['LeaderboardPlayer']>, ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type LeaderboardPlayerResolvers<ContextType = any, ParentType extends ResolversParentTypes['LeaderboardPlayer'] = ResolversParentTypes['LeaderboardPlayer']> = {
+  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  elo?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  githubId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  totalPlayed?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalWins?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  userName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -425,11 +487,12 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   currentUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   game?: Resolver<Maybe<ResolversTypes['Game']>, ParentType, ContextType, Partial<QueryGameArgs>>;
   games?: Resolver<Array<ResolversTypes['Game']>, ParentType, ContextType>;
+  leaderboards?: Resolver<Array<ResolversTypes['Leaderboard']>, ParentType, ContextType, RequireFields<QueryLeaderboardsArgs, 'gameTypes'>>;
   ongoingGame?: Resolver<ResolversTypes['OngoingGame'], ParentType, ContextType, RequireFields<QueryOngoingGameArgs, 'ongoingGameId'>>;
   playedGame?: Resolver<Maybe<ResolversTypes['PlayedGame']>, ParentType, ContextType, RequireFields<QueryPlayedGameArgs, 'id'>>;
   playedGames?: Resolver<Array<ResolversTypes['PlayedGame']>, ParentType, ContextType, Partial<QueryPlayedGamesArgs>>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
-  users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUsersArgs, 'ids'>>;
+  users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, Partial<QueryUsersArgs>>;
   usersStats?: Resolver<Array<ResolversTypes['UserStats']>, ParentType, ContextType, RequireFields<QueryUsersStatsArgs, 'gameType' | 'userIds'>>;
 };
 
@@ -454,6 +517,7 @@ export type UserStatsResolvers<ContextType = any, ParentType extends ResolversPa
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   elo?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   gameType?: Resolver<ResolversTypes['GameType'], ParentType, ContextType>;
+  totalPlayed?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   totalWins?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   userId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -462,6 +526,8 @@ export type UserStatsResolvers<ContextType = any, ParentType extends ResolversPa
 export type Resolvers<ContextType = any> = {
   Date?: GraphQLScalarType;
   Game?: GameResolvers<ContextType>;
+  Leaderboard?: LeaderboardResolvers<ContextType>;
+  LeaderboardPlayer?: LeaderboardPlayerResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   OngoingGame?: OngoingGameResolvers<ContextType>;
   OngoingGamePlayer?: OngoingGamePlayerResolvers<ContextType>;
@@ -473,3 +539,6 @@ export type Resolvers<ContextType = any> = {
   UserStats?: UserStatsResolvers<ContextType>;
 };
 
+export type DirectiveResolvers<ContextType = any> = {
+  cacheControl?: CacheControlDirectiveResolver<any, any, ContextType>;
+};

@@ -79,7 +79,7 @@ export const GamePage = () => {
       })
   }
 
-  if (loading) return <div>loading...</div>
+  if (loading) return <P.DefaultText>loading...</P.DefaultText>
   const game = data?.game
 
   if (!game) return <P.DefaultText>Game does not exist</P.DefaultText>

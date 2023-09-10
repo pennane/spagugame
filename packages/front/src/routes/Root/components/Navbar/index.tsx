@@ -104,16 +104,6 @@ const StyledNavLink = styled(NavLink)`
   }
 `
 
-const useNavLinks = () => {
-  const currentUser = useCurrentUser()
-  return [
-    ['Home', '/'],
-    ['Games', '/game'],
-    ['Matches', '/played'],
-    currentUser ? ['Profile', '/profile'] : null
-  ].filter(isNotNil) as [name: string, path: string][]
-}
-
 const openStyles = css`
   background-color: ${theme.colors.background.tertiary};
   box-shadow: inset 0 2px 5px 0 rgb(121 180 115 / 20%);
@@ -167,6 +157,17 @@ const SpaguNavTitle = styled.span`
   letter-spacing: -0.125rem;
   font-size: 1.25rem;
 `
+
+const useNavLinks = () => {
+  const currentUser = useCurrentUser()
+  return [
+    ['Home', '/'],
+    ['Games', '/game'],
+    ['Matches', '/played'],
+    ['Leaderboard', '/leaderboards'],
+    currentUser ? ['Profile', '/profile'] : null
+  ].filter(isNotNil) as [name: string, path: string][]
+}
 
 export const Navbar = () => {
   const [open, setOpen] = useState(false)

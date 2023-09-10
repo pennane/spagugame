@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "codegen": "pnpm run --filter server gen:schema && pnpm run --filter front gen:queries",
-    "dev": "pnpm run --filter environment dev && pnpm run --filter server dev & pnpm run --filter front dev"
+    "codegen": "pnpm run --filter server gen:schema && pnpm run --filter front gen:queries"
   },
   "keywords": [],
   "author": "Arttu Pennanen <arttu.pennanen@metropolia.fi>",

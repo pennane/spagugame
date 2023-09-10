@@ -3,6 +3,7 @@ fragment ProfilePageUserStats on UserStats {
   userId
   gameType
   totalWins
+  totalPlayed
   elo
 }
 

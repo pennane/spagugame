@@ -16,6 +16,7 @@ import { ApolloServer } from "@apollo/server";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
+import { InMemoryLRUCache } from "@apollo/utils.keyvaluecache";
 import { useServer } from "graphql-ws/lib/use/ws";
 
 import { ObjectId } from "mongodb";
@@ -29,6 +30,11 @@ import {
   TContext,
   TGlobalContext,
 } from "./context";
+
+export const apolloCache = new InMemoryLRUCache<any>({
+  maxSize: Math.pow(2, 20) * 100,
+  ttl: 900,
+});
 
 const configurePassport = (ctx: TGlobalContext) => {
   passport.serializeUser(function (user, done) {
@@ -117,9 +123,10 @@ const createApolloServer = ({
         },
       },
     ],
+    cache: apolloCache,
   });
 
-  return { apolloServer, app, httpServer };
+  return { apolloServer, app, httpServer, apolloCache };
 };
 
 const startApolloServer = async ({

@@ -28,6 +28,7 @@ import { GamesPage } from './routes/GamesPage'
 import { ProfilePage } from './routes/ProfilePage'
 import { PlayedGamesPage } from './routes/PlayedGamesPage'
 import { PlayedGamePage } from './routes/PlayedGamePage'
+import { LeaderboardPage } from './routes/LeaderboardPage'
 
 const httpLink = new HttpLink({
   uri: `${import.meta.env.VITE_SERVER_BASE_URL}/graphql`,
@@ -75,7 +76,8 @@ const router = createBrowserRouter([
       { path: 'game/:gameType/:gameId', element: <OngoingGamePage /> },
       { path: 'profile/:userId?', element: <ProfilePage /> },
       { path: 'played/:gameType?', element: <PlayedGamesPage /> },
-      { path: 'played/:gameType/:gameId', element: <PlayedGamePage /> }
+      { path: 'played/:gameType/:gameId', element: <PlayedGamePage /> },
+      { path: 'leaderboards', element: <LeaderboardPage /> }
     ]
   }
 ])

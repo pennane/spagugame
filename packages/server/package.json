@@ -28,9 +28,9 @@
     "@types/passport": "^1.0.12",
     "@types/passport-github2": "^1.2.5",
     "@types/ramda": "^0.29.3",
+    "@types/ws": "^8.5.5",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
-    "@types/ws": "^8.5.5",
     "eslint": "^8.45.0",
     "nodemon": "^3.0.1",
     "ts-node": "^10.9.1",
@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "@apollo/server": "^4.9.1",
+    "@apollo/utils.keyvaluecache": "^3.0.0",
     "@graphql-tools/schema": "^10.0.0",
     "body-parser": "^1.20.2",
     "connect-mongo": "^5.0.0",
