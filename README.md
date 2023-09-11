@@ -8,7 +8,8 @@ One might argue the integration of GraphQL directly into the game logic might af
 
 To ensure smooth gameplay even with this architecture, we're focusing on timeless turn-based classics. Think: Connect Four, Battleship (laivanupotus), Hangman, Guess the Drawing, etc.
 
-Underpinning our code is the purity of functional programming conventions, greatly assisted by the [ramda.js](https://ramdajs.com/) library.
+~~Underpinning our code is the purity of functional programming conventions, greatly assisted by the [ramda.js](https://ramdajs.com/) library.~~
+No, functional way has flown out the window, mega imperitave spagu has taken place. As a way to respect the name of the site.
 
 ## Tech Stack
 
