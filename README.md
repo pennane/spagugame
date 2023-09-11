@@ -59,7 +59,7 @@ pnpm --filter server dev
   - indexes are automatically kept upto date
 - apollo caching for leaderboards (once every 15 minutes)
 
-## Images of the current prototype
+## Images of the prototype (differs from current state of the website=
 
 ![Alt text](<docs/images/Näyttökuva 2023-9-4 kello 15.07.43.png>)
 ![Alt text](<docs/images/Näyttökuva 2023-9-4 kello 15.07.46.png>)
