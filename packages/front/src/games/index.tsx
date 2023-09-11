@@ -31,11 +31,11 @@ const StyledGame = styled.div`
   padding: 2rem;
   @media (max-width: ${MOBILE_WIDTHS.default}px) {
     flex-direction: column;
+    padding: 0.75rem;
   }
 `
 
 const StyledGameLeft = styled.div`
-  width: 15rem;
   display: flex;
   gap: 0.5rem;
   flex-direction: column;

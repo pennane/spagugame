@@ -89,8 +89,11 @@ const renderState = (
   )
 }
 
+const getPlayerIdentifier = (index: number) => (index === 0 ? 'x' : 'o')
+
 export const TickTackToe: GameSpecification<TickTackToeState> = {
   validateState,
   parseState,
-  renderState
+  renderState,
+  getPlayerIdentifier
 }

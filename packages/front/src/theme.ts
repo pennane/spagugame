@@ -12,7 +12,8 @@ export const theme = {
       success: '#79B473',
       info: '#5299D3',
       inverted: '#021710',
-      invertedSecondary: '#060F0D'
+      invertedSecondary: '#060F0D',
+      transparent: 'transparent'
     }
   }
 } as const

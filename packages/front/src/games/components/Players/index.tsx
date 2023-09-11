@@ -13,6 +13,7 @@ import {
 import { Span } from '../../../components/Span'
 import { Pill } from '../../../components/Pill'
 import { ProfileImage } from '../../../routes/ProfilePage'
+import { GAME_TYPE_TO_SPECIFICATION } from '../../constants'
 
 type PlayersProps = {
   game: OngoingGame
@@ -30,7 +31,7 @@ const PlayerHeaders = styled.div`
   display: grid;
   grid-auto-flow: column;
   gap: 0.25rem;
-  grid-template-columns: 2rem 8rem 1fr;
+  grid-template-columns: 2rem 8rem 3rem 3rem 3rem;
 `
 
 const StyledPlayers = styled.div`
@@ -43,7 +44,7 @@ const StyledPlayer = styled.div`
   display: grid;
   grid-auto-flow: column;
   gap: 0.25rem;
-  grid-template-columns: 2rem 8rem 1fr;
+  grid-template-columns: 2rem 8rem 3rem 3rem 3rem;
 `
 
 type MergedUser = Partial<
@@ -96,10 +97,13 @@ export const Players: FC<PlayersProps> = ({ game }) => {
           <b>Elo</b>
         </Span.SmallText>
         <Span.SmallText>
+          <b>Icon</b>
+        </Span.SmallText>
+        <Span.SmallText>
           <b>State</b>
         </Span.SmallText>
       </PlayerHeaders>
-      {players.map((player) => (
+      {players.map((player, i) => (
         <StyledPlayer key={player.userId}>
           <MiniProfileImage githubId={player.githubId} />
           <Span.SmallText
@@ -113,12 +117,25 @@ export const Players: FC<PlayersProps> = ({ game }) => {
             {player.userName || player.userId}{' '}
           </Span.SmallText>
           <Pill color="info">{player.elo}</Pill>
-          <Span.SmallText>
-            {player.userId === currentTurnPlayerId && '⚡'}
-          </Span.SmallText>
-          <Span.SmallText>
-            {showReadyState && (player.ready ? '✅' : '❌')}
-          </Span.SmallText>
+
+          <Pill color="transparent" onlyBorder style={{ padding: '.25rem' }}>
+            {GAME_TYPE_TO_SPECIFICATION[game.gameType].getPlayerIdentifier(i)}
+          </Pill>
+          {showReadyState && (
+            <Span.SmallText
+              style={{
+                display: 'flex',
+                alignItems: 'center'
+              }}
+            >
+              {showReadyState && (player.ready ? '✅' : '❌')}
+            </Span.SmallText>
+          )}
+          {!showReadyState && (
+            <Span.SmallText>
+              {player.userId === currentTurnPlayerId && '⚡'}
+            </Span.SmallText>
+          )}
         </StyledPlayer>
       ))}
     </StyledPlayers>

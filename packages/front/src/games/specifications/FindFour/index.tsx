@@ -96,8 +96,18 @@ const renderState = (
   )
 }
 
+const MiniCircle = styled(StyledCircle)`
+  height: 1.25rem;
+  width: 1.25rem;
+`
+
+const getPlayerIdentifier = (index: number) => (
+  <MiniCircle $cell={index === 0 ? '1' : '2'} />
+)
+
 export const FindFour: GameSpecification<FindFourState> = {
   validateState,
   parseState,
-  renderState
+  renderState,
+  getPlayerIdentifier
 }
