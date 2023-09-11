@@ -66,22 +66,16 @@ const flood = (
   playerState: PlayerState,
   board: Board
 ): { playerState: PlayerState; board: Board } => {
-  console.log("flood");
-
-  // Flood cells adjacent to player cells that have the same color as the player
   const color = playerState.color;
 
   const newRegion: Set<Cell> = new Set(playerState.cells);
 
   for (const cell of [...newRegion.values()]) {
-    console.log("checking cell", cell);
-
     for (const adjacent of adjacentCells(cell, color, board)) {
       if (newRegion.has(adjacent)) continue;
       newRegion.add(adjacent);
     }
   }
-  console.log("flood2");
 
   let i = 0;
   const traverseAdjacents = (perimiter: Set<Cell>) => {
@@ -89,7 +83,6 @@ const flood = (
     if (i > 100) throw new Error("too many iterations");
     const adjacents = new Set<Cell>();
     for (const cell of [...perimiter.values()]) {
-      console.log("checking cell", cell);
       for (const adjacent of adjacentCells(cell, color, board)) {
         if (newRegion.has(adjacent)) continue;
 
@@ -98,20 +91,16 @@ const flood = (
       }
     }
     if (adjacents.size > 0) {
-      console.log("traversing further asdf with size of ", adjacents.size);
-
       traverseAdjacents(new Set<Cell>(adjacents));
     }
   };
   traverseAdjacents(newRegion);
-  console.log("flood3");
 
   const newBoard = R.clone(board);
   for (const cell of newRegion.values()) {
     const [x, y] = cell.split(",").map((n) => parseInt(n, 10));
     newBoard[x][y] = color;
   }
-  console.log("flood4");
 
   return {
     playerState: {
@@ -213,8 +202,6 @@ export const ColorFloodSpecification: GameSpecification<ColorFloodState> = {
     const currentPlayerIndex = newState.players.findIndex(
       (p) => p.userId === newState.currentTurn
     );
-    console.log(JSON.stringify(newState.jsonState.player1.cells));
-    console.log(JSON.stringify(newState.jsonState.player2.cells));
     const playerNumber = currentPlayerIndex === 0 ? "1" : "2";
 
     const playerState = newState.jsonState[`player${playerNumber}`];
