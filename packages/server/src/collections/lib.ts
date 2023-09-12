@@ -36,11 +36,16 @@ export const get = async <T extends keyof TContext["collections"]>(
   collection: T,
   {
     filter,
+    options,
   }: {
     filter: Filter<ExtractCollectionSchema<TContext["collections"][T]>>;
+    options?: FindOptions;
   }
 ): Promise<ExtractCollectionSchema<TContext["collections"][T]> | null> => {
-  const document = await ctx.collections[collection].findOne(filter as any);
+  const document = await ctx.collections[collection].findOne(
+    filter as any,
+    options!
+  );
   return document as ExtractCollectionSchema<TContext["collections"][T]>;
 };
 

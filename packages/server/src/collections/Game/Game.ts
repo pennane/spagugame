@@ -1,8 +1,8 @@
 import * as R from "ramda";
 import { ObjectId } from "mongodb";
-import { Game } from "../graphql/generated/graphql";
-import { CollectionSettings } from "./models";
-import { GAME_SPECIFICATIONS_MAP } from "../games/models";
+import { Game } from "../../graphql/generated/graphql";
+import { CollectionSettings } from "../models";
+import { GAME_SPECIFICATIONS_MAP } from "../../games/models";
 
 export interface IGame extends Omit<Game, "_id" | "ongoingGames"> {
   _id: ObjectId;

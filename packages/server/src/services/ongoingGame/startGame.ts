@@ -5,7 +5,7 @@ import { GAME_SPECIFICATIONS_MAP, GameSpecification } from "../../games/models";
 import { sample, wait } from "../../lib/common";
 import { getGameFromRedis, getGameKey, publishGameChange } from "./lib/publish";
 
-const STARTING_DURATION_SECONDS = 5;
+const STARTING_DURATION_SECONDS = 3;
 const SECOND_IN_MS = 1000;
 
 const startGame = authenticatedService<{ gameId: string }, void>(

@@ -7,6 +7,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -17,6 +18,16 @@ export type Scalars = {
   Float: { input: number; output: number; }
   Date: { input: any; output: any; }
 };
+
+export type Achievement = {
+  __typename?: 'Achievement';
+  _id: Scalars['ID']['output'];
+  criteria: AchievementUnlockCriteriaUnion;
+  description: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+};
+
+export type AchievementUnlockCriteriaUnion = LeaderboardRankUnlockCriteria | OtherUnlockCriteria | TotalPlayedUnlockCriteria | TotalWinsUnlockCriteria | WinStreakUnlockCriteria;
 
 export enum CacheControlScope {
   Private = 'PRIVATE',
@@ -57,6 +68,18 @@ export type LeaderboardPlayer = {
   totalWins: Scalars['Int']['output'];
   userId: Scalars['ID']['output'];
   userName?: Maybe<Scalars['String']['output']>;
+};
+
+export type LeaderboardRank = {
+  __typename?: 'LeaderboardRank';
+  gameType: GameType;
+  rank: Scalars['Int']['output'];
+};
+
+export type LeaderboardRankUnlockCriteria = UnlockCriteria & {
+  __typename?: 'LeaderboardRankUnlockCriteria';
+  gameType?: Maybe<GameType>;
+  rank: Scalars['Int']['output'];
 };
 
 export type Mutation = {
@@ -145,6 +168,11 @@ export type OngoingGameStateChange = {
   winnerIds?: Maybe<Array<Scalars['ID']['output']>>;
 };
 
+export type OtherUnlockCriteria = UnlockCriteria & {
+  __typename?: 'OtherUnlockCriteria';
+  gameType?: Maybe<GameType>;
+};
+
 export type PlayedGame = {
   __typename?: 'PlayedGame';
   _id: Scalars['ID']['output'];
@@ -161,6 +189,7 @@ export type PlayedGame = {
 
 export type Query = {
   __typename?: 'Query';
+  achievements: Array<Achievement>;
   currentUser?: Maybe<User>;
   game?: Maybe<Game>;
   games: Array<Game>;
@@ -233,16 +262,39 @@ export type SubscriptionOngoingGameStateChangeArgs = {
   ongoingGameId: Scalars['ID']['input'];
 };
 
+export type TotalPlayedUnlockCriteria = UnlockCriteria & {
+  __typename?: 'TotalPlayedUnlockCriteria';
+  gameType?: Maybe<GameType>;
+  played: Scalars['Int']['output'];
+};
+
+export type TotalWinsUnlockCriteria = UnlockCriteria & {
+  __typename?: 'TotalWinsUnlockCriteria';
+  gameType?: Maybe<GameType>;
+  wins: Scalars['Int']['output'];
+};
+
+export type UnlockCriteria = {
+  gameType?: Maybe<GameType>;
+};
+
 export type User = {
   __typename?: 'User';
   _id: Scalars['ID']['output'];
+  achievements: Array<Achievement>;
   description?: Maybe<Scalars['String']['output']>;
   githubId: Scalars['ID']['output'];
   joinedAt: Scalars['Date']['output'];
+  leaderboardRanks: Array<LeaderboardRank>;
   playedGames: Array<PlayedGame>;
   roles: Array<UserRole>;
   stats: Array<UserStats>;
   userName: Scalars['String']['output'];
+};
+
+
+export type UserLeaderboardRanksArgs = {
+  gameTypes?: InputMaybe<Array<GameType>>;
 };
 
 
@@ -274,6 +326,12 @@ export type UserStats = {
   totalPlayed: Scalars['Int']['output'];
   totalWins: Scalars['Int']['output'];
   userId: Scalars['ID']['output'];
+};
+
+export type WinStreakUnlockCriteria = UnlockCriteria & {
+  __typename?: 'WinStreakUnlockCriteria';
+  gameType?: Maybe<GameType>;
+  streak: Scalars['Int']['output'];
 };
 
 
@@ -343,10 +401,20 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
+/** Mapping of union types */
+export type ResolversUnionTypes<RefType extends Record<string, unknown>> = {
+  AchievementUnlockCriteriaUnion: ( LeaderboardRankUnlockCriteria ) | ( OtherUnlockCriteria ) | ( TotalPlayedUnlockCriteria ) | ( TotalWinsUnlockCriteria ) | ( WinStreakUnlockCriteria );
+};
 
+/** Mapping of interface types */
+export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = {
+  UnlockCriteria: ( LeaderboardRankUnlockCriteria ) | ( OtherUnlockCriteria ) | ( TotalPlayedUnlockCriteria ) | ( TotalWinsUnlockCriteria ) | ( WinStreakUnlockCriteria );
+};
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  Achievement: ResolverTypeWrapper<Omit<Achievement, 'criteria'> & { criteria: ResolversTypes['AchievementUnlockCriteriaUnion'] }>;
+  AchievementUnlockCriteriaUnion: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['AchievementUnlockCriteriaUnion']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   CacheControlScope: CacheControlScope;
   Date: ResolverTypeWrapper<Scalars['Date']['output']>;
@@ -357,23 +425,32 @@ export type ResolversTypes = {
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Leaderboard: ResolverTypeWrapper<Leaderboard>;
   LeaderboardPlayer: ResolverTypeWrapper<LeaderboardPlayer>;
+  LeaderboardRank: ResolverTypeWrapper<LeaderboardRank>;
+  LeaderboardRankUnlockCriteria: ResolverTypeWrapper<LeaderboardRankUnlockCriteria>;
   Mutation: ResolverTypeWrapper<{}>;
   OngoingGame: ResolverTypeWrapper<OngoingGame>;
   OngoingGamePlayer: ResolverTypeWrapper<OngoingGamePlayer>;
   OngoingGameProcessState: OngoingGameProcessState;
   OngoingGameStateChange: ResolverTypeWrapper<OngoingGameStateChange>;
+  OtherUnlockCriteria: ResolverTypeWrapper<OtherUnlockCriteria>;
   PlayedGame: ResolverTypeWrapper<PlayedGame>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   Subscription: ResolverTypeWrapper<{}>;
+  TotalPlayedUnlockCriteria: ResolverTypeWrapper<TotalPlayedUnlockCriteria>;
+  TotalWinsUnlockCriteria: ResolverTypeWrapper<TotalWinsUnlockCriteria>;
+  UnlockCriteria: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['UnlockCriteria']>;
   User: ResolverTypeWrapper<User>;
   UserInput: UserInput;
   UserRole: UserRole;
   UserStats: ResolverTypeWrapper<UserStats>;
+  WinStreakUnlockCriteria: ResolverTypeWrapper<WinStreakUnlockCriteria>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  Achievement: Omit<Achievement, 'criteria'> & { criteria: ResolversParentTypes['AchievementUnlockCriteriaUnion'] };
+  AchievementUnlockCriteriaUnion: ResolversUnionTypes<ResolversParentTypes>['AchievementUnlockCriteriaUnion'];
   Boolean: Scalars['Boolean']['output'];
   Date: Scalars['Date']['output'];
   Float: Scalars['Float']['output'];
@@ -382,17 +459,24 @@ export type ResolversParentTypes = {
   Int: Scalars['Int']['output'];
   Leaderboard: Leaderboard;
   LeaderboardPlayer: LeaderboardPlayer;
+  LeaderboardRank: LeaderboardRank;
+  LeaderboardRankUnlockCriteria: LeaderboardRankUnlockCriteria;
   Mutation: {};
   OngoingGame: OngoingGame;
   OngoingGamePlayer: OngoingGamePlayer;
   OngoingGameStateChange: OngoingGameStateChange;
+  OtherUnlockCriteria: OtherUnlockCriteria;
   PlayedGame: PlayedGame;
   Query: {};
   String: Scalars['String']['output'];
   Subscription: {};
+  TotalPlayedUnlockCriteria: TotalPlayedUnlockCriteria;
+  TotalWinsUnlockCriteria: TotalWinsUnlockCriteria;
+  UnlockCriteria: ResolversInterfaceTypes<ResolversParentTypes>['UnlockCriteria'];
   User: User;
   UserInput: UserInput;
   UserStats: UserStats;
+  WinStreakUnlockCriteria: WinStreakUnlockCriteria;
 };
 
 export type CacheControlDirectiveArgs = {
@@ -402,6 +486,18 @@ export type CacheControlDirectiveArgs = {
 };
 
 export type CacheControlDirectiveResolver<Result, Parent, ContextType = any, Args = CacheControlDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
+
+export type AchievementResolvers<ContextType = any, ParentType extends ResolversParentTypes['Achievement'] = ResolversParentTypes['Achievement']> = {
+  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  criteria?: Resolver<ResolversTypes['AchievementUnlockCriteriaUnion'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AchievementUnlockCriteriaUnionResolvers<ContextType = any, ParentType extends ResolversParentTypes['AchievementUnlockCriteriaUnion'] = ResolversParentTypes['AchievementUnlockCriteriaUnion']> = {
+  __resolveType: TypeResolveFn<'LeaderboardRankUnlockCriteria' | 'OtherUnlockCriteria' | 'TotalPlayedUnlockCriteria' | 'TotalWinsUnlockCriteria' | 'WinStreakUnlockCriteria', ParentType, ContextType>;
+};
 
 export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
   name: 'Date';
@@ -434,6 +530,18 @@ export type LeaderboardPlayerResolvers<ContextType = any, ParentType extends Res
   totalWins?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   userId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   userName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type LeaderboardRankResolvers<ContextType = any, ParentType extends ResolversParentTypes['LeaderboardRank'] = ResolversParentTypes['LeaderboardRank']> = {
+  gameType?: Resolver<ResolversTypes['GameType'], ParentType, ContextType>;
+  rank?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type LeaderboardRankUnlockCriteriaResolvers<ContextType = any, ParentType extends ResolversParentTypes['LeaderboardRankUnlockCriteria'] = ResolversParentTypes['LeaderboardRankUnlockCriteria']> = {
+  gameType?: Resolver<Maybe<ResolversTypes['GameType']>, ParentType, ContextType>;
+  rank?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -481,6 +589,11 @@ export type OngoingGameStateChangeResolvers<ContextType = any, ParentType extend
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type OtherUnlockCriteriaResolvers<ContextType = any, ParentType extends ResolversParentTypes['OtherUnlockCriteria'] = ResolversParentTypes['OtherUnlockCriteria']> = {
+  gameType?: Resolver<Maybe<ResolversTypes['GameType']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type PlayedGameResolvers<ContextType = any, ParentType extends ResolversParentTypes['PlayedGame'] = ResolversParentTypes['PlayedGame']> = {
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   finalState?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -496,6 +609,7 @@ export type PlayedGameResolvers<ContextType = any, ParentType extends ResolversP
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  achievements?: Resolver<Array<ResolversTypes['Achievement']>, ParentType, ContextType>;
   currentUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   game?: Resolver<Maybe<ResolversTypes['Game']>, ParentType, ContextType, Partial<QueryGameArgs>>;
   games?: Resolver<Array<ResolversTypes['Game']>, ParentType, ContextType>;
@@ -513,11 +627,30 @@ export type SubscriptionResolvers<ContextType = any, ParentType extends Resolver
   ongoingGameStateChange?: SubscriptionResolver<ResolversTypes['OngoingGameStateChange'], "ongoingGameStateChange", ParentType, ContextType, RequireFields<SubscriptionOngoingGameStateChangeArgs, 'ongoingGameId'>>;
 };
 
+export type TotalPlayedUnlockCriteriaResolvers<ContextType = any, ParentType extends ResolversParentTypes['TotalPlayedUnlockCriteria'] = ResolversParentTypes['TotalPlayedUnlockCriteria']> = {
+  gameType?: Resolver<Maybe<ResolversTypes['GameType']>, ParentType, ContextType>;
+  played?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TotalWinsUnlockCriteriaResolvers<ContextType = any, ParentType extends ResolversParentTypes['TotalWinsUnlockCriteria'] = ResolversParentTypes['TotalWinsUnlockCriteria']> = {
+  gameType?: Resolver<Maybe<ResolversTypes['GameType']>, ParentType, ContextType>;
+  wins?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UnlockCriteriaResolvers<ContextType = any, ParentType extends ResolversParentTypes['UnlockCriteria'] = ResolversParentTypes['UnlockCriteria']> = {
+  __resolveType: TypeResolveFn<'LeaderboardRankUnlockCriteria' | 'OtherUnlockCriteria' | 'TotalPlayedUnlockCriteria' | 'TotalWinsUnlockCriteria' | 'WinStreakUnlockCriteria', ParentType, ContextType>;
+  gameType?: Resolver<Maybe<ResolversTypes['GameType']>, ParentType, ContextType>;
+};
+
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  achievements?: Resolver<Array<ResolversTypes['Achievement']>, ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   githubId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   joinedAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
+  leaderboardRanks?: Resolver<Array<ResolversTypes['LeaderboardRank']>, ParentType, ContextType, Partial<UserLeaderboardRanksArgs>>;
   playedGames?: Resolver<Array<ResolversTypes['PlayedGame']>, ParentType, ContextType, Partial<UserPlayedGamesArgs>>;
   roles?: Resolver<Array<ResolversTypes['UserRole']>, ParentType, ContextType>;
   stats?: Resolver<Array<ResolversTypes['UserStats']>, ParentType, ContextType, Partial<UserStatsArgs>>;
@@ -535,20 +668,35 @@ export type UserStatsResolvers<ContextType = any, ParentType extends ResolversPa
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type WinStreakUnlockCriteriaResolvers<ContextType = any, ParentType extends ResolversParentTypes['WinStreakUnlockCriteria'] = ResolversParentTypes['WinStreakUnlockCriteria']> = {
+  gameType?: Resolver<Maybe<ResolversTypes['GameType']>, ParentType, ContextType>;
+  streak?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type Resolvers<ContextType = any> = {
+  Achievement?: AchievementResolvers<ContextType>;
+  AchievementUnlockCriteriaUnion?: AchievementUnlockCriteriaUnionResolvers<ContextType>;
   Date?: GraphQLScalarType;
   Game?: GameResolvers<ContextType>;
   Leaderboard?: LeaderboardResolvers<ContextType>;
   LeaderboardPlayer?: LeaderboardPlayerResolvers<ContextType>;
+  LeaderboardRank?: LeaderboardRankResolvers<ContextType>;
+  LeaderboardRankUnlockCriteria?: LeaderboardRankUnlockCriteriaResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   OngoingGame?: OngoingGameResolvers<ContextType>;
   OngoingGamePlayer?: OngoingGamePlayerResolvers<ContextType>;
   OngoingGameStateChange?: OngoingGameStateChangeResolvers<ContextType>;
+  OtherUnlockCriteria?: OtherUnlockCriteriaResolvers<ContextType>;
   PlayedGame?: PlayedGameResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Subscription?: SubscriptionResolvers<ContextType>;
+  TotalPlayedUnlockCriteria?: TotalPlayedUnlockCriteriaResolvers<ContextType>;
+  TotalWinsUnlockCriteria?: TotalWinsUnlockCriteriaResolvers<ContextType>;
+  UnlockCriteria?: UnlockCriteriaResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   UserStats?: UserStatsResolvers<ContextType>;
+  WinStreakUnlockCriteria?: WinStreakUnlockCriteriaResolvers<ContextType>;
 };
 
 export type DirectiveResolvers<ContextType = any> = {

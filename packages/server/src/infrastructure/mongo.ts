@@ -2,10 +2,11 @@ import * as R from "ramda";
 import { Db, MongoClient } from "mongodb";
 import { CollectionSettings } from "../collections/models";
 import { CONFIG_OBJECT } from "./config";
-import { GAME_COLLECTION_SETTINGS } from "../collections/Game";
-import { PLAYED_GAME_COLLECTION_SETTINGS } from "../collections/PlayedGame";
-import { USER_COLLECTION_SETTINGS } from "../collections/User";
-import { USER_STATS_COLLECTION_SETTINGS } from "../collections/UserStats";
+import { GAME_COLLECTION_SETTINGS } from "../collections/Game/Game";
+import { PLAYED_GAME_COLLECTION_SETTINGS } from "../collections/PlayedGame/PlayedGame";
+import { USER_COLLECTION_SETTINGS } from "../collections/User/User";
+import { USER_STATS_COLLECTION_SETTINGS } from "../collections/UserStats/UserStats";
+import { ACHIEVEMENT_COLLECTION_SETTINGS } from "../collections/Achievement/Achievement";
 
 const connectDb = async () => {
   const client = new MongoClient(CONFIG_OBJECT.MONGO_CONNECTION_STRING);
@@ -74,6 +75,7 @@ export const initializeMongo = async () => {
     game: GAME_COLLECTION_SETTINGS,
     playedGame: PLAYED_GAME_COLLECTION_SETTINGS,
     userStats: USER_STATS_COLLECTION_SETTINGS,
+    achievement: ACHIEVEMENT_COLLECTION_SETTINGS,
   } as const;
 
   const collections = R.map(

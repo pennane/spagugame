@@ -1,4 +1,4 @@
-import { IUser } from "../collections/User";
+import { IUser } from "../collections/User/User";
 import { UserRole } from "../graphql/generated/graphql";
 import { TContext } from "../infrastructure/context";
 import { TServiceHandler } from "./models";

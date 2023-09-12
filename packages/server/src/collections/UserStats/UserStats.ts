@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
-import { UserStats } from "../graphql/generated/graphql";
-import { CollectionSettings } from "./models";
+import { UserStats } from "../../graphql/generated/graphql";
+import { CollectionSettings } from "../models";
 
 export interface IUserStats extends Omit<UserStats, "_id"> {
   _id: ObjectId;

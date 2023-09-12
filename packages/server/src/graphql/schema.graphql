@@ -24,6 +24,47 @@ enum UserRole {
 
 # Static mongo types
 
+## Achievements
+
+interface UnlockCriteria {
+  gameType: GameType
+}
+
+type OtherUnlockCriteria implements UnlockCriteria {
+  gameType: GameType
+}
+
+type TotalWinsUnlockCriteria implements UnlockCriteria {
+  gameType: GameType
+  wins: Int!
+}
+type WinStreakUnlockCriteria implements UnlockCriteria {
+  gameType: GameType
+  streak: Int!
+}
+type TotalPlayedUnlockCriteria implements UnlockCriteria {
+  gameType: GameType
+  played: Int!
+}
+type LeaderboardRankUnlockCriteria implements UnlockCriteria {
+  gameType: GameType
+  rank: Int!
+}
+
+union AchievementUnlockCriteriaUnion =
+    TotalWinsUnlockCriteria
+  | WinStreakUnlockCriteria
+  | TotalPlayedUnlockCriteria
+  | LeaderboardRankUnlockCriteria
+  | OtherUnlockCriteria
+
+type Achievement {
+  _id: ID!
+  name: String!
+  description: String!
+  criteria: AchievementUnlockCriteriaUnion!
+}
+
 ## Leaderboard
 type LeaderboardPlayer {
   _id: ID!
@@ -42,6 +83,11 @@ type Leaderboard @cacheControl(maxAge: 900, scope: PUBLIC) {
   players: [LeaderboardPlayer!]!
 }
 
+type LeaderboardRank {
+  gameType: GameType!
+  rank: Int!
+}
+
 ## User
 
 type User {
@@ -53,6 +99,8 @@ type User {
   playedGames(gameTypes: [GameType!], first: Int): [PlayedGame!]!
   roles: [UserRole!]!
   joinedAt: Date!
+  achievements: [Achievement!]!
+  leaderboardRanks(gameTypes: [GameType!]): [LeaderboardRank!]!
 }
 
 input UserInput {
@@ -141,6 +189,7 @@ type OngoingGameStateChange {
 }
 
 type Query {
+  achievements: [Achievement!]!
   ongoingGame(ongoingGameId: ID!): OngoingGame!
   user(id: ID!): User
   users(ids: [ID!], nameIncludes: String): [User!]!

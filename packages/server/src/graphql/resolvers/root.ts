@@ -6,13 +6,7 @@ import { TContext } from "../../infrastructure/context";
 import createGame from "../../services/ongoingGame/createGame";
 import joinGame from "../../services/ongoingGame/joinGame";
 import { gqlSerializeGame } from "../../services/ongoingGame/lib/serialize";
-import {
-  Game,
-  GameType,
-  Leaderboard,
-  Resolvers,
-  User,
-} from "../generated/graphql";
+import { Game, GameType, Resolvers, User } from "../generated/graphql";
 import { dateScalar } from "../scalars/Date/Date";
 import playTurn from "../../services/ongoingGame/playTurn";
 import toggleReady from "../../services/ongoingGame/toggleReady";
@@ -22,13 +16,30 @@ import {
   getGameFromRedis,
 } from "../../services/ongoingGame/lib/publish";
 import leaveGame from "../../services/ongoingGame/leaveGame";
-import { IUser } from "../../collections/User";
+import { IUser } from "../../collections/User/User";
 import { escapeRegex } from "../../lib/common";
-import { apolloCache } from "../../infrastructure/server";
-import { IPlayedGame } from "../../collections/PlayedGame";
+import { IPlayedGame } from "../../collections/PlayedGame/PlayedGame";
+import getLeaderboard from "../../services/leaderboard/getLeaderboard";
+import { LEADERBOARD_ACHIEVEMENTS } from "../../collections/Achievement/Achievement";
+import giveAchievement from "../../services/achievements/giveAchievement";
 
 export const resolvers: Resolvers<TContext> = {
   User: {
+    achievements: async (user, _args, ctx) => {
+      const achievements = await find(ctx, "achievement", {
+        filter: {
+          _id: {
+            $in: (user as unknown as IUser).achievementIds.map(
+              (id) => new ObjectId(id)
+            ),
+          },
+        },
+      });
+      return R.map(
+        (g) => R.modify("_id", (id) => id.toString(), g),
+        achievements
+      );
+    },
     stats: async (user, { gameTypes = [] }, ctx) => {
       const stats = await find(ctx, "userStats", {
         filter: {
@@ -95,7 +106,7 @@ export const resolvers: Resolvers<TContext> = {
           filter: { _id: new ObjectId(id) },
         });
         if (!user) return null;
-        return R.modify("_id", (id) => id.toString(), user) as User;
+        return R.modify("_id", (id) => id.toString(), user) as unknown as User;
       } catch {
         return null;
       }
@@ -120,7 +131,7 @@ export const resolvers: Resolvers<TContext> = {
       return R.map(
         R.modify<"_id", ObjectId, string>("_id", (id) => id.toString()),
         users
-      );
+      ) as unknown as User[];
     },
     ongoingGame: async (_root, { ongoingGameId }, ctx) => {
       const game = await getGameFromRedis(ctx, ongoingGameId);
@@ -192,57 +203,45 @@ export const resolvers: Resolvers<TContext> = {
       );
     },
     leaderboards: async (_root, { gameTypes }, ctx) => {
-      const now = new Date();
-      const leaderboards: Leaderboard[] = await Promise.all(
-        gameTypes.map(async (gameType) => {
-          const cacheKey = `leaderboards:${gameType}`;
-          const cachedLeaderboard = await apolloCache.get(cacheKey);
-
-          if (cachedLeaderboard) {
-            return cachedLeaderboard;
-          }
-
-          const stats = await find(ctx, "userStats", {
-            filter: { gameType },
-            options: {
-              sort: { elo: -1, totalWins: -1 },
-              limit: 10,
-            },
-          });
-
-          const users = await find(ctx, "user", {
-            filter: {
-              _id: { $in: stats.map((stat) => new ObjectId(stat.userId)) },
-            },
-          });
-
-          const leaderboard = {
-            _id: gameType,
-            gameType,
-            players: stats.map((stat) => {
-              const user = users.find((user) => user._id.equals(stat.userId));
-              return {
-                _id: stat.userId.toString() + "" + gameType,
-                userId: stat.userId.toString(),
-                elo: stat.elo,
-                totalWins: stat.totalWins,
-                githubId: user?.githubId,
-                userName: user?.userName,
-                totalPlayed: stat.totalPlayed,
-              };
-            }),
-            updatedAt: now,
-          };
-
-          await apolloCache.set(cacheKey, leaderboard, {
-            ttl: 60 * 15, // seconds
-          });
-
-          return leaderboard;
-        })
+      const results = await Promise.all(
+        gameTypes.map(async (gameType) => getLeaderboard(ctx, { gameType }))
       );
 
-      return leaderboards;
+      const newLeaderboards = results
+        .filter(({ fromCache }) => !fromCache)
+        .map(({ leaderboard }) => leaderboard);
+
+      if (newLeaderboards.length > 0) {
+        Promise.all(
+          newLeaderboards.map((lb) => {
+            Promise.all(
+              lb.players.slice(0, 3).map(async (player, i) => {
+                if (i > 2) return;
+                const index = (i + 1) as 1 | 2 | 3;
+                const achievement =
+                  LEADERBOARD_ACHIEVEMENTS[lb.gameType][index];
+                if (!achievement) return;
+                console.log(achievement);
+                await giveAchievement(ctx, {
+                  userId: player.userId,
+                  achievementId: achievement._id.toString(),
+                });
+              })
+            );
+          })
+        );
+      }
+
+      return results.map(({ leaderboard }) => leaderboard);
+    },
+    achievements: async (_root, _args, ctx) => {
+      const achievements = await find(ctx, "achievement", {
+        filter: {},
+      });
+      return R.map(
+        (g) => R.modify("_id", (id) => id.toString(), g),
+        achievements
+      );
     },
   },
   Subscription: {

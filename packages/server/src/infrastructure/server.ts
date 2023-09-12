@@ -16,13 +16,13 @@ import { ApolloServer } from "@apollo/server";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
-import { InMemoryLRUCache } from "@apollo/utils.keyvaluecache";
+
 import { useServer } from "graphql-ws/lib/use/ws";
 
 import { ObjectId } from "mongodb";
 import { UserRole } from "../graphql/generated/graphql";
 import { resolvers } from "../graphql/resolvers/root";
-import { IUser } from "../collections/User";
+import { IUser } from "../collections/User/User";
 
 import {
   getGlobalContext,
@@ -30,11 +30,6 @@ import {
   TContext,
   TGlobalContext,
 } from "./context";
-
-export const apolloCache = new InMemoryLRUCache<any>({
-  maxSize: Math.pow(2, 20) * 100,
-  ttl: 900,
-});
 
 const configurePassport = (ctx: TGlobalContext) => {
   passport.serializeUser(function (user, done) {
@@ -89,51 +84,47 @@ const createHttpServer = () => {
   return { app, httpServer };
 };
 
-const createApolloServer = ({
-  app,
-  httpServer,
-}: {
-  app: Express;
-  httpServer: Server;
-}) => {
-  const typeDefs = fs.readFileSync("./src/graphql/schema.graphql", {
-    encoding: "utf-8",
-  });
+const createApolloServer =
+  (ctx: TGlobalContext) =>
+  ({ app, httpServer }: { app: Express; httpServer: Server }) => {
+    const typeDefs = fs.readFileSync("./src/graphql/schema.graphql", {
+      encoding: "utf-8",
+    });
 
-  const schema = makeExecutableSchema({ typeDefs, resolvers });
+    const schema = makeExecutableSchema({ typeDefs, resolvers });
 
-  const wsServer = new WebSocketServer({
-    server: httpServer,
-    path: "/graphql",
-  });
+    const wsServer = new WebSocketServer({
+      server: httpServer,
+      path: "/graphql",
+    });
 
-  const serverCleanup = useServer({ schema, context: getContext }, wsServer);
+    const serverCleanup = useServer({ schema, context: getContext }, wsServer);
 
-  const apolloServer = new ApolloServer<TContext>({
-    schema,
-    plugins: [
-      ApolloServerPluginDrainHttpServer({ httpServer }),
-      {
-        async serverWillStart() {
-          return {
-            async drainServer() {
-              await serverCleanup.dispose();
-            },
-          };
+    const apolloServer = new ApolloServer<TContext>({
+      schema,
+      plugins: [
+        ApolloServerPluginDrainHttpServer({ httpServer }),
+        {
+          async serverWillStart() {
+            return {
+              async drainServer() {
+                await serverCleanup.dispose();
+              },
+            };
+          },
         },
-      },
-    ],
-    cache: apolloCache,
-  });
+      ],
+      cache: ctx.apolloCache,
+    });
 
-  return { apolloServer, app, httpServer, apolloCache };
-};
+    return { apolloServer, app, httpServer };
+  };
 
 const startApolloServer = async ({
-  apolloServer,
   app,
   httpServer,
-}: ReturnType<typeof createApolloServer>) => {
+  apolloServer,
+}: ReturnType<ReturnType<typeof createApolloServer>>) => {
   await apolloServer.start();
   return { apolloServer, app, httpServer };
 };
@@ -240,7 +231,7 @@ export const startServer = async () => {
   return Promise.resolve(configurePassport(ctx))
     .then(createHttpServer)
     .then(R.tap(() => console.info("Created http server")))
-    .then(createApolloServer)
+    .then(createApolloServer(ctx))
     .then(R.tap(() => console.info("Created apollo server")))
     .then(startApolloServer)
     .then(R.tap(() => console.info("Started apollo server")))

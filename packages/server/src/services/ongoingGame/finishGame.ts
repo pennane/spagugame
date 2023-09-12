@@ -13,6 +13,7 @@ import {
   publishGameChange,
   removeGameFromRedis,
 } from "./lib/publish";
+import giveEntitledGameAchievements from "../achievements/giveEntitledGameAchievements";
 
 const calculateElo = (
   a: number,
@@ -155,9 +156,19 @@ const finishGame = authenticatedService<
                 : {}),
               totalPlayed: 1,
             },
-          }
+          },
+          { returnDocument: "after" }
         ),
       ])
+    )
+  );
+
+  Promise.all(
+    newEloPlayers.map((player) =>
+      giveEntitledGameAchievements(ctx, {
+        gameType: game.gameType,
+        userId: player._id,
+      })
     )
   );
 
