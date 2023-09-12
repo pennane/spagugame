@@ -7,6 +7,33 @@ fragment ProfilePageUserStats on UserStats {
   elo
 }
 
+fragment ProfilePageUserAchievement on Achievement {
+  _id
+  name
+  description
+  criteria {
+    ... on OtherUnlockCriteria {
+      gameType
+    }
+    ... on TotalWinsUnlockCriteria {
+      gameType
+      wins
+    }
+    ... on WinStreakUnlockCriteria {
+      gameType
+      streak
+    }
+    ... on TotalPlayedUnlockCriteria {
+      gameType
+      played
+    }
+    ... on LeaderboardRankUnlockCriteria {
+      gameType
+      rank
+    }
+  }
+}
+
 fragment ProfilePageUserPlayedGame on PlayedGame {
   _id
   gameType
@@ -30,6 +57,9 @@ query ProfilePageUser($userId: ID!) {
     }
     playedGames {
       ...ProfilePageUserPlayedGame
+    }
+    achievements {
+      ...ProfilePageUserAchievement
     }
   }
 }

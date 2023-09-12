@@ -15,6 +15,16 @@ export type Scalars = {
   Date: { input: Date; output: Date; }
 };
 
+export type Achievement = {
+  __typename?: 'Achievement';
+  _id: Scalars['ID']['output'];
+  criteria: AchievementUnlockCriteriaUnion;
+  description: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+};
+
+export type AchievementUnlockCriteriaUnion = LeaderboardRankUnlockCriteria | OtherUnlockCriteria | TotalPlayedUnlockCriteria | TotalWinsUnlockCriteria | WinStreakUnlockCriteria;
+
 export enum CacheControlScope {
   Private = 'PRIVATE',
   Public = 'PUBLIC'
@@ -54,6 +64,18 @@ export type LeaderboardPlayer = {
   totalWins: Scalars['Int']['output'];
   userId: Scalars['ID']['output'];
   userName?: Maybe<Scalars['String']['output']>;
+};
+
+export type LeaderboardRank = {
+  __typename?: 'LeaderboardRank';
+  gameType: GameType;
+  rank: Scalars['Int']['output'];
+};
+
+export type LeaderboardRankUnlockCriteria = UnlockCriteria & {
+  __typename?: 'LeaderboardRankUnlockCriteria';
+  gameType?: Maybe<GameType>;
+  rank: Scalars['Int']['output'];
 };
 
 export type Mutation = {
@@ -142,6 +164,11 @@ export type OngoingGameStateChange = {
   winnerIds?: Maybe<Array<Scalars['ID']['output']>>;
 };
 
+export type OtherUnlockCriteria = UnlockCriteria & {
+  __typename?: 'OtherUnlockCriteria';
+  gameType?: Maybe<GameType>;
+};
+
 export type PlayedGame = {
   __typename?: 'PlayedGame';
   _id: Scalars['ID']['output'];
@@ -158,6 +185,7 @@ export type PlayedGame = {
 
 export type Query = {
   __typename?: 'Query';
+  achievements: Array<Achievement>;
   currentUser?: Maybe<User>;
   game?: Maybe<Game>;
   games: Array<Game>;
@@ -230,16 +258,39 @@ export type SubscriptionOngoingGameStateChangeArgs = {
   ongoingGameId: Scalars['ID']['input'];
 };
 
+export type TotalPlayedUnlockCriteria = UnlockCriteria & {
+  __typename?: 'TotalPlayedUnlockCriteria';
+  gameType?: Maybe<GameType>;
+  played: Scalars['Int']['output'];
+};
+
+export type TotalWinsUnlockCriteria = UnlockCriteria & {
+  __typename?: 'TotalWinsUnlockCriteria';
+  gameType?: Maybe<GameType>;
+  wins: Scalars['Int']['output'];
+};
+
+export type UnlockCriteria = {
+  gameType?: Maybe<GameType>;
+};
+
 export type User = {
   __typename?: 'User';
   _id: Scalars['ID']['output'];
+  achievements: Array<Achievement>;
   description?: Maybe<Scalars['String']['output']>;
   githubId: Scalars['ID']['output'];
   joinedAt: Scalars['Date']['output'];
+  leaderboardRanks: Array<LeaderboardRank>;
   playedGames: Array<PlayedGame>;
   roles: Array<UserRole>;
   stats: Array<UserStats>;
   userName: Scalars['String']['output'];
+};
+
+
+export type UserLeaderboardRanksArgs = {
+  gameTypes?: InputMaybe<Array<GameType>>;
 };
 
 
@@ -271,4 +322,10 @@ export type UserStats = {
   totalPlayed: Scalars['Int']['output'];
   totalWins: Scalars['Int']['output'];
   userId: Scalars['ID']['output'];
+};
+
+export type WinStreakUnlockCriteria = UnlockCriteria & {
+  __typename?: 'WinStreakUnlockCriteria';
+  gameType?: Maybe<GameType>;
+  streak: Scalars['Int']['output'];
 };

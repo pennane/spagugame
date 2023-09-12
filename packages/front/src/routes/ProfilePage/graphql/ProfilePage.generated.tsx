@@ -5,6 +5,8 @@ import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type ProfilePageUserStatsFragment = { __typename?: 'UserStats', _id: string, userId: string, gameType: Types.GameType, totalWins: number, totalPlayed: number, elo: number };
 
+export type ProfilePageUserAchievementFragment = { __typename?: 'Achievement', _id: string, name: string, description: string, criteria: { __typename?: 'LeaderboardRankUnlockCriteria', gameType?: Types.GameType | null, rank: number } | { __typename?: 'OtherUnlockCriteria', gameType?: Types.GameType | null } | { __typename?: 'TotalPlayedUnlockCriteria', gameType?: Types.GameType | null, played: number } | { __typename?: 'TotalWinsUnlockCriteria', gameType?: Types.GameType | null, wins: number } | { __typename?: 'WinStreakUnlockCriteria', gameType?: Types.GameType | null, streak: number } };
+
 export type ProfilePageUserPlayedGameFragment = { __typename?: 'PlayedGame', _id: string, gameType: Types.GameType, playerIds: Array<string>, playerScores: Array<number>, playerElosBefore: Array<number>, playerElosAfter: Array<number>, startedAt: Date, finishedAt: Date, finalState?: string | null, ongoingGameId?: string | null };
 
 export type ProfilePageUserQueryVariables = Types.Exact<{
@@ -12,7 +14,7 @@ export type ProfilePageUserQueryVariables = Types.Exact<{
 }>;
 
 
-export type ProfilePageUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', _id: string, githubId: string, userName: string, stats: Array<{ __typename?: 'UserStats', _id: string, userId: string, gameType: Types.GameType, totalWins: number, totalPlayed: number, elo: number }>, playedGames: Array<{ __typename?: 'PlayedGame', _id: string, gameType: Types.GameType, playerIds: Array<string>, playerScores: Array<number>, playerElosBefore: Array<number>, playerElosAfter: Array<number>, startedAt: Date, finishedAt: Date, finalState?: string | null, ongoingGameId?: string | null }> } | null };
+export type ProfilePageUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', _id: string, githubId: string, userName: string, stats: Array<{ __typename?: 'UserStats', _id: string, userId: string, gameType: Types.GameType, totalWins: number, totalPlayed: number, elo: number }>, playedGames: Array<{ __typename?: 'PlayedGame', _id: string, gameType: Types.GameType, playerIds: Array<string>, playerScores: Array<number>, playerElosBefore: Array<number>, playerElosAfter: Array<number>, startedAt: Date, finishedAt: Date, finalState?: string | null, ongoingGameId?: string | null }>, achievements: Array<{ __typename?: 'Achievement', _id: string, name: string, description: string, criteria: { __typename?: 'LeaderboardRankUnlockCriteria', gameType?: Types.GameType | null, rank: number } | { __typename?: 'OtherUnlockCriteria', gameType?: Types.GameType | null } | { __typename?: 'TotalPlayedUnlockCriteria', gameType?: Types.GameType | null, played: number } | { __typename?: 'TotalWinsUnlockCriteria', gameType?: Types.GameType | null, wins: number } | { __typename?: 'WinStreakUnlockCriteria', gameType?: Types.GameType | null, streak: number } }> } | null };
 
 export const ProfilePageUserStatsFragmentDoc = gql`
     fragment ProfilePageUserStats on UserStats {
@@ -22,6 +24,34 @@ export const ProfilePageUserStatsFragmentDoc = gql`
   totalWins
   totalPlayed
   elo
+}
+    `;
+export const ProfilePageUserAchievementFragmentDoc = gql`
+    fragment ProfilePageUserAchievement on Achievement {
+  _id
+  name
+  description
+  criteria {
+    ... on OtherUnlockCriteria {
+      gameType
+    }
+    ... on TotalWinsUnlockCriteria {
+      gameType
+      wins
+    }
+    ... on WinStreakUnlockCriteria {
+      gameType
+      streak
+    }
+    ... on TotalPlayedUnlockCriteria {
+      gameType
+      played
+    }
+    ... on LeaderboardRankUnlockCriteria {
+      gameType
+      rank
+    }
+  }
 }
     `;
 export const ProfilePageUserPlayedGameFragmentDoc = gql`
@@ -50,10 +80,14 @@ export const ProfilePageUserDocument = gql`
     playedGames {
       ...ProfilePageUserPlayedGame
     }
+    achievements {
+      ...ProfilePageUserAchievement
+    }
   }
 }
     ${ProfilePageUserStatsFragmentDoc}
-${ProfilePageUserPlayedGameFragmentDoc}`;
+${ProfilePageUserPlayedGameFragmentDoc}
+${ProfilePageUserAchievementFragmentDoc}`;
 
 /**
  * __useProfilePageUserQuery__

@@ -7,21 +7,54 @@ import { useProfilePageUserQuery } from './graphql/ProfilePage.generated'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { P } from '../../components/P'
 import { PlayedGame } from '../PlayedGamesPage'
+import { Achievements } from './components/Achievements'
+import { MOBILE_WIDTHS } from '../../hooks/useIsMobile'
 
 const StyledProfilePage = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 2.5rem;
 `
 const StyledProfileHeader = styled.div``
 
+const Section = styled.section`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`
+
+const StyledGamesWrapper = styled.div`
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-evenly;
+  @media (max-width: ${MOBILE_WIDTHS.default}px) {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+`
+
+const StyledGameStats = styled.div`
+  display: flex;
+  flex-direction: column;
+  @media (max-width: ${MOBILE_WIDTHS.default}px) {
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+`
+
 const StyledGame = styled.div`
+  width: 14rem;
   border: 1px solid #ff5666;
   padding: 0.75rem 1rem;
   border-radius: 0.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  @media (max-width: ${MOBILE_WIDTHS.default}px) {
+    width: 100%;
+  }
 `
 
 const StyledRecentMatches = styled.div`
@@ -73,43 +106,57 @@ export const ProfilePage: FC = () => {
 
   return (
     <StyledProfilePage>
-      <StyledProfileHeader>
-        <Heading.H1>{profileUser.userName}</Heading.H1>
-      </StyledProfileHeader>
-      <ProfileImage githubId={profileUser.githubId} />
-      <Heading.H2>Stats:</Heading.H2>
-      {profileUser.stats.map((stat) => (
-        <StyledGame key={stat._id}>
-          <Heading.H3>{stat.gameType}</Heading.H3>
-          <P.DefaultText>{Math.floor(stat.elo)} elo</P.DefaultText>
-          <P.DefaultText>{stat.totalWins} wins</P.DefaultText>
-          <P.DefaultText>{stat.totalPlayed} played</P.DefaultText>
-        </StyledGame>
-      ))}
-      <Heading.H2>Recent matches:</Heading.H2>
-      <StyledRecentMatches>
-        {profileUser.playedGames.map((game) => {
-          const playerIndex = game.playerIds.findIndex(
-            (p) => p === profileUser._id
-          )
-          const eloChange =
-            playerIndex !== -1
-              ? Math.floor(
-                  game.playerElosAfter[playerIndex] -
-                    game.playerElosBefore[playerIndex]
-                )
-              : undefined
+      <Section>
+        <StyledProfileHeader>
+          <Heading.H1>{profileUser.userName}</Heading.H1>
+        </StyledProfileHeader>
+        <ProfileImage githubId={profileUser.githubId} />
+      </Section>
+      <Section>
+        <Heading.H2>Stats:</Heading.H2>
+        <StyledGamesWrapper>
+          {profileUser.stats.map((stat) => (
+            <StyledGame key={stat._id}>
+              <Heading.H3>{stat.gameType}</Heading.H3>
+              <StyledGameStats>
+                <P.DefaultText>{Math.floor(stat.elo)} elo</P.DefaultText>
+                <P.DefaultText>{stat.totalWins} wins</P.DefaultText>
+                <P.DefaultText>{stat.totalPlayed} played</P.DefaultText>
+              </StyledGameStats>
+            </StyledGame>
+          ))}
+        </StyledGamesWrapper>
+      </Section>
+      <Section>
+        <Heading.H2>Recent matches:</Heading.H2>
+        <StyledRecentMatches>
+          {profileUser.playedGames.map((game) => {
+            const playerIndex = game.playerIds.findIndex(
+              (p) => p === profileUser._id
+            )
+            const eloChange =
+              playerIndex !== -1
+                ? Math.floor(
+                    game.playerElosAfter[playerIndex] -
+                      game.playerElosBefore[playerIndex]
+                  )
+                : undefined
 
-          return (
-            <PlayedGame
-              key={game._id}
-              game={game}
-              profilePage
-              eloChange={eloChange}
-            />
-          )
-        })}
-      </StyledRecentMatches>
+            return (
+              <PlayedGame
+                key={game._id}
+                game={game}
+                profilePage
+                eloChange={eloChange}
+              />
+            )
+          })}
+        </StyledRecentMatches>
+      </Section>
+      <Section>
+        <Heading.H2>Achievements:</Heading.H2>
+        <Achievements achievements={profileUser.achievements || []} />
+      </Section>
     </StyledProfilePage>
   )
 }

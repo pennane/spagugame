@@ -110,8 +110,8 @@ export const PEIGOM_ACHIEVEMENT: IAchievement = addIdFromName(
 
 export const KONAMI_ACHIEVEMENT: IAchievement = addIdFromName(
   addOtherUnlockCriteria({
-    name: "Peigom",
-    description: "Only for the players of highest prestige",
+    name: "Konami",
+    description: "??????????",
   })
 );
 
