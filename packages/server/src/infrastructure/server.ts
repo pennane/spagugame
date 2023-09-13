@@ -115,6 +115,7 @@ const createApolloServer =
         },
       ],
       cache: ctx.apolloCache,
+      allowBatchedHttpRequests: true,
     });
 
     return { apolloServer, app, httpServer };

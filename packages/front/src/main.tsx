@@ -6,11 +6,11 @@ import {
   ApolloClient,
   InMemoryCache,
   ApolloProvider,
-  split,
-  HttpLink
+  split
 } from '@apollo/client'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
+import { BatchHttpLink } from '@apollo/client/link/batch-http'
 import { createClient } from 'graphql-ws'
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
@@ -31,8 +31,10 @@ import { PlayedGamePage } from './routes/PlayedGamePage'
 import { LeaderboardPage } from './routes/LeaderboardPage'
 import { SoundContextProvider } from './hooks/usePlaySound/context'
 
-const httpLink = new HttpLink({
+const httpLink = new BatchHttpLink({
   uri: `${import.meta.env.VITE_SERVER_BASE_URL}/graphql`,
+  batchMax: 5,
+  batchInterval: 20,
   credentials: 'include'
 })
 
