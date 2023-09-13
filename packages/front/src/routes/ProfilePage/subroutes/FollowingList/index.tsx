@@ -63,7 +63,7 @@ export const FollowingList: FC = () => {
                 </User>
               </CustomLink>
 
-              {user._id !== currentUser?._id && (
+              {currentUser && user._id !== currentUser?._id && (
                 <Button
                   onClick={() =>
                     followMutation({

@@ -84,7 +84,7 @@ export const ProfilePage: FC = () => {
           </FollowingLink>
         </FollowingLinks>
 
-        {currentUser?._id !== profileUser._id && (
+        {currentUser && currentUser?._id !== profileUser._id && (
           <Button
             style={{ width: '10rem' }}
             onClick={() =>
