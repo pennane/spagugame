@@ -28,7 +28,7 @@ const StyledGamesWrapper = styled.div`
   gap: 1rem;
   flex-wrap: wrap;
   align-items: baseline;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   @media (max-width: ${MOBILE_WIDTHS.default}px) {
     flex-direction: column;
     gap: 0.5rem;

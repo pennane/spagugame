@@ -67,6 +67,7 @@ const configurePassport = (ctx: TGlobalContext) => {
               roles: [UserRole.User],
               userName: profile.displayName || profile.username,
               joinedAt: new Date(),
+              achievementIds: [],
             },
           },
           { upsert: true, returnDocument: "after" }

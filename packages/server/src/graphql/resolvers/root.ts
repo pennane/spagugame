@@ -28,6 +28,12 @@ import konami from "../../services/achievements/konami";
 export const resolvers: Resolvers<TContext> = {
   User: {
     achievements: async (user, _args, ctx) => {
+      if (
+        !(user as unknown as IUser).achievementIds ||
+        (user as unknown as IUser).achievementIds.length === 0
+      ) {
+        return [];
+      }
       const achievements = await find(ctx, "achievement", {
         filter: {
           _id: {
@@ -37,6 +43,7 @@ export const resolvers: Resolvers<TContext> = {
           },
         },
       });
+
       return R.map(
         (g) => R.modify("_id", (id) => id.toString(), g),
         achievements
