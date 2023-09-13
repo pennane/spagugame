@@ -4,16 +4,16 @@ import { OngoingGame } from '../../../../types'
 import { GameFragment } from '../../../LandingPage/graphql/Games.generated'
 import { Button } from '../../../../components/Button'
 import { CustomLink } from '../../../../components/CustomLink'
-import { CurrentUserFragment } from '../../../../hooks/useCurrentUser/graphql/CurrentUser.generated'
 import { MiniProfileImage } from '../../../../games/components/Players'
 import styled from 'styled-components'
+import { ProfilePageUserFragment } from '../../../ProfilePage/graphql/ProfilePage.generated'
 
 type OngoingGameItemProps = {
   ongoingGame: Pick<OngoingGame, '_id'> & {
     players: Pick<OngoingGame['players'][number], 'userId'>[]
   }
   game: GameFragment
-  currentUser: CurrentUserFragment | null
+  currentUser: ProfilePageUserFragment | null
 }
 
 const StyledMiniProfileImage = styled(MiniProfileImage)`
