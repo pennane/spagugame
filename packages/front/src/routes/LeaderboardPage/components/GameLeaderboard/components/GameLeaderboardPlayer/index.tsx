@@ -41,19 +41,33 @@ const StyledRank = styled.div`
   font-weight: 900;
   color: ${({ theme }) => theme.colors.foreground.success};
 `
+type ShadowedPlayerWrapperProps = {
+  children?: React.ReactNode
+  to: string
+}
+
+const ShadowedPlayerWrapper: FC<ShadowedPlayerWrapperProps> = ({
+  children,
+  to,
+  ...rest
+}) => {
+  return (
+    <CustomLink boxShadow color="info" to={to} {...rest}>
+      <StyledGameLeaderboardPlayer>{children}</StyledGameLeaderboardPlayer>
+    </CustomLink>
+  )
+}
 
 export const GameLeaderboardPlayer: FC<GameLeaderboardPlayerProps> = ({
   player,
   rank
 }) => {
   return (
-    <CustomLink boxShadow color="info" to={`/profile/${player.userId}`}>
-      <StyledGameLeaderboardPlayer>
-        <StyledRank>{rank}.</StyledRank>
-        <Pill color="info">{player.elo}</Pill>
-        <MiniProfileImage githubId={player.githubId || ''} />
-        <Heading.H3>{player?.userName || player.userId}</Heading.H3>
-      </StyledGameLeaderboardPlayer>
-    </CustomLink>
+    <ShadowedPlayerWrapper to={`/profile/${player.userId}`}>
+      <StyledRank>{rank}.</StyledRank>
+      <Pill color="info">{player.elo}</Pill>
+      <MiniProfileImage githubId={player.githubId || ''} />
+      <Heading.H3>{player?.userName || player.userId}</Heading.H3>
+    </ShadowedPlayerWrapper>
   )
 }

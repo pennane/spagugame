@@ -1,11 +1,9 @@
 import { FC, ReactNode, createContext } from 'react'
 
-import {
-  CurrentUserFragment,
-  useCurrentUserQuery
-} from './graphql/CurrentUser.generated'
+import { useCurrentUserQuery } from './graphql/CurrentUser.generated'
+import { ProfilePageUserFragment } from '../../routes/ProfilePage/graphql/ProfilePage.generated'
 
-export const CurrentUserContext = createContext<CurrentUserFragment | null>(
+export const CurrentUserContext = createContext<ProfilePageUserFragment | null>(
   null
 )
 

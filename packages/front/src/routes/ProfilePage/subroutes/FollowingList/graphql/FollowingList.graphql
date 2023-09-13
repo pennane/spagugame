@@ -1,0 +1,7 @@
+query FollowingListUser($userId: ID!) {
+  user(id: $userId) {
+    _id
+    userName
+    ...UserFollowing
+  }
+}

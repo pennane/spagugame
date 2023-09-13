@@ -68,6 +68,8 @@ const configurePassport = (ctx: TGlobalContext) => {
               userName: profile.displayName || profile.username,
               joinedAt: new Date(),
               achievementIds: [],
+              followerIds: [],
+              followingIds: [],
             },
           },
           { upsert: true, returnDocument: "after" }

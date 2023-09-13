@@ -89,6 +89,7 @@ export type Mutation = {
   joinOngoingGame: OngoingGame;
   leaveOngoingGame: OngoingGame;
   playTurn: OngoingGame;
+  toggleFollow: User;
   toggleReady: OngoingGame;
   updateUser: User;
 };
@@ -118,6 +119,12 @@ export type MutationLeaveOngoingGameArgs = {
 export type MutationPlayTurnArgs = {
   json: Scalars['String']['input'];
   ongoingGameId: Scalars['ID']['input'];
+};
+
+
+export type MutationToggleFollowArgs = {
+  toggle: Scalars['Boolean']['input'];
+  userId: Scalars['ID']['input'];
 };
 
 
@@ -295,6 +302,8 @@ export type User = {
   _id: Scalars['ID']['output'];
   achievements: Array<Achievement>;
   description?: Maybe<Scalars['String']['output']>;
+  followers: Array<User>;
+  following: Array<User>;
   githubId: Scalars['ID']['output'];
   joinedAt: Scalars['Date']['output'];
   leaderboardRanks: Array<LeaderboardRank>;
@@ -563,6 +572,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   joinOngoingGame?: Resolver<ResolversTypes['OngoingGame'], ParentType, ContextType, RequireFields<MutationJoinOngoingGameArgs, 'ongoingGameId'>>;
   leaveOngoingGame?: Resolver<ResolversTypes['OngoingGame'], ParentType, ContextType, RequireFields<MutationLeaveOngoingGameArgs, 'ongoingGameId'>>;
   playTurn?: Resolver<ResolversTypes['OngoingGame'], ParentType, ContextType, RequireFields<MutationPlayTurnArgs, 'json' | 'ongoingGameId'>>;
+  toggleFollow?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationToggleFollowArgs, 'toggle' | 'userId'>>;
   toggleReady?: Resolver<ResolversTypes['OngoingGame'], ParentType, ContextType, RequireFields<MutationToggleReadyArgs, 'ongoingGameId' | 'ready'>>;
   updateUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, Partial<MutationUpdateUserArgs>>;
 };
@@ -662,6 +672,8 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   achievements?: Resolver<Array<ResolversTypes['Achievement']>, ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  followers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
+  following?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
   githubId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   joinedAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   leaderboardRanks?: Resolver<Array<ResolversTypes['LeaderboardRank']>, ParentType, ContextType, Partial<UserLeaderboardRanksArgs>>;

@@ -3,9 +3,9 @@ import styled from 'styled-components'
 import { useCurrentUser } from '../../../../hooks/useCurrentUser'
 import { Button } from '../../../../components/Button'
 import { Span } from '../../../../components/Span'
-import { ProfileImage } from '../../../ProfilePage'
 import { useIsMobile } from '../../../../hooks/useIsMobile'
 import { Link } from 'react-router-dom'
+import { ProfileImage } from '../../../ProfilePage/components/ProfileImage'
 
 const StyledAuthenticationActions = styled.div`
   color: ${({ theme }) => theme.colors.foreground.success};

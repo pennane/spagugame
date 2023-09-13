@@ -24,6 +24,7 @@ import getLeaderboard from "../../services/leaderboard/getLeaderboard";
 import { LEADERBOARD_ACHIEVEMENTS } from "../../collections/Achievement/Achievement";
 import giveAchievement from "../../services/achievements/giveAchievement";
 import konami from "../../services/achievements/konami";
+import toggleFollow from "../../services/user/toggleFollow";
 
 export const resolvers: Resolvers<TContext> = {
   User: {
@@ -81,6 +82,50 @@ export const resolvers: Resolvers<TContext> = {
         R.modify<"_id", ObjectId, string>("_id", (id) => id.toString()),
         stats
       );
+    },
+    followers: async (user, _args, ctx) => {
+      if (
+        !(user as unknown as IUser).followerIds ||
+        (user as unknown as IUser).followerIds.length === 0
+      ) {
+        return [];
+      }
+      const followers = await find(ctx, "user", {
+        filter: {
+          _id: {
+            $in: (user as unknown as IUser).followerIds.map(
+              (id) => new ObjectId(id)
+            ),
+          },
+        },
+      });
+
+      return R.map(
+        (g) => R.modify("_id", (id) => id.toString(), g),
+        followers
+      ) as unknown as User[];
+    },
+    following: async (user, _args, ctx) => {
+      if (
+        !(user as unknown as IUser).followingIds ||
+        (user as unknown as IUser).followingIds.length === 0
+      ) {
+        return [];
+      }
+      const followers = await find(ctx, "user", {
+        filter: {
+          _id: {
+            $in: (user as unknown as IUser).followingIds.map(
+              (id) => new ObjectId(id)
+            ),
+          },
+        },
+      });
+
+      return R.map(
+        (g) => R.modify("_id", (id) => id.toString(), g),
+        followers
+      ) as unknown as User[];
     },
   },
   Game: {
@@ -298,6 +343,15 @@ export const resolvers: Resolvers<TContext> = {
     debug: async (_root, { tokens }, ctx) => {
       const { success } = await konami(ctx, { tokens });
       return success;
+    },
+    toggleFollow: async (_root, { userId, toggle }, ctx) => {
+      await toggleFollow(ctx, { userId, toggle });
+      const user = await get(ctx, "user", {
+        filter: { _id: new ObjectId(ctx.user?._id) },
+      });
+      if (!user) throw new Error("User not found - again");
+
+      return R.modify("_id", (id) => id.toString(), user) as unknown as User;
     },
   },
 };

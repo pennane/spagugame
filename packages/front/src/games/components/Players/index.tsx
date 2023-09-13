@@ -12,8 +12,8 @@ import {
 } from './graphql/GamePlayerProfiles.generated'
 import { Span } from '../../../components/Span'
 import { Pill } from '../../../components/Pill'
-import { ProfileImage } from '../../../routes/ProfilePage'
 import { GAME_TYPE_TO_SPECIFICATION } from '../../constants'
+import { ProfileImage } from '../../../routes/ProfilePage/components/ProfileImage'
 
 type PlayersProps = {
   game: OngoingGame

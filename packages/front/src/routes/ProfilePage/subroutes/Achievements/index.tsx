@@ -1,8 +1,9 @@
 import styled, { css } from 'styled-components'
 import { FC } from 'react'
-import { ProfilePageUserAchievementFragment } from '../../graphql/ProfilePage.generated'
 import { useAllAchievementsQuery } from './graphql/Achievements.generated'
 import { P } from '../../../../components/P'
+import { Section, useProfileUser } from '../..'
+import { Heading } from '../../../../components/Heading'
 
 const StyledAchievements = styled.div`
   display: flex;
@@ -39,31 +40,35 @@ const StyledAchievement = styled.div<{ $locked: boolean }>`
   ${({ $locked }) => $locked && lockedCss}
 `
 
-type AchievementsProps = {
-  achievements: ProfilePageUserAchievementFragment[]
-}
+export const Achievements: FC = () => {
+  const { user: profileUser } = useProfileUser()
 
-export const Achievements: FC<AchievementsProps> = ({ achievements }) => {
-  const unlockedIds = achievements.map((achievement) => achievement._id)
+  const unlockedIds =
+    profileUser?.achievements.map((achievement) => achievement._id) || []
+
   const { data: allAchievementsData, loading: allAchievementsLoading } =
     useAllAchievementsQuery()
 
   if (allAchievementsLoading) return <P.SmallText>Loading ...</P.SmallText>
 
-  const allAchievements = allAchievementsData?.achievements || achievements
+  const allAchievements =
+    allAchievementsData?.achievements || profileUser?.achievements
   return (
-    <StyledAchievements>
-      {allAchievements.map((achievement) => {
-        return (
-          <StyledAchievement
-            title={achievement.description}
-            $locked={!unlockedIds.includes(achievement._id)}
-            key={achievement._id}
-          >
-            {achievement.name}
-          </StyledAchievement>
-        )
-      })}
-    </StyledAchievements>
+    <Section>
+      <Heading.H2>Achievements:</Heading.H2>
+      <StyledAchievements>
+        {allAchievements?.map((achievement) => {
+          return (
+            <StyledAchievement
+              title={achievement.description}
+              $locked={!unlockedIds.includes(achievement._id)}
+              key={achievement._id}
+            >
+              {achievement.name}
+            </StyledAchievement>
+          )
+        })}
+      </StyledAchievements>
+    </Section>
   )
 }

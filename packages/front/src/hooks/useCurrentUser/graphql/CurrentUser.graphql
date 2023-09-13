@@ -1,12 +1,5 @@
-fragment CurrentUser on User {
-  _id
-  githubId
-  userName
-  roles
-}
-
 query CurrentUser {
   currentUser {
-    ...CurrentUser
+    ...ProfilePageUser
   }
 }

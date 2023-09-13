@@ -47,19 +47,44 @@ fragment ProfilePageUserPlayedGame on PlayedGame {
   ongoingGameId
 }
 
+fragment UserFollowing on User {
+  followers {
+    _id
+    userName
+    githubId
+  }
+  following {
+    _id
+    userName
+    githubId
+  }
+}
+
+fragment ProfilePageUser on User {
+  _id
+  githubId
+  userName
+  stats {
+    ...ProfilePageUserStats
+  }
+  playedGames {
+    ...ProfilePageUserPlayedGame
+  }
+  achievements {
+    ...ProfilePageUserAchievement
+  }
+  ...UserFollowing
+}
+
 query ProfilePageUser($userId: ID!) {
   user(id: $userId) {
+    ...ProfilePageUser
+  }
+}
+
+mutation FollowUser($userId: ID!, $toggle: Boolean!) {
+  toggleFollow(userId: $userId, toggle: $toggle) {
     _id
-    githubId
-    userName
-    stats {
-      ...ProfilePageUserStats
-    }
-    playedGames {
-      ...ProfilePageUserPlayedGame
-    }
-    achievements {
-      ...ProfilePageUserAchievement
-    }
+    ...UserFollowing
   }
 }

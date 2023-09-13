@@ -101,6 +101,8 @@ type User {
   joinedAt: Date!
   achievements: [Achievement!]!
   leaderboardRanks(gameTypes: [GameType!]): [LeaderboardRank!]!
+  followers: [User!]!
+  following: [User!]!
 }
 
 input UserInput {
@@ -215,5 +217,7 @@ type Mutation {
   playTurn(ongoingGameId: ID!, json: String!): OngoingGame!
   toggleReady(ongoingGameId: ID!, ready: Boolean!): OngoingGame!
   updateUser(userInput: UserInput): User!
+  # Returns the currentUser
+  toggleFollow(userId: ID!, toggle: Boolean!): User!
   debug(tokens: [String!]!): Boolean!
 }

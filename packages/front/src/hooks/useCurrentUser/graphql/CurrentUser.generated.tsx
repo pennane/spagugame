@@ -1,30 +1,22 @@
 import * as Types from '../../../types';
 
 import { gql } from '@apollo/client';
+import { ProfilePageUserFragmentDoc } from '../../../routes/ProfilePage/graphql/ProfilePage.generated';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type CurrentUserFragment = { __typename?: 'User', _id: string, githubId: string, userName: string, roles: Array<Types.UserRole> };
-
 export type CurrentUserQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type CurrentUserQuery = { __typename?: 'Query', currentUser?: { __typename?: 'User', _id: string, githubId: string, userName: string, roles: Array<Types.UserRole> } | null };
+export type CurrentUserQuery = { __typename?: 'Query', currentUser?: { __typename?: 'User', _id: string, githubId: string, userName: string, stats: Array<{ __typename?: 'UserStats', _id: string, userId: string, gameType: Types.GameType, totalWins: number, totalPlayed: number, elo: number }>, playedGames: Array<{ __typename?: 'PlayedGame', _id: string, gameType: Types.GameType, playerIds: Array<string>, playerScores: Array<number>, playerElosBefore: Array<number>, playerElosAfter: Array<number>, startedAt: Date, finishedAt: Date, finalState?: string | null, ongoingGameId?: string | null }>, achievements: Array<{ __typename?: 'Achievement', _id: string, name: string, description: string, criteria: { __typename?: 'LeaderboardRankUnlockCriteria', gameType?: Types.GameType | null, rank: number } | { __typename?: 'OtherUnlockCriteria', gameType?: Types.GameType | null } | { __typename?: 'TotalPlayedUnlockCriteria', gameType?: Types.GameType | null, played: number } | { __typename?: 'TotalWinsUnlockCriteria', gameType?: Types.GameType | null, wins: number } | { __typename?: 'WinStreakUnlockCriteria', gameType?: Types.GameType | null, streak: number } }>, followers: Array<{ __typename?: 'User', _id: string, userName: string, githubId: string }>, following: Array<{ __typename?: 'User', _id: string, userName: string, githubId: string }> } | null };
 
-export const CurrentUserFragmentDoc = gql`
-    fragment CurrentUser on User {
-  _id
-  githubId
-  userName
-  roles
-}
-    `;
+
 export const CurrentUserDocument = gql`
     query CurrentUser {
   currentUser {
-    ...CurrentUser
+    ...ProfilePageUser
   }
 }
-    ${CurrentUserFragmentDoc}`;
+    ${ProfilePageUserFragmentDoc}`;
 
 /**
  * __useCurrentUserQuery__
