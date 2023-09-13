@@ -163,8 +163,6 @@ export const LEADERBOARD_ACHIEVEMENTS = R.pipe(
   Record<1 | 2 | 3, Achievement>
 >;
 
-console.log(LEADERBOARD_ACHIEVEMENTS);
-
 export const ACHIEVEMENT_COLLECTION_SETTINGS: CollectionSettings<IAchievement> =
   {
     name: "achievements",

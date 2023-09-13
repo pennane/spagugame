@@ -12,6 +12,9 @@ export const getGameCreatedKey = (gameType: string) =>
 export const getGamesKey = (gameType: GameType) => `games.${gameType}` as const;
 export const getUserGameKey = (userId: string) =>
   `user_game.${userId}` as const;
+export const getAchievementUnlockKey = (userId: string) =>
+  `achievement_unlock.${userId}` as const;
+``;
 
 export const publishGameChange = async <
   T extends keyof DeserializedGame<unknown>

@@ -1,0 +1,3 @@
+mutation Debug($sequence: [String!]!) {
+  debug(tokens: $sequence)
+}

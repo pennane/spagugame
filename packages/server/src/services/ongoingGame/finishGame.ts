@@ -9,6 +9,7 @@ import { DeserializedGame } from "../../games/models";
 import { gqlSerializeGame } from "./lib/serialize";
 import { create } from "../../collections/lib";
 import {
+  getAchievementUnlockKey,
   getUserGameKey,
   publishGameChange,
   removeGameFromRedis,
@@ -164,12 +165,16 @@ const finishGame = authenticatedService<
   );
 
   Promise.all(
-    newEloPlayers.map((player) =>
-      giveEntitledGameAchievements(ctx, {
+    newEloPlayers.map(async (player) => {
+      const { achievements } = await giveEntitledGameAchievements(ctx, {
         gameType: game.gameType,
         userId: player._id,
-      })
-    )
+      });
+      if (!achievements || achievements.length === 0) return;
+      await ctx.pubsub.publish(getAchievementUnlockKey(player._id), {
+        achievementUnlock: achievements,
+      });
+    })
   );
 
   // return final state

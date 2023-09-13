@@ -1,0 +1,7 @@
+subscription AchievementUnlocks($userId: ID!) {
+  achievementUnlock(userId: $userId) {
+    _id
+    name
+    description
+  }
+}

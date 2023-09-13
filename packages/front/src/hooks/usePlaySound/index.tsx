@@ -8,7 +8,8 @@ const soundNames = [
   'left',
   'start',
   'playerPlay',
-  'opponentPlay'
+  'opponentPlay',
+  'unlock'
 ] as const
 const sounds = soundNames.reduce((acc, name) => {
   const audio = new Audio(`/sound/${name}.wav`)

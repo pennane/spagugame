@@ -1,9 +1,10 @@
+import { IAchievement } from "../../collections/Achievement/Achievement";
 import { TServiceHandler } from "../models";
 import { ObjectId } from "mongodb";
 
 const giveAchievement: TServiceHandler<
   { userId: string; achievementId: string },
-  boolean
+  { achievement: IAchievement | null }
 > = async (ctx, { achievementId, userId }) => {
   const achievement = await ctx.collections.achievement.findOne({
     _id: new ObjectId(achievementId),
@@ -15,7 +16,9 @@ const giveAchievement: TServiceHandler<
     { _id: new ObjectId(userId) },
     { $addToSet: { achievementIds: achievementId } }
   );
-  return result.modifiedCount === 1;
+  return {
+    achievement: result.modifiedCount === 1 ? achievement : null,
+  };
 };
 
 export default giveAchievement;

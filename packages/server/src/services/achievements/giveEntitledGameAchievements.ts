@@ -86,7 +86,6 @@ const checkWinStreakNAchievementEntitlement = async (
       }
     )
     .toArray();
-  console.log(playedGames.map((g) => g.playerIds));
   return playedGames.length >= achievement.criteria.streak &&
     playedGames.every((stat) => stat.playerIds[0] === user._id.toString())
     ? achievement._id.toString()
@@ -122,7 +121,7 @@ const toEntitledId =
 
 const giveEntitledGameAchievements: TServiceHandler<
   { userId: string; gameType: GameType },
-  string[]
+  { achievements: IAchievement[] }
 > = async (ctx, { gameType, userId }) => {
   const targetAchievements = [
     ...GAME_TYPE_INDEXED_ACHIEVEMENTS[gameType],
@@ -149,7 +148,13 @@ const giveEntitledGameAchievements: TServiceHandler<
     { $addToSet: { achievementIds: { $each: entitledIds } } }
   );
 
-  return entitledIds;
+  const achievements = await ctx.collections.achievement
+    .find({
+      _id: { $in: entitledIds.map((id) => new ObjectId(id)) },
+    })
+    .toArray();
+
+  return { achievements };
 };
 
 export default giveEntitledGameAchievements;

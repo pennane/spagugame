@@ -11,6 +11,7 @@ import { dateScalar } from "../scalars/Date/Date";
 import playTurn from "../../services/ongoingGame/playTurn";
 import toggleReady from "../../services/ongoingGame/toggleReady";
 import {
+  getAchievementUnlockKey,
   getGameChangedKey,
   getGameCreatedKey,
   getGameFromRedis,
@@ -22,6 +23,7 @@ import { IPlayedGame } from "../../collections/PlayedGame/PlayedGame";
 import getLeaderboard from "../../services/leaderboard/getLeaderboard";
 import { LEADERBOARD_ACHIEVEMENTS } from "../../collections/Achievement/Achievement";
 import giveAchievement from "../../services/achievements/giveAchievement";
+import konami from "../../services/achievements/konami";
 
 export const resolvers: Resolvers<TContext> = {
   User: {
@@ -221,11 +223,16 @@ export const resolvers: Resolvers<TContext> = {
                 const achievement =
                   LEADERBOARD_ACHIEVEMENTS[lb.gameType][index];
                 if (!achievement) return;
-                console.log(achievement);
-                await giveAchievement(ctx, {
-                  userId: player.userId,
-                  achievementId: achievement._id.toString(),
-                });
+                const { achievement: receivedAchievement } =
+                  await giveAchievement(ctx, {
+                    userId: player.userId,
+                    achievementId: achievement._id.toString(),
+                  });
+                if (receivedAchievement)
+                  await ctx.pubsub.publish(
+                    getAchievementUnlockKey(player.userId),
+                    { achievementUnlock: [receivedAchievement] }
+                  );
               })
             );
           })
@@ -261,6 +268,14 @@ export const resolvers: Resolvers<TContext> = {
         };
       },
     },
+    achievementUnlock: {
+      subscribe: async (_root, { userId }, ctx) => {
+        return {
+          [Symbol.asyncIterator]: () =>
+            ctx.pubsub.asyncIterator(getAchievementUnlockKey(userId)),
+        };
+      },
+    },
   },
   Mutation: {
     createOngoingGame: async (_root, { gameType, isPrivate }, ctx) =>
@@ -273,5 +288,9 @@ export const resolvers: Resolvers<TContext> = {
       playTurn(ctx, { gameId: ongoingGameId, json }),
     toggleReady: async (_root, { ready, ongoingGameId }, ctx) =>
       toggleReady(ctx, { gameId: ongoingGameId, ready }),
+    debug: async (_root, { tokens }, ctx) => {
+      const { success } = await konami(ctx, { tokens });
+      return success;
+    },
   },
 };

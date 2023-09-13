@@ -12,7 +12,7 @@ const StyledGameBannerContainer = styled.div`
 `
 
 export const Games = () => {
-  const { data, loading } = useGamesQuery({ pollInterval: 5000 })
+  const { data, loading } = useGamesQuery({ pollInterval: 10000 })
   const games = data?.games
 
   return (

@@ -205,6 +205,7 @@ type Query {
 type Subscription {
   ongoingGameStateChange(ongoingGameId: ID!): OngoingGameStateChange!
   newOngoingGame(gameType: GameType): OngoingGame!
+  achievementUnlock(userId: ID!): [Achievement!]!
 }
 
 type Mutation {
@@ -214,4 +215,5 @@ type Mutation {
   playTurn(ongoingGameId: ID!, json: String!): OngoingGame!
   toggleReady(ongoingGameId: ID!, ready: Boolean!): OngoingGame!
   updateUser(userInput: UserInput): User!
+  debug(tokens: [String!]!): Boolean!
 }

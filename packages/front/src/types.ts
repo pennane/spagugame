@@ -81,6 +81,7 @@ export type LeaderboardRankUnlockCriteria = UnlockCriteria & {
 export type Mutation = {
   __typename?: 'Mutation';
   createOngoingGame: OngoingGame;
+  debug: Scalars['Boolean']['output'];
   joinOngoingGame: OngoingGame;
   leaveOngoingGame: OngoingGame;
   playTurn: OngoingGame;
@@ -92,6 +93,11 @@ export type Mutation = {
 export type MutationCreateOngoingGameArgs = {
   gameType: GameType;
   isPrivate?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationDebugArgs = {
+  tokens: Array<Scalars['String']['input']>;
 };
 
 
@@ -244,8 +250,14 @@ export type QueryUsersStatsArgs = {
 
 export type Subscription = {
   __typename?: 'Subscription';
+  achievementUnlock: Array<Achievement>;
   newOngoingGame: OngoingGame;
   ongoingGameStateChange: OngoingGameStateChange;
+};
+
+
+export type SubscriptionAchievementUnlockArgs = {
+  userId: Scalars['ID']['input'];
 };
 
 

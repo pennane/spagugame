@@ -85,6 +85,7 @@ export type LeaderboardRankUnlockCriteria = UnlockCriteria & {
 export type Mutation = {
   __typename?: 'Mutation';
   createOngoingGame: OngoingGame;
+  debug: Scalars['Boolean']['output'];
   joinOngoingGame: OngoingGame;
   leaveOngoingGame: OngoingGame;
   playTurn: OngoingGame;
@@ -96,6 +97,11 @@ export type Mutation = {
 export type MutationCreateOngoingGameArgs = {
   gameType: GameType;
   isPrivate?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationDebugArgs = {
+  tokens: Array<Scalars['String']['input']>;
 };
 
 
@@ -248,8 +254,14 @@ export type QueryUsersStatsArgs = {
 
 export type Subscription = {
   __typename?: 'Subscription';
+  achievementUnlock: Array<Achievement>;
   newOngoingGame: OngoingGame;
   ongoingGameStateChange: OngoingGameStateChange;
+};
+
+
+export type SubscriptionAchievementUnlockArgs = {
+  userId: Scalars['ID']['input'];
 };
 
 
@@ -547,6 +559,7 @@ export type LeaderboardRankUnlockCriteriaResolvers<ContextType = any, ParentType
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createOngoingGame?: Resolver<ResolversTypes['OngoingGame'], ParentType, ContextType, RequireFields<MutationCreateOngoingGameArgs, 'gameType'>>;
+  debug?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDebugArgs, 'tokens'>>;
   joinOngoingGame?: Resolver<ResolversTypes['OngoingGame'], ParentType, ContextType, RequireFields<MutationJoinOngoingGameArgs, 'ongoingGameId'>>;
   leaveOngoingGame?: Resolver<ResolversTypes['OngoingGame'], ParentType, ContextType, RequireFields<MutationLeaveOngoingGameArgs, 'ongoingGameId'>>;
   playTurn?: Resolver<ResolversTypes['OngoingGame'], ParentType, ContextType, RequireFields<MutationPlayTurnArgs, 'json' | 'ongoingGameId'>>;
@@ -623,6 +636,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 };
 
 export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
+  achievementUnlock?: SubscriptionResolver<Array<ResolversTypes['Achievement']>, "achievementUnlock", ParentType, ContextType, RequireFields<SubscriptionAchievementUnlockArgs, 'userId'>>;
   newOngoingGame?: SubscriptionResolver<ResolversTypes['OngoingGame'], "newOngoingGame", ParentType, ContextType, Partial<SubscriptionNewOngoingGameArgs>>;
   ongoingGameStateChange?: SubscriptionResolver<ResolversTypes['OngoingGameStateChange'], "ongoingGameStateChange", ParentType, ContextType, RequireFields<SubscriptionOngoingGameStateChangeArgs, 'ongoingGameId'>>;
 };

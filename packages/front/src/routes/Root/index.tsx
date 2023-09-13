@@ -5,6 +5,9 @@ import { Footer } from './components/Footer'
 import { MOBILE_WIDTHS } from '../../hooks/useIsMobile'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { useCharacterSequence } from '../../hooks/useCharacterSequence'
+import { useSubscribeAchievementUnlocks } from '../../hooks/useSubscribeAchievementUnlocks'
+import { useDebugMutation } from '../../hooks/useCharacterSequence/graphql/Debug.generated'
 
 const StyledRoot = styled.div`
   display: flex;
@@ -29,7 +32,23 @@ const StyledContent = styled.div`
   width: 100%;
 `
 
+const SECRET_SEQUENCE = [
+  'ArrowDown',
+  'ArrowDown',
+  'ArrowLeft',
+  'ArrowRight',
+  'ArrowLeft',
+  'ArrowRight',
+  'b',
+  'a'
+]
+
 export const Root = () => {
+  const [debug] = useDebugMutation()
+  useCharacterSequence(SECRET_SEQUENCE, (sequence) => {
+    debug({ variables: { sequence } })
+  })
+  useSubscribeAchievementUnlocks()
   return (
     <StyledRoot>
       <Navbar />
