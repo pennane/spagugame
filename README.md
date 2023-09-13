@@ -58,6 +58,7 @@ pnpm --filter server dev
 - automatic index creation and dropping
   - indexes are automatically kept upto date
 - apollo caching for leaderboards (once every 15 minutes)
+- apollo http req batching
 
 ## Images of the prototype (differs from current state of the website=
 
