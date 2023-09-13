@@ -15,7 +15,6 @@ const toggleFollow = authenticatedService<
   }
 
   const targetUser = await find(ctx, "user", { filter: { _id: targetUserId } });
-  console.log(targetUser, userId);
   if (!targetUser) {
     throw new Error("User not found");
   }

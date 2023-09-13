@@ -42,7 +42,6 @@ const StyledGame = styled.div`
 export const Stats: FC = () => {
   const { user: profileUser } = useProfileUser()
 
-  console.log(profileUser)
   return (
     <Section>
       <Heading.H2>Stats:</Heading.H2>
