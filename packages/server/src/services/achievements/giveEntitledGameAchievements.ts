@@ -14,6 +14,7 @@ import {
 import { get } from "../../collections/lib";
 import { IUser } from "../../collections/User/User";
 import { TContext } from "../../infrastructure/context";
+import { authenticatedService } from "../lib";
 
 const checkPlayedNAchievementEntitlement = async (
   ctx: TContext,
@@ -122,7 +123,7 @@ const toEntitledId =
 const giveEntitledGameAchievements: TServiceHandler<
   { userId: string; gameType: GameType },
   { achievements: IAchievement[] }
-> = async (ctx, { gameType, userId }) => {
+> = authenticatedService(async (ctx, { gameType, userId }) => {
   const targetAchievements = [
     ...GAME_TYPE_INDEXED_ACHIEVEMENTS[gameType],
     ...GAME_TYPE_INDEXED_ACHIEVEMENTS["any"],
@@ -155,6 +156,6 @@ const giveEntitledGameAchievements: TServiceHandler<
     .toArray();
 
   return { achievements };
-};
+});
 
 export default giveEntitledGameAchievements;

@@ -10,7 +10,7 @@ const giveAchievement: TServiceHandler<
     _id: new ObjectId(achievementId),
   });
 
-  if (!achievement) throw new Error(`Achievement ${achievementId} not found`);
+  if (!achievement) throw new Error(`Achievement does not exist`);
 
   const result = await ctx.collections.user.updateOne(
     { _id: new ObjectId(userId) },

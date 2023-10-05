@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "NODE_ENV=test mocha --require ts-node/register 'src/**/*.test.ts'",
+    "test:watch": "NODE_ENV=test mocha -r ts-node/register src/**/*.test.ts --extension ts --watch",
     "dev": "cross-env NODE_ENV=development nodemon src/index.ts",
     "gen:schema": "graphql-codegen --config codegen.schema.yml",
     "seed-db": "ts-node src/scripts/seedDb.ts",
@@ -20,6 +21,7 @@
     "@graphql-codegen/typescript": "4.0.1",
     "@graphql-codegen/typescript-resolvers": "4.0.1",
     "@types/body-parser": "^1.19.2",
+    "@types/chai-as-promised": "^7.1.6",
     "@types/cookie-parser": "^1.4.3",
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
@@ -31,10 +33,18 @@
     "@types/ws": "^8.5.5",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
+    "chai-as-promised": "^7.1.1",
     "eslint": "^8.45.0",
     "nodemon": "^3.0.1",
     "ts-node": "^10.9.1",
-    "typescript": "^5.0.2"
+    "typescript": "^5.0.2",
+    "@types/chai": "^4.3.6",
+    "@types/mocha": "^10.0.2",
+    "@types/sinon": "^10.0.18",
+    "chai": "^4.3.10",
+    "mocha": "^10.2.0",
+    "server": "^1.0.38",
+    "sinon": "^16.1.0"
   },
   "dependencies": {
     "@apollo/server": "^4.9.1",
