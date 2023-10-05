@@ -7,7 +7,8 @@ import { initializeMongo } from "./mongo";
 import { initializeRedis } from "./redis";
 
 const createGlobalContext = async () => {
-  const { db, collections, mongoClient } = await initializeMongo();
+  const { db, collections, mongoClient, collectionSettings } =
+    await initializeMongo();
   const { pubsub, redis } = await initializeRedis();
 
   const apolloCache = new InMemoryLRUCache<any>({
@@ -22,6 +23,7 @@ const createGlobalContext = async () => {
     redis,
     pubsub,
     apolloCache,
+    collectionSettings,
     config: CONFIG_OBJECT,
   };
 };

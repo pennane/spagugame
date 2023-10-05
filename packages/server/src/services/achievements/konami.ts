@@ -16,7 +16,7 @@ const SECRET_SEQUENCE = [
 
 const konami = authenticatedService<{ tokens: string[] }, { success: boolean }>(
   async (ctx, { tokens }) => {
-    if (tokens.join === SECRET_SEQUENCE.join) {
+    if (tokens.join() === SECRET_SEQUENCE.join()) {
       const { achievement } = await giveAchievement(ctx, {
         userId: ctx.user._id.toString(),
         achievementId: KONAMI_ACHIEVEMENT._id.toString(),

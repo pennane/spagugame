@@ -10,10 +10,9 @@ export const authenticatedService = <IN, OUT>(
 ): TServiceHandler<IN, OUT> =>
   ((ctx, args) => {
     if (!ctx.user) {
-      throw new Error(
-        "Tried to access a services that requires higher authentication"
-      );
+      throw new Error("Tried to access service requiring higher access");
     }
+
     return service(ctx as TContextWithRequiredUser, args);
   }) as TServiceHandler<IN, OUT>;
 
@@ -25,9 +24,7 @@ export const adminAuthenticatedService = <IN, OUT>(
       !ctx.user?.roles ||
       !ctx.user.roles.some((role) => role === UserRole.Admin)
     ) {
-      throw new Error(
-        "Tried to access a services that requires higher authentication"
-      );
+      throw new Error("Tried to access service requiring higher access");
     }
     return service(ctx as TContextWithRequiredUser, args);
   }) as TServiceHandler<IN, OUT>;

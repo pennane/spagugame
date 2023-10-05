@@ -13,7 +13,11 @@ const connectDb = async () => {
 
   await client.connect();
 
-  const db = client.db(CONFIG_OBJECT.MONGO_DB_NAME);
+  const db = client.db(
+    CONFIG_OBJECT.NODE_ENV === "test"
+      ? CONFIG_OBJECT.MONGO_TEST_DB_NAME
+      : CONFIG_OBJECT.MONGO_DB_NAME
+  );
 
   return { mongoClient: client, db };
 };
