@@ -58,7 +58,10 @@ export const FollowingList: FC = () => {
             <Kasdf>
               <CustomLink to={`/profile/${user._id}`}>
                 <User>
-                  <MiniProfileImage githubId={user.githubId} />
+                  <MiniProfileImage
+                    githubId={user.githubId}
+                    profileImageSrc={user.profilePicture?.url}
+                  />
                   <P.DefaultText>{user.userName}</P.DefaultText>
                 </User>
               </CustomLink>

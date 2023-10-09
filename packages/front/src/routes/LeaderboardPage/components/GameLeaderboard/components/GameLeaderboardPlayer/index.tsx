@@ -66,7 +66,10 @@ export const GameLeaderboardPlayer: FC<GameLeaderboardPlayerProps> = ({
     <ShadowedPlayerWrapper to={`/profile/${player.userId}`}>
       <StyledRank>{rank}.</StyledRank>
       <Pill color="info">{player.elo}</Pill>
-      <MiniProfileImage githubId={player.githubId || ''} />
+      <MiniProfileImage
+        githubId={player.githubId || ''}
+        profileImageSrc={player.profilePicture?.url}
+      />
       <Heading.H3>{player?.userName || player.userId}</Heading.H3>
     </ShadowedPlayerWrapper>
   )

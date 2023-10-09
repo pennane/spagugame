@@ -8,7 +8,7 @@ export type WinnersQueryVariables = Types.Exact<{
 }>;
 
 
-export type WinnersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', githubId: string, _id: string, userName: string }> };
+export type WinnersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', githubId: string, _id: string, userName: string, profilePicture?: { __typename?: 'Image', url: string } | null }> };
 
 
 export const WinnersDocument = gql`
@@ -17,6 +17,9 @@ export const WinnersDocument = gql`
     githubId
     _id
     userName
+    profilePicture {
+      url
+    }
   }
 }
     `;

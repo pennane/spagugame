@@ -81,6 +81,7 @@ type LeaderboardPlayer {
   totalWins: Int!
   totalPlayed: Int!
   elo: Float!
+  profilePicture: Image
 }
 
 type Leaderboard @cacheControl(maxAge: 900, scope: PUBLIC) {

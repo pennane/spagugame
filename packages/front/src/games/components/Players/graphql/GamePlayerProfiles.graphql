@@ -9,6 +9,9 @@ fragment OngoingGamePlayerProfile on User {
   _id
   githubId
   userName
+  profilePicture {
+    url
+  }
 }
 
 query GamePlayerProfiles($userIds: [ID!]!, $gameType: GameType!) {

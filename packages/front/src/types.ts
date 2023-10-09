@@ -68,6 +68,7 @@ export type LeaderboardPlayer = {
   _id: Scalars['ID']['output'];
   elo: Scalars['Float']['output'];
   githubId?: Maybe<Scalars['ID']['output']>;
+  profilePicture?: Maybe<Image>;
   totalPlayed: Scalars['Int']['output'];
   totalWins: Scalars['Int']['output'];
   userId: Scalars['ID']['output'];

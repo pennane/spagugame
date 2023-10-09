@@ -6,6 +6,9 @@ fragment LeaderboardPlayer on LeaderboardPlayer {
   totalWins
   totalPlayed
   elo
+  profilePicture {
+    url
+  }
 }
 
 fragment LeaderboardsLeaderboard on Leaderboard {

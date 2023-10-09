@@ -34,7 +34,10 @@ type UserSearchUserProps = {
 export const UserSearchUser: FC<UserSearchUserProps> = ({ user }) => {
   return (
     <StyledUserSearchUser>
-      <MiniProfileImage githubId={user.githubId} />
+      <MiniProfileImage
+        githubId={user.githubId}
+        profileImageSrc={user.profilePicture?.url}
+      />
       <Span.DefaultText>{user.userName}</Span.DefaultText>
       <CustomLink color="info" to={`/profile/${user._id}`}>
         Profile
