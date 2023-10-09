@@ -10,7 +10,7 @@ export type PlayedGamesQueryVariables = Types.Exact<{
 }>;
 
 
-export type PlayedGamesQuery = { __typename?: 'Query', playedGames: Array<{ __typename?: 'PlayedGame', _id: string, gameType: Types.GameType, playerElosBefore: Array<number>, startedAt: Date, finishedAt: Date, players: Array<{ __typename?: 'User', _id: string, githubId: string, userName: string }> }> };
+export type PlayedGamesQuery = { __typename?: 'Query', playedGames: Array<{ __typename?: 'PlayedGame', _id: string, gameType: Types.GameType, playerElosBefore: Array<number>, startedAt: Date, finishedAt: Date, playerIds: Array<string>, players: Array<{ __typename?: 'User', _id: string, githubId: string, userName: string }> }> };
 
 export const PlayedGamePlayerFragmentDoc = gql`
     fragment PlayedGamePlayer on User {
@@ -27,6 +27,7 @@ export const PlayedGamesDocument = gql`
     playerElosBefore
     startedAt
     finishedAt
+    playerIds
     players {
       ...PlayedGamePlayer
     }

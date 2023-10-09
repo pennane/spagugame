@@ -63,10 +63,13 @@ export const PlayedGame: FC<{
       {profilePage && <P.DefaultText>{game.gameType}</P.DefaultText>}
       {!profilePage && (
         <StyledPlayers color="invertedSecondary">
-          {game.players.map((plyer, i) => [
-            i > 0 && <StyledVs>vs</StyledVs>,
-            <span>{plyer.userName}</span>
-          ])}
+          {game.playerIds.map((id, i) => {
+            const player = game.players.find((p) => p._id === id)!
+            return [
+              i > 0 && <StyledVs>vs</StyledVs>,
+              <span>{player.userName}</span>
+            ]
+          })}
         </StyledPlayers>
       )}
       {!isMobile && (

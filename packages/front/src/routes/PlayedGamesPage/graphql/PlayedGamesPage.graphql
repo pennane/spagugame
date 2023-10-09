@@ -11,6 +11,7 @@ query PlayedGames($gameType: GameType!) {
     playerElosBefore
     startedAt
     finishedAt
+    playerIds
     players {
       ...PlayedGamePlayer
     }
