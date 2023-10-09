@@ -24,8 +24,6 @@ export const initializeRedis = async () => {
   subscriber.psubscribe("__key*__:*", async () => {});
 
   pubsub.subscribe("__key*__:*", async (key: unknown) => {
-    console.info("pubsub key expired:", key);
-
     if (typeof key !== "string") {
       return console.error("pubsub expiration key was not a string");
     }

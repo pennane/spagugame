@@ -48,6 +48,13 @@ export enum GameType {
   TickTackToe = 'TICK_TACK_TOE'
 }
 
+export type Image = {
+  __typename?: 'Image';
+  hash?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  url: Scalars['String']['output'];
+};
+
 export type Leaderboard = {
   __typename?: 'Leaderboard';
   _id: Scalars['ID']['output'];
@@ -305,7 +312,7 @@ export type User = {
   joinedAt: Scalars['Date']['output'];
   leaderboardRanks: Array<LeaderboardRank>;
   playedGames: Array<PlayedGame>;
-  profilePictureUrl?: Maybe<Scalars['String']['output']>;
+  profilePicture?: Maybe<Image>;
   roles: Array<UserRole>;
   stats: Array<UserStats>;
   userName: Scalars['String']['output'];

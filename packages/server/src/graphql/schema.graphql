@@ -23,6 +23,12 @@ enum UserRole {
   ADMIN
 }
 
+type Image {
+  id: ID!
+  hash: String
+  url: String!
+}
+
 # Static mongo types
 
 ## Achievements
@@ -104,7 +110,7 @@ type User {
   leaderboardRanks(gameTypes: [GameType!]): [LeaderboardRank!]!
   followers: [User!]!
   following: [User!]!
-  profilePictureUrl: String
+  profilePicture: Image
 }
 
 input UserInput {

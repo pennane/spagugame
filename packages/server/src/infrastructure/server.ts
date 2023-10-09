@@ -165,7 +165,7 @@ const registerMiddleware =
     app.use(
       "/graphql",
       cors<cors.CorsRequest>(corsOptions),
-      graphqlUploadExpress({ maxFileSize: 5000000, maxFiles: 1 }),
+      graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 1 }),
       json(),
       expressMiddleware(apolloServer, {
         context: getContext,

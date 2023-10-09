@@ -3,8 +3,12 @@ import { TContext } from "../../infrastructure/context";
 import { authenticatedService } from "../lib";
 import { get, update } from "../../collections/lib";
 import { ObjectId } from "mongodb";
+import { Image } from "../../graphql/generated/graphql";
 
-const uploadImage = async (ctx: TContext, stream: ReadStream) => {
+const uploadImage = async (
+  ctx: TContext,
+  stream: ReadStream
+): Promise<Image> => {
   const response = await ctx.imgur.upload({
     image: stream as any,
     type: "stream",
@@ -14,29 +18,38 @@ const uploadImage = async (ctx: TContext, stream: ReadStream) => {
     throw new Error("Upload failed " + JSON.stringify(response));
   }
 
-  return response.data.link;
+  return {
+    hash: response.data.deletehash,
+    url: response.data.link,
+    id: response.data.id,
+  };
 };
 
 const uploadProfilePicture = authenticatedService<
   { userId: ObjectId; file: any },
   { success: boolean }
 >(async (ctx, { file, userId }) => {
-  const user = await get(ctx, "user", { filter: { _id: userId } });
-  const oldProfilePictureUrl = user?.profilePictureUrl || null;
-  if (!user) {
-    throw new Error("User not found");
-  }
-  console.log(file);
-  const { createReadStream } = await file;
-  const newProfilePictureUrl = await uploadImage(ctx, createReadStream());
+  try {
+    const user = await get(ctx, "user", { filter: { _id: userId } });
+    const oldDeleteHash = user?.profilePicture?.hash || null;
 
-  if (oldProfilePictureUrl) {
-    await ctx.imgur.deleteImage(oldProfilePictureUrl);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const { createReadStream } = await file;
+    const profilePicture = await uploadImage(ctx, createReadStream());
+
+    if (oldDeleteHash) {
+      await ctx.imgur.deleteImage(oldDeleteHash);
+    }
+    await update(ctx, "user", {
+      filter: { _id: userId },
+      update: { profilePicture },
+    });
+    return { success: true };
+  } catch (e) {
+    throw new Error("Failed to upload profile picture");
   }
-  await update(ctx, "user", {
-    filter: { _id: userId },
-    update: { profilePictureUrl: newProfilePictureUrl },
-  });
-  return { success: true };
 });
 export default uploadProfilePicture;

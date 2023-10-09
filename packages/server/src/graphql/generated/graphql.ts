@@ -52,6 +52,13 @@ export enum GameType {
   TickTackToe = 'TICK_TACK_TOE'
 }
 
+export type Image = {
+  __typename?: 'Image';
+  hash?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  url: Scalars['String']['output'];
+};
+
 export type Leaderboard = {
   __typename?: 'Leaderboard';
   _id: Scalars['ID']['output'];
@@ -309,7 +316,7 @@ export type User = {
   joinedAt: Scalars['Date']['output'];
   leaderboardRanks: Array<LeaderboardRank>;
   playedGames: Array<PlayedGame>;
-  profilePictureUrl?: Maybe<Scalars['String']['output']>;
+  profilePicture?: Maybe<Image>;
   roles: Array<UserRole>;
   stats: Array<UserStats>;
   userName: Scalars['String']['output'];
@@ -445,6 +452,7 @@ export type ResolversTypes = {
   Game: ResolverTypeWrapper<Game>;
   GameType: GameType;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+  Image: ResolverTypeWrapper<Image>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Leaderboard: ResolverTypeWrapper<Leaderboard>;
   LeaderboardPlayer: ResolverTypeWrapper<LeaderboardPlayer>;
@@ -480,6 +488,7 @@ export type ResolversParentTypes = {
   Float: Scalars['Float']['output'];
   Game: Game;
   ID: Scalars['ID']['output'];
+  Image: Image;
   Int: Scalars['Int']['output'];
   Leaderboard: Leaderboard;
   LeaderboardPlayer: LeaderboardPlayer;
@@ -536,6 +545,13 @@ export type GameResolvers<ContextType = any, ParentType extends ResolversParentT
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   ongoingGames?: Resolver<Array<ResolversTypes['OngoingGame']>, ParentType, ContextType>;
   type?: Resolver<ResolversTypes['GameType'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ImageResolvers<ContextType = any, ParentType extends ResolversParentTypes['Image'] = ResolversParentTypes['Image']> = {
+  hash?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -686,7 +702,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   joinedAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   leaderboardRanks?: Resolver<Array<ResolversTypes['LeaderboardRank']>, ParentType, ContextType, Partial<UserLeaderboardRanksArgs>>;
   playedGames?: Resolver<Array<ResolversTypes['PlayedGame']>, ParentType, ContextType, Partial<UserPlayedGamesArgs>>;
-  profilePictureUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  profilePicture?: Resolver<Maybe<ResolversTypes['Image']>, ParentType, ContextType>;
   roles?: Resolver<Array<ResolversTypes['UserRole']>, ParentType, ContextType>;
   stats?: Resolver<Array<ResolversTypes['UserStats']>, ParentType, ContextType, Partial<UserStatsArgs>>;
   userName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -714,6 +730,7 @@ export type Resolvers<ContextType = any> = {
   AchievementUnlockCriteriaUnion?: AchievementUnlockCriteriaUnionResolvers<ContextType>;
   Date?: GraphQLScalarType;
   Game?: GameResolvers<ContextType>;
+  Image?: ImageResolvers<ContextType>;
   Leaderboard?: LeaderboardResolvers<ContextType>;
   LeaderboardPlayer?: LeaderboardPlayerResolvers<ContextType>;
   LeaderboardRank?: LeaderboardRankResolvers<ContextType>;

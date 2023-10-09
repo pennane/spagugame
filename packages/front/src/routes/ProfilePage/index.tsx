@@ -95,7 +95,7 @@ export const ProfilePage: FC = () => {
     uploadProfileImageMutation({
       variables: { file },
       onCompleted: (data) => {
-        if (!data.uploadProfilePicture.profilePictureUrl) {
+        if (!data.uploadProfilePicture.profilePicture?.url) {
           return toast(
             'Failed to upload profile picture. Imgur might be overutilized.',
             { type: 'error' }
@@ -103,10 +103,13 @@ export const ProfilePage: FC = () => {
         }
         toast('Profile picture uploaded!', { type: 'success' })
       },
-      onError: (error) => {
-        toast('Failed to upload profile picture. Error: ' + error.message, {
-          type: 'error'
-        })
+      onError: () => {
+        toast(
+          'Failed to upload profile picture. Imgur might be overutilized.',
+          {
+            type: 'error'
+          }
+        )
       }
     })
   }
@@ -123,7 +126,7 @@ export const ProfilePage: FC = () => {
 
         <ProfileImage
           githubId={profileUser.githubId}
-          profileImageSrc={profileUser.profilePictureUrl}
+          profileImageSrc={profileUser.profilePicture?.url}
         />
         {currentUser?._id === profileUser._id && (
           <div>
