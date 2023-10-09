@@ -51,9 +51,9 @@ export const PlayedGamePage: FC = () => {
   const game = data?.playedGame
   if (!game) return <P.DefaultText>Game not found</P.DefaultText>
 
-  const players = game.players
-    .map((player, index) => ({
-      ...player,
+  const players = game.playerIds
+    .map((id, index) => ({
+      ...game.players.find((p) => p._id === id)!,
       eloBefore: game.playerElosBefore[index],
       eloAfter: game.playerElosAfter[index],
       score: game.playerScores[index]

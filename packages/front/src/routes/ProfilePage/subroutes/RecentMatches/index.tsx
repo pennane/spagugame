@@ -18,8 +18,8 @@ export const RecentMatches: FC = () => {
       <Heading.H2>Recent matches:</Heading.H2>
       <StyledRecentMatches>
         {profileUser?.playedGames.map((game) => {
-          const playerIndex = game.players.findIndex(
-            (p) => p._id === profileUser._id
+          const playerIndex = game.playerIds.findIndex(
+            (id) => id === profileUser._id
           )
           const eloChange =
             playerIndex !== -1
