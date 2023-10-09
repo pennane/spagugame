@@ -16,6 +16,7 @@ import { ApolloServer } from "@apollo/server";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
+import { graphqlUploadExpress } from "graphql-upload-minimal";
 
 import { useServer } from "graphql-ws/lib/use/ws";
 
@@ -164,6 +165,7 @@ const registerMiddleware =
     app.use(
       "/graphql",
       cors<cors.CorsRequest>(corsOptions),
+      graphqlUploadExpress({ maxFileSize: 5000000, maxFiles: 1 }),
       json(),
       expressMiddleware(apolloServer, {
         context: getContext,

@@ -1,5 +1,6 @@
 import * as R from "ramda";
 
+import { GraphQLUpload } from "graphql-upload-minimal";
 import { ObjectId } from "mongodb";
 import { find, get } from "../../collections/lib";
 import { TContext } from "../../infrastructure/context";
@@ -25,6 +26,7 @@ import { LEADERBOARD_ACHIEVEMENTS } from "../../collections/Achievement/Achievem
 import giveAchievement from "../../services/achievements/giveAchievement";
 import konami from "../../services/achievements/konami";
 import toggleFollow from "../../services/user/toggleFollow";
+import uploadProfilePicture from "../../services/user/uploadProfilePicture";
 
 export const resolvers: Resolvers<TContext> = {
   User: {
@@ -142,6 +144,7 @@ export const resolvers: Resolvers<TContext> = {
     },
   },
   Date: dateScalar,
+  Upload: GraphQLUpload,
   Query: {
     currentUser: async (_root, _args, ctx) => {
       if (!ctx.user?._id) return null;
@@ -351,6 +354,17 @@ export const resolvers: Resolvers<TContext> = {
       });
       if (!user) throw new Error("User not found - again");
 
+      return R.modify("_id", (id) => id.toString(), user) as unknown as User;
+    },
+    uploadProfilePicture: async (_root, { file }, ctx) => {
+      if (!ctx.user?._id)
+        throw new Error("Tried to access service requiring higher access");
+      await uploadProfilePicture(ctx, {
+        file,
+        userId: ctx.user._id,
+      });
+      const user = await get(ctx, "user", { filter: { _id: ctx.user._id } });
+      if (!user) throw new Error("User not found - again");
       return R.modify("_id", (id) => id.toString(), user) as unknown as User;
     },
   },

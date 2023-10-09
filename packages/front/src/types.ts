@@ -13,6 +13,7 @@ export type Scalars = {
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
   Date: { input: Date; output: Date; }
+  Upload: { input: any; output: any; }
 };
 
 export type Achievement = {
@@ -87,7 +88,7 @@ export type Mutation = {
   playTurn: OngoingGame;
   toggleFollow: User;
   toggleReady: OngoingGame;
-  updateUser: User;
+  uploadProfilePicture: User;
 };
 
 
@@ -130,8 +131,8 @@ export type MutationToggleReadyArgs = {
 };
 
 
-export type MutationUpdateUserArgs = {
-  userInput?: InputMaybe<UserInput>;
+export type MutationUploadProfilePictureArgs = {
+  file: Scalars['Upload']['input'];
 };
 
 export type OngoingGame = {
@@ -304,6 +305,7 @@ export type User = {
   joinedAt: Scalars['Date']['output'];
   leaderboardRanks: Array<LeaderboardRank>;
   playedGames: Array<PlayedGame>;
+  profilePictureUrl?: Maybe<Scalars['String']['output']>;
   roles: Array<UserRole>;
   stats: Array<UserStats>;
   userName: Scalars['String']['output'];

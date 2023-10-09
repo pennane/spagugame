@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.8.2",
+    "apollo-upload-client": "^17.0.0",
     "graphql": "^16.8.0",
     "graphql-ws": "^5.14.0",
     "ramda": "^0.29.0",
@@ -27,6 +28,7 @@
     "@graphql-codegen/client-preset": "4.1.0",
     "@graphql-codegen/near-operation-file-preset": "^2.5.0",
     "@graphql-codegen/typescript-react-apollo": "^3.3.7",
+    "@types/apollo-upload-client": "^17.0.3",
     "@types/ramda": "^0.29.3",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",

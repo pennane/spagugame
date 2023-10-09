@@ -1,5 +1,6 @@
 import { IUser } from "../collections/User/User";
 
+import ImgurClient from "imgur";
 import { InMemoryLRUCache } from "@apollo/utils.keyvaluecache";
 import { ExpressContextFunctionArgument } from "@apollo/server/dist/esm/express4";
 import { CONFIG_OBJECT } from "./config";
@@ -16,9 +17,15 @@ const createGlobalContext = async () => {
     ttl: 900,
   });
 
+  const imgur = new ImgurClient({
+    clientId: CONFIG_OBJECT.IMGUR_CLIENT_ID,
+    clientSecret: CONFIG_OBJECT.IMGUR_CLIENT_SECRET,
+  });
+
   return {
     db,
     mongoClient,
+    imgur,
     collections,
     redis,
     pubsub,
