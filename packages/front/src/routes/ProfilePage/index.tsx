@@ -15,6 +15,7 @@ import { Button } from '../../components/Button'
 import { ProfileImage } from './components/ProfileImage'
 import { ProfilePageNavBar } from './components/ProfilePageNavBar'
 import { CustomLink } from '../../components/CustomLink'
+import { toast } from 'react-toastify'
 
 const StyledProfilePage = styled.div`
   display: flex;
@@ -91,7 +92,23 @@ export const ProfilePage: FC = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
-    uploadProfileImageMutation({ variables: { file } })
+    uploadProfileImageMutation({
+      variables: { file },
+      onCompleted: (data) => {
+        if (!data.uploadProfilePicture.profilePictureUrl) {
+          return toast(
+            'Failed to upload profile picture. Imgur might be overutilized.',
+            { type: 'error' }
+          )
+        }
+        toast('Profile picture uploaded!', { type: 'success' })
+      },
+      onError: (error) => {
+        toast('Failed to upload profile picture. Error: ' + error.message, {
+          type: 'error'
+        })
+      }
+    })
   }
 
   return (
