@@ -203,14 +203,7 @@ pnpm --filter front dev
 pnpm --filter server dev
 ```
 
-## Keeping track of some of the implemented techical features
-
-- automatic index creation and dropping
-  - indexes are automatically kept upto date
-- apollo caching for leaderboards (once every 15 minutes)
-- apollo http req batching
-
-## Images of the prototype (differs from current state of the website
+## Images of spagugame
 
 ![Alt text](<docs/images/Näyttökuva 2023-10-9 kello 14.53.06.png>)
 ![Alt text](<docs/images/Näyttökuva 2023-10-9 kello 14.52.20.png>)
