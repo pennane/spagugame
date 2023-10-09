@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 import { PlayedGame } from "../../graphql/generated/graphql";
 import { CollectionSettings } from "../models";
 
-export interface IPlayedGame extends Omit<PlayedGame, "_id"> {
+export interface IPlayedGame extends Omit<PlayedGame, "_id" | "players"> {
   _id: ObjectId;
 }
 

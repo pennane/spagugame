@@ -205,6 +205,7 @@ export type PlayedGame = {
   playerElosBefore: Array<Scalars['Float']['output']>;
   playerIds: Array<Scalars['ID']['output']>;
   playerScores: Array<Scalars['Int']['output']>;
+  players: Array<User>;
   startedAt: Scalars['Date']['output'];
 };
 
@@ -647,6 +648,7 @@ export type PlayedGameResolvers<ContextType = any, ParentType extends ResolversP
   playerElosBefore?: Resolver<Array<ResolversTypes['Float']>, ParentType, ContextType>;
   playerIds?: Resolver<Array<ResolversTypes['ID']>, ParentType, ContextType>;
   playerScores?: Resolver<Array<ResolversTypes['Int']>, ParentType, ContextType>;
+  players?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
   startedAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };

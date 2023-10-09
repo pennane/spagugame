@@ -61,14 +61,12 @@ export const PlayedGame: FC<{
       )}
       {!profilePage && (
         <>
-          {!isMobile && (
-            <Pill color="info">{game.playerIds.length} players</Pill>
-          )}
+          {!isMobile && <Pill color="info">{game.players.length} players</Pill>}
           <Pill color="success">
             Avg. elo{' '}
             {Math.round(
               game.playerElosBefore.reduce((acc, elo) => acc + elo, 0) /
-                game.playerIds.length
+                game.players.length
             )}
           </Pill>
         </>

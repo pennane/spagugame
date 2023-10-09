@@ -29,6 +29,21 @@ import toggleFollow from "../../services/user/toggleFollow";
 import uploadProfilePicture from "../../services/user/uploadProfilePicture";
 
 export const resolvers: Resolvers<TContext> = {
+  PlayedGame: {
+    players: async (game, _args, ctx) => {
+      const users = await find(ctx, "user", {
+        filter: {
+          _id: {
+            $in: (game as any).playerIds.map((id: string) => new ObjectId(id)),
+          },
+        },
+      });
+      return R.map(
+        (g) => R.modify("_id", (id) => id.toString(), g),
+        users
+      ) as unknown as User[];
+    },
+  },
   User: {
     achievements: async (user, _args, ctx) => {
       if (
@@ -83,7 +98,7 @@ export const resolvers: Resolvers<TContext> = {
       return R.map(
         R.modify<"_id", ObjectId, string>("_id", (id) => id.toString()),
         stats
-      );
+      ) as any;
     },
     followers: async (user, _args, ctx) => {
       if (
@@ -239,7 +254,7 @@ export const resolvers: Resolvers<TContext> = {
       }
 
       if (!game) return null;
-      return R.modify("_id", (id) => id.toString(), game);
+      return R.modify("_id", (id) => id.toString(), game) as any;
     },
     playedGames: async (_root, { gameTypes = [], first }, ctx) => {
       const limit = first || 10;
@@ -257,7 +272,7 @@ export const resolvers: Resolvers<TContext> = {
       return R.map(
         R.modify<"_id", ObjectId, string>("_id", (id) => id.toString()),
         stats
-      );
+      ) as any;
     },
     leaderboards: async (_root, { gameTypes }, ctx) => {
       const results = await Promise.all(

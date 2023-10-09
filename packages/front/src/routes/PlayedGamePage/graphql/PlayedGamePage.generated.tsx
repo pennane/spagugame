@@ -9,14 +9,14 @@ export type PlayedGamePagePlayedGameQueryVariables = Types.Exact<{
 }>;
 
 
-export type PlayedGamePagePlayedGameQuery = { __typename?: 'Query', playedGame?: { __typename?: 'PlayedGame', _id: string, gameType: Types.GameType, playerIds: Array<string>, playerScores: Array<number>, playerElosBefore: Array<number>, playerElosAfter: Array<number>, startedAt: Date, finishedAt: Date, finalState?: string | null, ongoingGameId?: string | null } | null };
+export type PlayedGamePagePlayedGameQuery = { __typename?: 'Query', playedGame?: { __typename?: 'PlayedGame', _id: string, gameType: Types.GameType, playerScores: Array<number>, playerElosBefore: Array<number>, playerElosAfter: Array<number>, startedAt: Date, finishedAt: Date, finalState?: string | null, ongoingGameId?: string | null, players: Array<{ __typename?: 'User', _id: string, githubId: string, userName: string }> } | null };
 
 export type PlayedGamePagePlayedGameByOldIdQueryVariables = Types.Exact<{
   ongoingGameId: Types.Scalars['ID']['input'];
 }>;
 
 
-export type PlayedGamePagePlayedGameByOldIdQuery = { __typename?: 'Query', playedGame?: { __typename?: 'PlayedGame', _id: string, gameType: Types.GameType, playerIds: Array<string>, playerScores: Array<number>, playerElosBefore: Array<number>, playerElosAfter: Array<number>, startedAt: Date, finishedAt: Date, finalState?: string | null, ongoingGameId?: string | null } | null };
+export type PlayedGamePagePlayedGameByOldIdQuery = { __typename?: 'Query', playedGame?: { __typename?: 'PlayedGame', _id: string, gameType: Types.GameType, playerScores: Array<number>, playerElosBefore: Array<number>, playerElosAfter: Array<number>, startedAt: Date, finishedAt: Date, finalState?: string | null, ongoingGameId?: string | null, players: Array<{ __typename?: 'User', _id: string, githubId: string, userName: string }> } | null };
 
 
 export const PlayedGamePagePlayedGameDocument = gql`

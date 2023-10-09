@@ -1,26 +1,27 @@
 import * as Types from '../../../types';
 
 import { gql } from '@apollo/client';
+import { PlayedGamePlayerFragmentDoc } from '../../PlayedGamesPage/graphql/PlayedGamesPage.generated';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type ProfilePageUserStatsFragment = { __typename?: 'UserStats', _id: string, userId: string, gameType: Types.GameType, totalWins: number, totalPlayed: number, elo: number };
 
 export type ProfilePageUserAchievementFragment = { __typename?: 'Achievement', _id: string, name: string, description: string, criteria: { __typename?: 'LeaderboardRankUnlockCriteria', gameType?: Types.GameType | null, rank: number } | { __typename?: 'OtherUnlockCriteria', gameType?: Types.GameType | null } | { __typename?: 'TotalPlayedUnlockCriteria', gameType?: Types.GameType | null, played: number } | { __typename?: 'TotalWinsUnlockCriteria', gameType?: Types.GameType | null, wins: number } | { __typename?: 'WinStreakUnlockCriteria', gameType?: Types.GameType | null, streak: number } };
 
-export type ProfilePageUserPlayedGameFragment = { __typename?: 'PlayedGame', _id: string, gameType: Types.GameType, playerIds: Array<string>, playerScores: Array<number>, playerElosBefore: Array<number>, playerElosAfter: Array<number>, startedAt: Date, finishedAt: Date, finalState?: string | null, ongoingGameId?: string | null };
+export type ProfilePageUserPlayedGameFragment = { __typename?: 'PlayedGame', _id: string, gameType: Types.GameType, playerScores: Array<number>, playerElosBefore: Array<number>, playerElosAfter: Array<number>, startedAt: Date, finishedAt: Date, finalState?: string | null, ongoingGameId?: string | null, players: Array<{ __typename?: 'User', _id: string, githubId: string, userName: string }> };
 
 export type UserFollowingFragment = { __typename?: 'User', followers: Array<{ __typename?: 'User', _id: string, userName: string, githubId: string }>, following: Array<{ __typename?: 'User', _id: string, userName: string, githubId: string }> };
 
 export type ProfilePictureFragment = { __typename?: 'Image', id: string, hash?: string | null, url: string };
 
-export type ProfilePageUserFragment = { __typename?: 'User', _id: string, githubId: string, userName: string, profilePicture?: { __typename?: 'Image', id: string, hash?: string | null, url: string } | null, stats: Array<{ __typename?: 'UserStats', _id: string, userId: string, gameType: Types.GameType, totalWins: number, totalPlayed: number, elo: number }>, playedGames: Array<{ __typename?: 'PlayedGame', _id: string, gameType: Types.GameType, playerIds: Array<string>, playerScores: Array<number>, playerElosBefore: Array<number>, playerElosAfter: Array<number>, startedAt: Date, finishedAt: Date, finalState?: string | null, ongoingGameId?: string | null }>, achievements: Array<{ __typename?: 'Achievement', _id: string, name: string, description: string, criteria: { __typename?: 'LeaderboardRankUnlockCriteria', gameType?: Types.GameType | null, rank: number } | { __typename?: 'OtherUnlockCriteria', gameType?: Types.GameType | null } | { __typename?: 'TotalPlayedUnlockCriteria', gameType?: Types.GameType | null, played: number } | { __typename?: 'TotalWinsUnlockCriteria', gameType?: Types.GameType | null, wins: number } | { __typename?: 'WinStreakUnlockCriteria', gameType?: Types.GameType | null, streak: number } }>, followers: Array<{ __typename?: 'User', _id: string, userName: string, githubId: string }>, following: Array<{ __typename?: 'User', _id: string, userName: string, githubId: string }> };
+export type ProfilePageUserFragment = { __typename?: 'User', _id: string, githubId: string, userName: string, profilePicture?: { __typename?: 'Image', id: string, hash?: string | null, url: string } | null, stats: Array<{ __typename?: 'UserStats', _id: string, userId: string, gameType: Types.GameType, totalWins: number, totalPlayed: number, elo: number }>, playedGames: Array<{ __typename?: 'PlayedGame', _id: string, gameType: Types.GameType, playerScores: Array<number>, playerElosBefore: Array<number>, playerElosAfter: Array<number>, startedAt: Date, finishedAt: Date, finalState?: string | null, ongoingGameId?: string | null, players: Array<{ __typename?: 'User', _id: string, githubId: string, userName: string }> }>, achievements: Array<{ __typename?: 'Achievement', _id: string, name: string, description: string, criteria: { __typename?: 'LeaderboardRankUnlockCriteria', gameType?: Types.GameType | null, rank: number } | { __typename?: 'OtherUnlockCriteria', gameType?: Types.GameType | null } | { __typename?: 'TotalPlayedUnlockCriteria', gameType?: Types.GameType | null, played: number } | { __typename?: 'TotalWinsUnlockCriteria', gameType?: Types.GameType | null, wins: number } | { __typename?: 'WinStreakUnlockCriteria', gameType?: Types.GameType | null, streak: number } }>, followers: Array<{ __typename?: 'User', _id: string, userName: string, githubId: string }>, following: Array<{ __typename?: 'User', _id: string, userName: string, githubId: string }> };
 
 export type ProfilePageUserQueryVariables = Types.Exact<{
   userId: Types.Scalars['ID']['input'];
 }>;
 
 
-export type ProfilePageUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', _id: string, githubId: string, userName: string, profilePicture?: { __typename?: 'Image', id: string, hash?: string | null, url: string } | null, stats: Array<{ __typename?: 'UserStats', _id: string, userId: string, gameType: Types.GameType, totalWins: number, totalPlayed: number, elo: number }>, playedGames: Array<{ __typename?: 'PlayedGame', _id: string, gameType: Types.GameType, playerIds: Array<string>, playerScores: Array<number>, playerElosBefore: Array<number>, playerElosAfter: Array<number>, startedAt: Date, finishedAt: Date, finalState?: string | null, ongoingGameId?: string | null }>, achievements: Array<{ __typename?: 'Achievement', _id: string, name: string, description: string, criteria: { __typename?: 'LeaderboardRankUnlockCriteria', gameType?: Types.GameType | null, rank: number } | { __typename?: 'OtherUnlockCriteria', gameType?: Types.GameType | null } | { __typename?: 'TotalPlayedUnlockCriteria', gameType?: Types.GameType | null, played: number } | { __typename?: 'TotalWinsUnlockCriteria', gameType?: Types.GameType | null, wins: number } | { __typename?: 'WinStreakUnlockCriteria', gameType?: Types.GameType | null, streak: number } }>, followers: Array<{ __typename?: 'User', _id: string, userName: string, githubId: string }>, following: Array<{ __typename?: 'User', _id: string, userName: string, githubId: string }> } | null };
+export type ProfilePageUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', _id: string, githubId: string, userName: string, profilePicture?: { __typename?: 'Image', id: string, hash?: string | null, url: string } | null, stats: Array<{ __typename?: 'UserStats', _id: string, userId: string, gameType: Types.GameType, totalWins: number, totalPlayed: number, elo: number }>, playedGames: Array<{ __typename?: 'PlayedGame', _id: string, gameType: Types.GameType, playerScores: Array<number>, playerElosBefore: Array<number>, playerElosAfter: Array<number>, startedAt: Date, finishedAt: Date, finalState?: string | null, ongoingGameId?: string | null, players: Array<{ __typename?: 'User', _id: string, githubId: string, userName: string }> }>, achievements: Array<{ __typename?: 'Achievement', _id: string, name: string, description: string, criteria: { __typename?: 'LeaderboardRankUnlockCriteria', gameType?: Types.GameType | null, rank: number } | { __typename?: 'OtherUnlockCriteria', gameType?: Types.GameType | null } | { __typename?: 'TotalPlayedUnlockCriteria', gameType?: Types.GameType | null, played: number } | { __typename?: 'TotalWinsUnlockCriteria', gameType?: Types.GameType | null, wins: number } | { __typename?: 'WinStreakUnlockCriteria', gameType?: Types.GameType | null, streak: number } }>, followers: Array<{ __typename?: 'User', _id: string, userName: string, githubId: string }>, following: Array<{ __typename?: 'User', _id: string, userName: string, githubId: string }> } | null };
 
 export type FollowUserMutationVariables = Types.Exact<{
   userId: Types.Scalars['ID']['input'];
@@ -58,7 +59,9 @@ export const ProfilePageUserPlayedGameFragmentDoc = gql`
     fragment ProfilePageUserPlayedGame on PlayedGame {
   _id
   gameType
-  playerIds
+  players {
+    ...PlayedGamePlayer
+  }
   playerScores
   playerElosBefore
   playerElosAfter
@@ -67,7 +70,7 @@ export const ProfilePageUserPlayedGameFragmentDoc = gql`
   finalState
   ongoingGameId
 }
-    `;
+    ${PlayedGamePlayerFragmentDoc}`;
 export const ProfilePageUserAchievementFragmentDoc = gql`
     fragment ProfilePageUserAchievement on Achievement {
   _id

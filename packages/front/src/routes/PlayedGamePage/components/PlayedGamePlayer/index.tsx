@@ -1,5 +1,4 @@
 import { FC } from 'react'
-import { usePlayedGamePlayerQuery } from './graphql/PlayedGamePlayer.generated'
 import styled from 'styled-components'
 import { Heading } from '../../../../components/Heading'
 import { P } from '../../../../components/P'
@@ -7,9 +6,9 @@ import { EloChange } from '../../../ProfilePage/components/EloChange'
 import { Pill } from '../../../../components/Pill'
 import { CustomLink } from '../../../../components/CustomLink'
 import { MOBILE_WIDTHS } from '../../../../hooks/useIsMobile'
+import { PlayedGamePlayerFragment } from '../../../PlayedGamesPage/graphql/PlayedGamesPage.generated'
 
-type PlayedGamePlayer = {
-  id: string
+type TPlayedGamePlayer = PlayedGamePlayerFragment & {
   eloBefore: number
   eloAfter: number
   score: number
@@ -34,19 +33,13 @@ const StyledPlayedGamePlayer = styled.div`
 `
 
 type PlayedGamePlayerProps = {
-  player: PlayedGamePlayer
+  player: TPlayedGamePlayer
 }
 
 export const PlayedGamePlayer: FC<PlayedGamePlayerProps> = ({ player }) => {
-  const { data } = usePlayedGamePlayerQuery({
-    variables: { userId: player.id! },
-    skip: !player.id
-  })
-  const user = data?.user
-
   return (
     <StyledPlayedGamePlayer>
-      <Heading.H3>{user?.userName || player.id}</Heading.H3>
+      <Heading.H3>{player.userName || player._id}</Heading.H3>
       <Pill color="info">{player.eloBefore}</Pill>
 
       <EloChange eloChange={player.eloAfter - player.eloBefore} />
@@ -55,7 +48,7 @@ export const PlayedGamePlayer: FC<PlayedGamePlayerProps> = ({ player }) => {
         <P.SmallText>Final score: {player.score}</P.SmallText>
       </Pill>
 
-      <CustomLink color="info" to={`/profile/${player.id}`}>
+      <CustomLink color="info" to={`/profile/${player._id}`}>
         Profile
       </CustomLink>
     </StyledPlayedGamePlayer>
