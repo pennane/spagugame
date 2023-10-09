@@ -43,6 +43,7 @@ const getLeaderboard: TServiceHandler<
         githubId: user?.githubId,
         userName: user?.userName,
         totalPlayed: stat.totalPlayed,
+        profilePicture: user?.profilePicture,
       };
     }),
     updatedAt: now,

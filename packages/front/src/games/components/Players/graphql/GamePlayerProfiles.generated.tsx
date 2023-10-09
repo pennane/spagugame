@@ -5,7 +5,7 @@ import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type OngoingGameUserStatsFragment = { __typename?: 'UserStats', _id: string, userId: string, gameType: Types.GameType, elo: number };
 
-export type OngoingGamePlayerProfileFragment = { __typename?: 'User', _id: string, githubId: string, userName: string };
+export type OngoingGamePlayerProfileFragment = { __typename?: 'User', _id: string, githubId: string, userName: string, profilePicture?: { __typename?: 'Image', url: string } | null };
 
 export type GamePlayerProfilesQueryVariables = Types.Exact<{
   userIds: Array<Types.Scalars['ID']['input']> | Types.Scalars['ID']['input'];
@@ -13,7 +13,7 @@ export type GamePlayerProfilesQueryVariables = Types.Exact<{
 }>;
 
 
-export type GamePlayerProfilesQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', _id: string, githubId: string, userName: string }>, usersStats: Array<{ __typename?: 'UserStats', _id: string, userId: string, gameType: Types.GameType, elo: number }> };
+export type GamePlayerProfilesQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', _id: string, githubId: string, userName: string, profilePicture?: { __typename?: 'Image', url: string } | null }>, usersStats: Array<{ __typename?: 'UserStats', _id: string, userId: string, gameType: Types.GameType, elo: number }> };
 
 export const OngoingGameUserStatsFragmentDoc = gql`
     fragment OngoingGameUserStats on UserStats {
@@ -28,6 +28,9 @@ export const OngoingGamePlayerProfileFragmentDoc = gql`
   _id
   githubId
   userName
+  profilePicture {
+    url
+  }
 }
     `;
 export const GamePlayerProfilesDocument = gql`

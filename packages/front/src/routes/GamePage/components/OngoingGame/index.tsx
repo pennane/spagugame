@@ -42,7 +42,10 @@ export const OngoingGameItem: FC<OngoingGameItemProps> = ({
         {game.name} ({ongoingGame.players.length} / {game.maxPlayers} players)
         {currentUser &&
           ongoingGame.players.some((p) => p.userId === currentUser?._id) && (
-            <StyledMiniProfileImage githubId={currentUser.githubId} />
+            <StyledMiniProfileImage
+              githubId={currentUser.githubId}
+              profileImageSrc={currentUser.profilePicture?.url}
+            />
           )}
       </StyledButton>
     </CustomLink>

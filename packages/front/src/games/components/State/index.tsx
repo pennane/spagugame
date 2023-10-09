@@ -105,7 +105,11 @@ export const State: FC<GameRenderedProps> = ({ game, playMove }) => {
           {winnersData &&
             winnersData.users.map((u) => (
               <Winner>
-                <MiniProfileImage githubId={u.githubId} /> {u?.userName}
+                <MiniProfileImage
+                  githubId={u.githubId}
+                  profileImageSrc={u.profilePicture?.url}
+                />
+                {u?.userName}
               </Winner>
             ))}
         </StyledWinners>

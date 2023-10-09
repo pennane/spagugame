@@ -105,7 +105,10 @@ export const Players: FC<PlayersProps> = ({ game }) => {
       </PlayerHeaders>
       {players.map((player, i) => (
         <StyledPlayer key={player.userId}>
-          <MiniProfileImage githubId={player.githubId} />
+          <MiniProfileImage
+            githubId={player.githubId}
+            profileImageSrc={player.profilePicture?.url}
+          />
           <Span.SmallText
             style={{
               width: '8rem',

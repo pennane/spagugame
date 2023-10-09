@@ -9,7 +9,7 @@ export type FollowingListUserQueryVariables = Types.Exact<{
 }>;
 
 
-export type FollowingListUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', _id: string, userName: string, followers: Array<{ __typename?: 'User', _id: string, userName: string, githubId: string }>, following: Array<{ __typename?: 'User', _id: string, userName: string, githubId: string }> } | null };
+export type FollowingListUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', _id: string, userName: string, profilePicture?: { __typename?: 'Image', url: string } | null, followers: Array<{ __typename?: 'User', _id: string, userName: string, githubId: string, profilePicture?: { __typename?: 'Image', url: string } | null }>, following: Array<{ __typename?: 'User', _id: string, userName: string, githubId: string, profilePicture?: { __typename?: 'Image', url: string } | null }> } | null };
 
 
 export const FollowingListUserDocument = gql`
@@ -17,6 +17,9 @@ export const FollowingListUserDocument = gql`
   user(id: $userId) {
     _id
     userName
+    profilePicture {
+      url
+    }
     ...UserFollowing
   }
 }

@@ -72,6 +72,7 @@ export type LeaderboardPlayer = {
   _id: Scalars['ID']['output'];
   elo: Scalars['Float']['output'];
   githubId?: Maybe<Scalars['ID']['output']>;
+  profilePicture?: Maybe<Image>;
   totalPlayed: Scalars['Int']['output'];
   totalWins: Scalars['Int']['output'];
   userId: Scalars['ID']['output'];
@@ -568,6 +569,7 @@ export type LeaderboardPlayerResolvers<ContextType = any, ParentType extends Res
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   elo?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   githubId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  profilePicture?: Resolver<Maybe<ResolversTypes['Image']>, ParentType, ContextType>;
   totalPlayed?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   totalWins?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   userId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;

@@ -2,6 +2,9 @@ fragment FindUsersUser on User {
   _id
   githubId
   userName
+  profilePicture {
+    url
+  }
 }
 
 query FindUsers($nameIncludes: String!) {

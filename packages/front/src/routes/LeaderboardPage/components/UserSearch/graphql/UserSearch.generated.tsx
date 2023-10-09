@@ -3,20 +3,23 @@ import * as Types from '../../../../../types';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type FindUsersUserFragment = { __typename?: 'User', _id: string, githubId: string, userName: string };
+export type FindUsersUserFragment = { __typename?: 'User', _id: string, githubId: string, userName: string, profilePicture?: { __typename?: 'Image', url: string } | null };
 
 export type FindUsersQueryVariables = Types.Exact<{
   nameIncludes: Types.Scalars['String']['input'];
 }>;
 
 
-export type FindUsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', _id: string, githubId: string, userName: string }> };
+export type FindUsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', _id: string, githubId: string, userName: string, profilePicture?: { __typename?: 'Image', url: string } | null }> };
 
 export const FindUsersUserFragmentDoc = gql`
     fragment FindUsersUser on User {
   _id
   githubId
   userName
+  profilePicture {
+    url
+  }
 }
     `;
 export const FindUsersDocument = gql`

@@ -3,5 +3,8 @@ query Winners($userIds: [ID!]!) {
     githubId
     _id
     userName
+    profilePicture {
+      url
+    }
   }
 }

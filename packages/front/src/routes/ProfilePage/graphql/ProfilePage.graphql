@@ -53,11 +53,17 @@ fragment UserFollowing on User {
   followers {
     _id
     userName
+    profilePicture {
+      url
+    }
     githubId
   }
   following {
     _id
     userName
+    profilePicture {
+      url
+    }
     githubId
   }
 }

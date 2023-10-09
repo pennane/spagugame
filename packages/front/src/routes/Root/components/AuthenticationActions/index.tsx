@@ -45,7 +45,10 @@ export const AuthenticationActions: FC = () => {
           )}
           {isMobile && (
             <Link to="/profile">
-              <MiniProfileImage githubId={user.githubId} />
+              <MiniProfileImage
+                githubId={user.githubId}
+                profileImageSrc={user.profilePicture?.url}
+              />
             </Link>
           )}
 
