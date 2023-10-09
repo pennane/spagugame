@@ -214,8 +214,11 @@ pnpm --filter server dev
 
 ## Images of the prototype (differs from current state of the website
 
-![Alt text](<docs/images/Näyttökuva 2023-9-4 kello 15.07.43.png>)
-![Alt text](<docs/images/Näyttökuva 2023-9-4 kello 15.07.46.png>)
-![Alt text](<docs/images/Näyttökuva 2023-9-4 kello 15.08.28.png>)
-![Alt text](<docs/images/Näyttökuva 2023-9-4 kello 15.08.42.png>)
-![Alt text](<docs/images/Näyttökuva 2023-9-4 kello 15.09.10.png>)
+![Alt text](<docs/images/Näyttökuva 2023-10-9 kello 14.53.06.png>)
+![Alt text](<docs/images/Näyttökuva 2023-10-9 kello 14.52.20.png>)
+![Alt text](<docs/images/Näyttökuva 2023-10-9 kello 14.53.20.png>)
+![Alt text](<docs/images/Näyttökuva 2023-10-9 kello 14.53.25.png>)
+![Alt text](<docs/images/Näyttökuva 2023-10-9 kello 14.53.30.png>)
+![Alt text](<docs/images/Näyttökuva 2023-10-9 kello 14.53.38.png>)
+![Alt text](<docs/images/Näyttökuva 2023-10-9 kello 14.53.56.png>)
+![Alt text](<docs/images/Näyttökuva 2023-10-9 kello 14.54.04.png>)
