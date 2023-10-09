@@ -33,7 +33,7 @@ const StyledPlayers = styled(Pill)`
   text-transform: uppercase;
   font-weight: 700;
   text-align: center;
-  /* color: ${({ theme }) => theme.colors.foreground.secondary}; */
+  color: ${({ theme }) => theme.colors.foreground.primary};
 `
 
 const StyledPlayedGame = styled.div`
