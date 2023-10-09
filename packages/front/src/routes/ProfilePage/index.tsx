@@ -6,7 +6,8 @@ import styled from 'styled-components'
 import {
   ProfilePageUserQuery,
   useFollowUserMutation,
-  useProfilePageUserQuery
+  useProfilePageUserQuery,
+  useUploadProfileImageMutation
 } from './graphql/ProfilePage.generated'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { P } from '../../components/P'
@@ -38,6 +39,28 @@ export const Section = styled.section`
   gap: 1rem;
 `
 
+const StyledFileInput = styled.input`
+  background-color: ${({ theme }) => theme.colors.background.secondary};
+  font-size: 0;
+  &::file-selector-button {
+    border-radius: 0.5rem;
+    color: ${({ theme }) => theme.colors.foreground.success};
+    background: transparent;
+    border: 1px solid ${({ theme }) => theme.colors.foreground.success};
+    padding: 0.25rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.1s;
+  }
+
+  &::file-selector-button:hover {
+    box-shadow: inset 0 0px 3px 0
+      ${({ theme }) => theme.colors.foreground.primary};
+  }
+`
+
 type ContextType = { user: ProfilePageUserQuery['user'] | null }
 
 export function useProfileUser() {
@@ -50,6 +73,7 @@ export const ProfilePage: FC = () => {
   const profileUserId = userId || currentUser?._id
 
   const [followMutation] = useFollowUserMutation()
+  const [uploadProfileImageMutation] = useUploadProfileImageMutation()
 
   const { data: profileUserData, loading: profileUserLoading } =
     useProfilePageUserQuery({
@@ -64,6 +88,12 @@ export const ProfilePage: FC = () => {
 
   const alreadyFollowing = currentUser?.following?.some((u) => u._id === userId)
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    uploadProfileImageMutation({ variables: { file } })
+  }
+
   return (
     <StyledProfilePage>
       <ProfilePageNavBar />
@@ -74,7 +104,19 @@ export const ProfilePage: FC = () => {
           </StyledProfileHeader>
         </Section>
 
-        <ProfileImage githubId={profileUser.githubId} />
+        <ProfileImage
+          githubId={profileUser.githubId}
+          profileImageSrc={profileUser.profilePictureUrl}
+        />
+        {currentUser?._id === profileUser._id && (
+          <div>
+            <StyledFileInput
+              accept="image/png, image/jpeg"
+              type="file"
+              onChange={handleFileChange}
+            />
+          </div>
+        )}
         <FollowingLinks>
           <FollowingLink to="followers" color="primary">
             <b>{profileUser.followers.length} </b>followers

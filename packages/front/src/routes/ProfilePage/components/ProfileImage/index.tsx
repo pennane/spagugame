@@ -14,14 +14,22 @@ const StyledProfileImage = styled.img`
 `
 
 type ProfileImageProps = {
-  githubId?: string
+  githubId?: string | null
+  profileImageSrc?: string | null
 } & React.HTMLAttributes<HTMLDivElement>
 
-export const ProfileImage: FC<ProfileImageProps> = ({ githubId, ...rest }) => {
+export const ProfileImage: FC<ProfileImageProps> = ({
+  profileImageSrc,
+  githubId,
+  ...rest
+}) => {
   return (
     <StyledProfileImageContainer {...rest}>
       <StyledProfileImage
-        src={`https://avatars.githubusercontent.com/u/${githubId}?v=4`}
+        src={
+          profileImageSrc ||
+          `https://avatars.githubusercontent.com/u/${githubId}?v=4`
+        }
       />
     </StyledProfileImageContainer>
   )

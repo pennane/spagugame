@@ -17,6 +17,7 @@ export type Scalars = {
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
   Date: { input: any; output: any; }
+  Upload: { input: any; output: any; }
 };
 
 export type Achievement = {
@@ -91,7 +92,7 @@ export type Mutation = {
   playTurn: OngoingGame;
   toggleFollow: User;
   toggleReady: OngoingGame;
-  updateUser: User;
+  uploadProfilePicture: User;
 };
 
 
@@ -134,8 +135,8 @@ export type MutationToggleReadyArgs = {
 };
 
 
-export type MutationUpdateUserArgs = {
-  userInput?: InputMaybe<UserInput>;
+export type MutationUploadProfilePictureArgs = {
+  file: Scalars['Upload']['input'];
 };
 
 export type OngoingGame = {
@@ -308,6 +309,7 @@ export type User = {
   joinedAt: Scalars['Date']['output'];
   leaderboardRanks: Array<LeaderboardRank>;
   playedGames: Array<PlayedGame>;
+  profilePictureUrl?: Maybe<Scalars['String']['output']>;
   roles: Array<UserRole>;
   stats: Array<UserStats>;
   userName: Scalars['String']['output'];
@@ -461,6 +463,7 @@ export type ResolversTypes = {
   TotalPlayedUnlockCriteria: ResolverTypeWrapper<TotalPlayedUnlockCriteria>;
   TotalWinsUnlockCriteria: ResolverTypeWrapper<TotalWinsUnlockCriteria>;
   UnlockCriteria: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['UnlockCriteria']>;
+  Upload: ResolverTypeWrapper<Scalars['Upload']['output']>;
   User: ResolverTypeWrapper<User>;
   UserInput: UserInput;
   UserRole: UserRole;
@@ -494,6 +497,7 @@ export type ResolversParentTypes = {
   TotalPlayedUnlockCriteria: TotalPlayedUnlockCriteria;
   TotalWinsUnlockCriteria: TotalWinsUnlockCriteria;
   UnlockCriteria: ResolversInterfaceTypes<ResolversParentTypes>['UnlockCriteria'];
+  Upload: Scalars['Upload']['output'];
   User: User;
   UserInput: UserInput;
   UserStats: UserStats;
@@ -574,7 +578,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   playTurn?: Resolver<ResolversTypes['OngoingGame'], ParentType, ContextType, RequireFields<MutationPlayTurnArgs, 'json' | 'ongoingGameId'>>;
   toggleFollow?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationToggleFollowArgs, 'toggle' | 'userId'>>;
   toggleReady?: Resolver<ResolversTypes['OngoingGame'], ParentType, ContextType, RequireFields<MutationToggleReadyArgs, 'ongoingGameId' | 'ready'>>;
-  updateUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, Partial<MutationUpdateUserArgs>>;
+  uploadProfilePicture?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUploadProfilePictureArgs, 'file'>>;
 };
 
 export type OngoingGameResolvers<ContextType = any, ParentType extends ResolversParentTypes['OngoingGame'] = ResolversParentTypes['OngoingGame']> = {
@@ -668,6 +672,10 @@ export type UnlockCriteriaResolvers<ContextType = any, ParentType extends Resolv
   gameType?: Resolver<Maybe<ResolversTypes['GameType']>, ParentType, ContextType>;
 };
 
+export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {
+  name: 'Upload';
+}
+
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   achievements?: Resolver<Array<ResolversTypes['Achievement']>, ParentType, ContextType>;
@@ -678,6 +686,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   joinedAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   leaderboardRanks?: Resolver<Array<ResolversTypes['LeaderboardRank']>, ParentType, ContextType, Partial<UserLeaderboardRanksArgs>>;
   playedGames?: Resolver<Array<ResolversTypes['PlayedGame']>, ParentType, ContextType, Partial<UserPlayedGamesArgs>>;
+  profilePictureUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   roles?: Resolver<Array<ResolversTypes['UserRole']>, ParentType, ContextType>;
   stats?: Resolver<Array<ResolversTypes['UserStats']>, ParentType, ContextType, Partial<UserStatsArgs>>;
   userName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -720,6 +729,7 @@ export type Resolvers<ContextType = any> = {
   TotalPlayedUnlockCriteria?: TotalPlayedUnlockCriteriaResolvers<ContextType>;
   TotalWinsUnlockCriteria?: TotalWinsUnlockCriteriaResolvers<ContextType>;
   UnlockCriteria?: UnlockCriteriaResolvers<ContextType>;
+  Upload?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
   UserStats?: UserStatsResolvers<ContextType>;
   WinStreakUnlockCriteria?: WinStreakUnlockCriteriaResolvers<ContextType>;

@@ -64,6 +64,7 @@ fragment ProfilePageUser on User {
   _id
   githubId
   userName
+  profilePictureUrl
   stats {
     ...ProfilePageUserStats
   }
@@ -86,5 +87,12 @@ mutation FollowUser($userId: ID!, $toggle: Boolean!) {
   toggleFollow(userId: $userId, toggle: $toggle) {
     _id
     ...UserFollowing
+  }
+}
+
+mutation UploadProfileImage($file: Upload!) {
+  uploadProfilePicture(file: $file) {
+    _id
+    profilePictureUrl
   }
 }

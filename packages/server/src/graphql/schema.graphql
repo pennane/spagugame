@@ -10,6 +10,7 @@ directive @cacheControl(
 ) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
 
 scalar Date
+scalar Upload
 
 enum GameType {
   FIND_FOUR
@@ -103,6 +104,7 @@ type User {
   leaderboardRanks(gameTypes: [GameType!]): [LeaderboardRank!]!
   followers: [User!]!
   following: [User!]!
+  profilePictureUrl: String
 }
 
 input UserInput {
@@ -216,8 +218,8 @@ type Mutation {
   leaveOngoingGame(ongoingGameId: ID!): OngoingGame!
   playTurn(ongoingGameId: ID!, json: String!): OngoingGame!
   toggleReady(ongoingGameId: ID!, ready: Boolean!): OngoingGame!
-  updateUser(userInput: UserInput): User!
   # Returns the currentUser
   toggleFollow(userId: ID!, toggle: Boolean!): User!
   debug(tokens: [String!]!): Boolean!
+  uploadProfilePicture(file: Upload!): User!
 }

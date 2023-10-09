@@ -21,6 +21,8 @@ const envVariablesSchema = z.object({
   GITHUB_CALLBACK_URL: z
     .string()
     .default("http://localhost:3000/auth/github/callback"),
+  IMGUR_CLIENT_ID: z.string(),
+  IMGUR_CLIENT_SECRET: z.string(),
 });
 
 export const CONFIG_OBJECT = envVariablesSchema.parse(process.env);
