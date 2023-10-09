@@ -37,7 +37,9 @@ fragment ProfilePageUserAchievement on Achievement {
 fragment ProfilePageUserPlayedGame on PlayedGame {
   _id
   gameType
-  playerIds
+  players {
+    ...PlayedGamePlayer
+  }
   playerScores
   playerElosBefore
   playerElosAfter

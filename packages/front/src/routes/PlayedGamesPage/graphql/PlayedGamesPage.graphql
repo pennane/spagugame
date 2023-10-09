@@ -1,10 +1,18 @@
+fragment PlayedGamePlayer on User {
+  _id
+  githubId
+  userName
+}
+
 query PlayedGames($gameType: GameType!) {
   playedGames(gameTypes: [$gameType], first: 10) {
     _id
     gameType
-    playerIds
     playerElosBefore
     startedAt
     finishedAt
+    players {
+      ...PlayedGamePlayer
+    }
   }
 }

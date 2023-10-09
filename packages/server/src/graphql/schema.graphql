@@ -147,6 +147,7 @@ type PlayedGame {
   _id: ID!
   ongoingGameId: ID
   gameType: GameType!
+  players: [User!]!
   playerIds: [ID!]!
   playerScores: [Int!]!
   playerElosBefore: [Float!]!

@@ -201,6 +201,7 @@ export type PlayedGame = {
   playerElosBefore: Array<Scalars['Float']['output']>;
   playerIds: Array<Scalars['ID']['output']>;
   playerScores: Array<Scalars['Int']['output']>;
+  players: Array<User>;
   startedAt: Scalars['Date']['output'];
 };
 

@@ -51,9 +51,9 @@ export const PlayedGamePage: FC = () => {
   const game = data?.playedGame
   if (!game) return <P.DefaultText>Game not found</P.DefaultText>
 
-  const players = game.playerIds
-    .map((id, index) => ({
-      id,
+  const players = game.players
+    .map((player, index) => ({
+      ...player,
       eloBefore: game.playerElosBefore[index],
       eloAfter: game.playerElosAfter[index],
       score: game.playerScores[index]
@@ -74,7 +74,7 @@ export const PlayedGamePage: FC = () => {
       )}
       <Heading.H2>Players</Heading.H2>
       {players.map((player) => (
-        <PlayedGamePlayer key={player.id} player={player} />
+        <PlayedGamePlayer key={player._id} player={player} />
       ))}
     </StyledPlayedGamePage>
   )

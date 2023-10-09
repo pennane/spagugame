@@ -3,26 +3,36 @@ import * as Types from '../../../types';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
+export type PlayedGamePlayerFragment = { __typename?: 'User', _id: string, githubId: string, userName: string };
+
 export type PlayedGamesQueryVariables = Types.Exact<{
   gameType: Types.GameType;
 }>;
 
 
-export type PlayedGamesQuery = { __typename?: 'Query', playedGames: Array<{ __typename?: 'PlayedGame', _id: string, gameType: Types.GameType, playerIds: Array<string>, playerElosBefore: Array<number>, startedAt: Date, finishedAt: Date }> };
+export type PlayedGamesQuery = { __typename?: 'Query', playedGames: Array<{ __typename?: 'PlayedGame', _id: string, gameType: Types.GameType, playerElosBefore: Array<number>, startedAt: Date, finishedAt: Date, players: Array<{ __typename?: 'User', _id: string, githubId: string, userName: string }> }> };
 
-
+export const PlayedGamePlayerFragmentDoc = gql`
+    fragment PlayedGamePlayer on User {
+  _id
+  githubId
+  userName
+}
+    `;
 export const PlayedGamesDocument = gql`
     query PlayedGames($gameType: GameType!) {
   playedGames(gameTypes: [$gameType], first: 10) {
     _id
     gameType
-    playerIds
     playerElosBefore
     startedAt
     finishedAt
+    players {
+      ...PlayedGamePlayer
+    }
   }
 }
-    `;
+    ${PlayedGamePlayerFragmentDoc}`;
 
 /**
  * __usePlayedGamesQuery__

@@ -21,20 +21,34 @@ const StyledPlayedGamesPage = styled.div`
   flex-direction: column;
   gap: 1rem;
 `
+const StyledVs = styled.span`
+  margin: 0 0.25rem;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: ${({ theme }) => theme.colors.foreground.warning};
+`
+
+const StyledPlayers = styled(Pill)`
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  text-align: center;
+  /* color: ${({ theme }) => theme.colors.foreground.secondary}; */
+`
 
 const StyledPlayedGame = styled.div`
   border-bottom: 1px solid #ff5666;
   padding: 0.75rem 0;
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: 8rem 9rem 1fr 2fr;
+  grid-auto-columns: 3fr 1fr 1fr 1fr;
   gap: 0.5rem;
   justify-content: flex-start;
   align-items: center;
   justify-items: flex-start;
 
   @media (max-width: ${MOBILE_WIDTHS.default}px) {
-    grid-auto-columns: 8rem 2fr 1fr;
+    grid-auto-columns: 3fr 1fr 1fr;
   }
 `
 export const PlayedGame: FC<{
@@ -46,32 +60,30 @@ export const PlayedGame: FC<{
 
   return (
     <StyledPlayedGame key={game._id}>
-      <P.DefaultText>{game.gameType}</P.DefaultText>
-
+      {profilePage && <P.DefaultText>{game.gameType}</P.DefaultText>}
+      {!profilePage && (
+        <StyledPlayers color="invertedSecondary">
+          {game.players.map((plyer, i) => [
+            i > 0 && <StyledVs>vs</StyledVs>,
+            <span>{plyer.userName}</span>
+          ])}
+        </StyledPlayers>
+      )}
       {!isMobile && (
         <Pill color="invertedSecondary">
           {dateToFinnishLocale(parseDate(game.finishedAt))}
         </Pill>
       )}
 
-      {profilePage && (
-        <>
-          <EloChange eloChange={eloChange} />
-        </>
-      )}
+      {profilePage && <EloChange eloChange={eloChange} />}
       {!profilePage && (
-        <>
-          {!isMobile && (
-            <Pill color="info">{game.playerIds.length} players</Pill>
+        <Pill color="success">
+          Avg. elo{' '}
+          {Math.round(
+            game.playerElosBefore.reduce((acc, elo) => acc + elo, 0) /
+              game.players.length
           )}
-          <Pill color="success">
-            Avg. elo{' '}
-            {Math.round(
-              game.playerElosBefore.reduce((acc, elo) => acc + elo, 0) /
-                game.playerIds.length
-            )}
-          </Pill>
-        </>
+        </Pill>
       )}
 
       <CustomLink to={`/played/${game.gameType}/${game._id}`}>
