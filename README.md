@@ -25,14 +25,15 @@ The website can be authenticated into with a github account
 
 ## How to test (for peer-review)
 
-- Grab friend(s) with github account
-- Authenticate into the site
-- Create a new game for a desired game (or join an existion one if there happens to be any)
-- Others can join the game by sharing the link from the search bar or from the ongoing games section of the game's page
-- If the game is already full, players can also spectate it in real time
-- Press "Ready" and wait for the game to start!
-- It should be somewhat intuitive
-- After playing some games check out the played matches from your profile, check the achievments you got and maybe follow the opponents' profiles if they played in good spirit
+1. Grab friend(s) with github account
+2. Authenticate into the site
+3. Create a new game for a desired game (or join an existing one if there happens to be any)
+    - Others can join the game by sharing the link from the search bar or from the ongoing games section of the game's page
+    - If the game is already full, players can also spectate it in real time
+4. After all players press "ready" the game will start
+5. Play the game through!
+    - It should be somewhat intuitive, click somewhere when it is your turn
+6. After playing some games check out the played matches from your profile, check the achievments you got and maybe follow the opponents' profiles if they played in good spirit
 
 ## Features
 
