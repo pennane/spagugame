@@ -2,7 +2,7 @@
 
 Welcome to the future of social gaming, spagugame, a course project for the "Web-sovelluskehitys 2 TX00DZ38-3006" at Metropolia UAS.
 
-Inspired by the legendary [aapeli.com](http://www.aapeli.com/), the goal is to craft an exhilarating social gaming experience enriched with real-time gameplay and robust social features. The platform is targeted to everyone interested in competitive turn based gaming action. By leveraging the power of Redis, we seamlessly manage ongoing games, while GraphQL subscriptions combined with websockets allow for dynamic game updates in real-time. A sophisticated ELO ranking system is also on the horizon, ensuring competitive thrills for every game on our platform.
+Inspired by the legendary [aapeli.com](http://www.aapeli.com/), the goal is to craft an exhilarating social gaming experience enriched with real-time gameplay and robust social features. The platform is targeted to everyone interested in competitive turn based gaming action. By leveraging the power of Redis, we seamlessly manage ongoing games, while GraphQL subscriptions combined with websockets allow for dynamic game updates in real-time. A sophisticated ELO ranking system has also been implemented, ensuring competitive thrills for every game on our platform.
 
 One might argue the integration of GraphQL directly into the game logic might affect performance. While that's a valid concern, we see it as an exciting challenge and a unique exploration of what’s possible.
 
@@ -157,6 +157,15 @@ Authentication through Github
   - No limit on player count
   - Only one player can play at a time (sad)
   - Game must end with each player having a score that can be used to determine who won etc
+</details>
+<details>
+<summary>ELO System
+</summary>
+
+  - Each played game affects the ELO of each player
+  - The amount the ELO changes is calculated based on the winning probabilities of each player
+  - It is a bit arbitrary, but seems to work as expected
+  - Ideas taken from https://gamedev.stackexchange.com/questions/55441/player-ranking-using-elo-with-more-than-two-players
 </details>
 <details>
 <summary>Apollo gql client
