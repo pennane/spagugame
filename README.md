@@ -194,15 +194,40 @@ The project is organized as a monorepo for clarity and scalability. Here are the
 
 ## Development
 
-Docker and pnpm (or npm) is required.
-All three packages can be started in dev mode with following command in monorepo root
+### Requirements
+- Docker
+- pnpm (or npm)
+- node v18.*.*
+- github project client id and secret
+- imgur api client id and secret
+
+## Env file samples
+`packages/frontend/.env`
+```sh
+VITE_SERVER_BASE_URL=http://localhost:3000  # root url for where the server is at
+VITE_WS_BASE_URL=ws://localhost:3000        # most likely same as SERVER_BASE_URL but ws as the protocol
+```
+`packages/server/.env`
+```sh
+SERVER_SESSION_SECRET=                       # something_arbitrary_and_secret
+MONGO_CONNECTION_STRING=                     # connection string to mongo
+MONGO_DB_NAME=devdb                          # main database name
+MONGO_TEST_DB_NAME=testdb                    # test database name
+GITHUB_CLIENT_ID=                            # github api client id
+GITHUB_CLIENT_SECRET=                        # github api client secret
+IMGUR_CLIENT_ID=                             # imgur api client id
+IMGUR_CLIENT_SECRET=                         # imgur api client secret
+```
+
+### Starting site up
+All three packages can be started in dev mode with following commands in monorepo root
 
 e.g.
 
 ```sh
-pnpm --filter environment dev
-pnpm --filter front dev
-pnpm --filter server dev
+pnpm --filter environment dev                # redis and mongo
+pnpm --filter front dev                      # vite react app
+pnpm --filter server dev                     # backend
 ```
 
 ## Images of spagugame
