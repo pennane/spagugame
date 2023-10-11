@@ -11,26 +11,28 @@ To ensure smooth gameplay even with this architecture, we're focusing on timeles
 ~~Underpinning our code is the purity of functional programming conventions, greatly assisted by the [ramda.js](https://ramdajs.com/) library.~~
 No, functional way has flown out the window, mega imperitave spagu has taken place. As a way to respect the name of the site.
 
+## Tech Stack
+
+**Backend:** Typescript, Node, Apollo GraphQL, MongoDB, Redis
+
+**Frontend:** Typescript, Vite, React
+
 ## Accessing the site
 
 The website is hosted at [spagugame.pennanen.dev](https://spagugame.pennanen.dev/)
 
 The website can be authenticated into with a github account
 
-## Tech Stack
+## How to test (for peer-review)
 
-**Backend:**
-
-- Typescript
-- Apollo GQL
-- MongoDB
-- Redis
-
-**Frontend:**
-
-- Typescript
-- Vite
-- React
+- Grab friend(s) with github account
+- Authenticate into the site
+- Create a new game for a desired game (or join an existion one if there happens to be any)
+- Others can join the game by sharing the link from the search bar or from the ongoing games section of the game's page
+- If the game is already full, players can also spectate it in real time
+- Press "Ready" and wait for the game to start!
+- It should be somewhat intuitive
+- After playing some games check out the played matches from your profile, check the achievments you got and maybe follow the opponents' profiles if they played in good spirit
 
 ## Features
 
