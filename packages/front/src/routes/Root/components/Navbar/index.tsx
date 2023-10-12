@@ -161,7 +161,6 @@ const SpaguNavTitle = styled.span`
 const useNavLinks = () => {
   const currentUser = useCurrentUser()
   return [
-    ['Home', '/'],
     ['Games', '/game'],
     ['Matches', '/played'],
     ['Leaderboard', '/leaderboards'],
@@ -215,6 +214,9 @@ export const Navbar = () => {
     <StyledNavbarContainer>
       <StyledNavbar>
         <StyledNavLinks>
+          <StyledNavLink to={'/'}>
+            <SpaguNavTitle style={{ marginRight: '1rem' }}>Spagu</SpaguNavTitle>
+          </StyledNavLink>
           {navLinks.map(([name, path], i) => (
             <StyledNavLink key={i} to={path}>
               {name}
