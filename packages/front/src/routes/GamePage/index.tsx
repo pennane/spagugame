@@ -13,6 +13,10 @@ import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { isGameType } from '../../lib/schema'
 import { theme } from '../../theme'
 import { useSubscribeGameTypeOngoingGames } from '../../hooks/useSubscribeNewOngoingGames'
+import { Modal } from '../../components/Modal'
+import { useLeaveGameMutation } from '../../games/graphql/OngoingGame.generated'
+import { useState } from 'react'
+import { useUserOngoingGameIdQuery } from '../../games/components/Actions/graphql/UserOngoingGameId.generated'
 
 const StyledGamePage = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.foreground.danger};
@@ -59,6 +63,15 @@ export const GamePage = () => {
   })
 
   const [createNewGame] = useNewGameMutation()
+  const [showAlreadyJoinedModal, setShowAlreadyJoinedModal] = useState(false)
+
+  const {
+    data: alreadyOngoingGameIdData,
+    loading: alreadyOngoingGameIdLoading
+  } = useUserOngoingGameIdQuery({ fetchPolicy: 'network-only' })
+
+  const alreadyOngoingGameId =
+    alreadyOngoingGameIdData?.currentUser?.ongoingGameId
 
   const handleCreateNewGame = (isPrivate: boolean) => {
     if (!gameType) return
@@ -69,17 +82,25 @@ export const GamePage = () => {
       })
       .catch((e) => {
         if (
-          typeof e.message === 'string' &&
-          e.message.includes('Cannot join multiple games at the same time')
+          e?.message ===
+            'Cannot join multiple games at the same time. Leave old game first' &&
+          alreadyOngoingGameId
         ) {
-          toast(
-            'You are already in a game. You must leave the old game before joining  new.'
-          )
+          setShowAlreadyJoinedModal(true)
+        } else {
+          toast(e?.message || 'error :(', { type: 'error' })
         }
       })
   }
+  const [leaveGame] = useLeaveGameMutation()
+  const handleLeaveGame = (id?: string | null) => {
+    if (!id) return
+    leaveGame({ variables: { ongoingGameId: id } })
+  }
 
-  if (loading) return <P.DefaultText>loading...</P.DefaultText>
+  if (loading || alreadyOngoingGameIdLoading)
+    return <P.DefaultText>loading...</P.DefaultText>
+
   const game = data?.game
 
   if (!game) return <P.DefaultText>Game does not exist</P.DefaultText>
@@ -143,6 +164,21 @@ export const GamePage = () => {
           </P.DefaultText>
         )}
       </StyledGameOngoingGames>
+      <Modal
+        title="Leave existing game"
+        onConfirm={() => {
+          handleLeaveGame(alreadyOngoingGameId)
+          setShowAlreadyJoinedModal(false)
+        }}
+        onCancel={() => setShowAlreadyJoinedModal(false)}
+        show={showAlreadyJoinedModal}
+      >
+        <P.DefaultText>
+          You are already joined to a game. You can leave it to join a new one.
+          When leaving a game that is already running you will lose elo
+          equivalent to losing the game.
+        </P.DefaultText>
+      </Modal>
     </StyledGamePage>
   )
 }

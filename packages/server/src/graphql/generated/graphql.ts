@@ -317,6 +317,7 @@ export type User = {
   githubId: Scalars['ID']['output'];
   joinedAt: Scalars['Date']['output'];
   leaderboardRanks: Array<LeaderboardRank>;
+  ongoingGameId?: Maybe<Scalars['ID']['output']>;
   playedGames: Array<PlayedGame>;
   profilePicture?: Maybe<Image>;
   roles: Array<UserRole>;
@@ -705,6 +706,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   githubId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   joinedAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   leaderboardRanks?: Resolver<Array<ResolversTypes['LeaderboardRank']>, ParentType, ContextType, Partial<UserLeaderboardRanksArgs>>;
+  ongoingGameId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   playedGames?: Resolver<Array<ResolversTypes['PlayedGame']>, ParentType, ContextType, Partial<UserPlayedGamesArgs>>;
   profilePicture?: Resolver<Maybe<ResolversTypes['Image']>, ParentType, ContextType>;
   roles?: Resolver<Array<ResolversTypes['UserRole']>, ParentType, ContextType>;

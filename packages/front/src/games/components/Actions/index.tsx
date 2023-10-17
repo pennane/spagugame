@@ -14,6 +14,8 @@ import { Modal } from '../../../components/Modal'
 import { P } from '../../../components/P'
 import { CustomLink } from '../../../components/CustomLink'
 import { useFindNewGame } from '../../../hooks/useFindNewGame'
+import { useUserOngoingGameIdQuery } from './graphql/UserOngoingGameId.generated'
+import { toast } from 'react-toastify'
 
 const StyledActions = styled.div`
   display: flex;
@@ -47,8 +49,20 @@ export const Actions: FC<ActionsProps> = ({ ongoingGame, game }) => {
   const [findNewGame, searchingNewGame] = useFindNewGame(game.type)
 
   const [showModal, setShowModal] = useState(false)
+  const [showAlreadyJoinedModal, setShowAlreadyJoinedModal] = useState(false)
+
+  const {
+    data: alreadyOngoingGameIdData,
+    loading: alreadyOngoingGameIdLoading
+  } = useUserOngoingGameIdQuery()
 
   const currentUser = useCurrentUser()
+
+  if (alreadyOngoingGameIdLoading) return null
+
+  const alreadyOngoingGameId =
+    alreadyOngoingGameIdData?.currentUser?.ongoingGameId
+
   if (!currentUser)
     return (
       <StyledActions>
@@ -79,12 +93,25 @@ export const Actions: FC<ActionsProps> = ({ ongoingGame, game }) => {
 
   const handleJoinGame = () => {
     if (!ongoingGame._id) return
-    joinGame({ variables: { ongoingGameId: ongoingGame._id } })
+    joinGame({
+      variables: { ongoingGameId: ongoingGame._id },
+      onError: (e) => {
+        if (
+          e?.message ===
+            'Cannot join multiple games at the same time. Leave old game first' &&
+          alreadyOngoingGameId
+        ) {
+          setShowAlreadyJoinedModal(true)
+        } else {
+          toast(e?.message, { type: 'error' })
+        }
+      }
+    })
   }
 
-  const handleLeaveGame = () => {
-    if (!ongoingGame._id) return
-    leaveGame({ variables: { ongoingGameId: ongoingGame._id } })
+  const handleLeaveGame = (id?: string | null) => {
+    if (!ongoingGame._id && !id) return
+    leaveGame({ variables: { ongoingGameId: id || ongoingGame._id } })
   }
 
   return (
@@ -136,6 +163,21 @@ export const Actions: FC<ActionsProps> = ({ ongoingGame, game }) => {
         <P.DefaultText>
           Are you sure you want to leave? If the game is running you will lose
           elo equivalent to losing the game.
+        </P.DefaultText>
+      </Modal>
+      <Modal
+        title="Leave existing game"
+        onConfirm={() => {
+          handleLeaveGame(alreadyOngoingGameId)
+          setShowAlreadyJoinedModal(false)
+        }}
+        onCancel={() => setShowAlreadyJoinedModal(false)}
+        show={showAlreadyJoinedModal}
+      >
+        <P.DefaultText>
+          You are already joined to a game. You can leave it to join a new one.
+          When leaving a game that is already running you will lose elo
+          equivalent to losing the game.
         </P.DefaultText>
       </Modal>
     </StyledActions>

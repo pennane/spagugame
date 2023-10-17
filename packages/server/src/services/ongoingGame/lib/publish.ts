@@ -81,15 +81,20 @@ export const removeGameFromRedis = async (
   ]);
 };
 
-export const hasGameActive = async (ctx: TContext, userId: string) => {
+export const getActiveGameId = async (ctx: TContext, userId: string) => {
   const alreadyJoinedGameId = await ctx.redis.get(getUserGameKey(userId));
-  if (!alreadyJoinedGameId) return false;
+  if (!alreadyJoinedGameId) return null;
 
   const game = await getGameFromRedis(ctx, alreadyJoinedGameId);
   if (!game) {
     await ctx.redis.del(getUserGameKey(userId));
-    return false;
+    return null;
   }
 
-  return true;
+  return alreadyJoinedGameId;
+};
+
+export const hasGameActive = async (ctx: TContext, userId: string) => {
+  const activeGameId = await getActiveGameId(ctx, userId);
+  return !!activeGameId;
 };

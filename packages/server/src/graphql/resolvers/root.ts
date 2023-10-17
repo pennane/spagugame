@@ -13,6 +13,7 @@ import playTurn from "../../services/ongoingGame/playTurn";
 import toggleReady from "../../services/ongoingGame/toggleReady";
 import {
   getAchievementUnlockKey,
+  getActiveGameId,
   getGameChangedKey,
   getGameCreatedKey,
   getGameFromRedis,
@@ -45,6 +46,9 @@ export const resolvers: Resolvers<TContext> = {
     },
   },
   User: {
+    ongoingGameId: async (user, _args, ctx) => {
+      return getActiveGameId(ctx, user._id);
+    },
     achievements: async (user, _args, ctx) => {
       if (
         !(user as unknown as IUser).achievementIds ||

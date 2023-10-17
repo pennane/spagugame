@@ -313,6 +313,7 @@ export type User = {
   githubId: Scalars['ID']['output'];
   joinedAt: Scalars['Date']['output'];
   leaderboardRanks: Array<LeaderboardRank>;
+  ongoingGameId?: Maybe<Scalars['ID']['output']>;
   playedGames: Array<PlayedGame>;
   profilePicture?: Maybe<Image>;
   roles: Array<UserRole>;

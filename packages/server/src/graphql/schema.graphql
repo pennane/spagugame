@@ -112,6 +112,7 @@ type User {
   followers: [User!]!
   following: [User!]!
   profilePicture: Image
+  ongoingGameId: ID
 }
 
 input UserInput {
