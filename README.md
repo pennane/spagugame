@@ -2,6 +2,12 @@
 
 Welcome to the future of social gaming, spagugame, a Metropolia course project for the "Web-sovelluskehitys 2 TX00DZ38-3006". Inspired by aapeli.com, the goal is to deliver a seamless, real-time, turn-based gaming platform with ELO ranking system that ensures competitive gameplay.
 
+## Tech Stack
+
+**Backend:** Typescript, Node, Apollo GraphQL, MongoDB, Redis
+
+**Frontend:** Typescript, Vite, React
+
 ## Quick Start for Peer-Review
 
 **1. Authenticate**: Log in with a GitHub account.
@@ -90,7 +96,7 @@ Welcome to the future of social gaming, spagugame, a Metropolia course project f
 - node 18
 - github (and imgur) api keys
 
-## Env file samples
+### Env file samples
 
 `packages/frontend/.env`
 
