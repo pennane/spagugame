@@ -1,223 +1,106 @@
 # spagugame
 
-Welcome to the future of social gaming, spagugame, a course project for the "Web-sovelluskehitys 2 TX00DZ38-3006" at Metropolia UAS.
+Welcome to the future of social gaming, spagugame, a Metropolia course project for the "Web-sovelluskehitys 2 TX00DZ38-3006". Inspired by aapeli.com, the goal is to deliver a seamless, real-time, turn-based gaming platform with ELO ranking system that ensures competitive gameplay.
 
-Inspired by the legendary [aapeli.com](http://www.aapeli.com/), the goal is to craft an exhilarating social gaming experience enriched with real-time gameplay and robust social features. The platform is targeted to everyone interested in competitive turn based gaming action. By leveraging the power of Redis, we seamlessly manage ongoing games, while GraphQL subscriptions combined with websockets allow for dynamic game updates in real-time. A sophisticated ELO ranking system has also been implemented, ensuring competitive thrills for every game on our platform.
+## Quick Start for Peer-Review
 
-One might argue the integration of GraphQL directly into the game logic might affect performance. While that's a valid concern, we see it as an exciting challenge and a unique exploration of what’s possible.
+**1. Authenticate**: Log in with a GitHub account.
 
-To ensure smooth gameplay even with this architecture, we're focusing on timeless turn-based classics. Think: Connect Four, Battleship (laivanupotus), Hangman, Guess the Drawing, etc.
+**2. Create/Join Game**: Either create a new game or join an existing one.
 
-~~Underpinning our code is the purity of functional programming conventions, greatly assisted by the [ramda.js](https://ramdajs.com/) library.~~
-No, functional way has flown out the window, mega imperitave spagu has taken place. As a way to respect the name of the site.
+**3. Ready Up**: Press "ready" to start.
 
-## Tech Stack
+**4. Play**: The gameplay should be intuitive.
 
-**Backend:** Typescript, Node, Apollo GraphQL, MongoDB, Redis
-
-**Frontend:** Typescript, Vite, React
-
-## Accessing the site
-
-The website is hosted at [spagugame.pennanen.dev](https://spagugame.pennanen.dev/)
-
-The website can be authenticated into with a github account
-
-## How to test (for peer-review)
-
-1. Grab friend(s) with github account
-2. Authenticate into the site
-3. Create a new game for a desired game (or join an existing one if there happens to be any)
-    - Others can join the game by sharing the link from the search bar or from the ongoing games section of the game's page
-    - If the game is already full, players can also spectate it in real time
-4. After all players press "ready" the game will start
-5. Play the game through!
-    - It should be somewhat intuitive, click somewhere when it is your turn
-6. After playing some games check out the played matches from your profile, check the achievments you got and maybe follow the opponents' profiles if they played in good spirit
+**5. Review**: Check your profile for match history and achievements.
 
 ## Features
 
-Down follows an almost comprehensive list of both user facing features and interesting implementation details
+<details>
+<summary>GitHub OAuth</summary>
 
-### User facing features
+- Simplifies secure authentication
 
-<details>
-<summary>
-Authentication through Github
-</summary>
-  
-  - Configuring a secure authentication is hard
-  - By using Github OAuth most of the headache can be ignored
 </details>
 <details>
-<summary>Play games
-</summary>
-  
-  - Users can play Tick tack toe, connect four and colof flood online against a real opponent
-  - Each played game tracks players' skill-level. Players can check their skill levels (elo) from their profile page.
-  - All off the played games are saved and can be viewed from the user profile, or from recent matches page
-  - When a game is finished, user can automatically seek a next game from the game window
+<summary>Gameplay</summary>
+
+- Tick tack toe, connect four and color flood available with ELO ranking and saved match history.
+
 </details>
 <details>
-<summary>Creating a game
-</summary>
-  
-  - User can create a new game in each game type
-  - The game can be specified as "private"
-      - if the game is private, the game can only be joined through the link in the browsers' url bar
-  - when a public game is created, the game is shown in realtime for other users
+<summary>Game Creation</summary>
+
+- Public and private games with real-time visibility.
+
 </details>
 <details>
-<summary>The main page
-</summary>
-  
-  - The main page displays the currently ongoing games in real time
+<summary>Profile & Leaderboard</summary>
+
+- Follow users, change profile pictures, and view stats and achievements.
+- Note that this probably wont work due to ip address limitations
+
 </details>
 <details>
-<summary>Leaderboard
-</summary>
-  
-  - Each game has its own leaderboard showing the best players of each game
-  - Achieving high places in any leaderboard grants the user achievements
-  - The leaderboard standings are directly tied to the user's skill level in that particular game
-</details>
-<details>
-<summary>Achievements
-</summary>
-  
-  - Playing, winning, getting winstreaks or getting high on a leaderboard grants players achievements
-  - Achievements can be viewed from the users' profile page
-</details>
-<details>
-<summary>Profile page
-</summary>
-  
-  - In the profile page users can
-      - follow other users
-      - change their profile picture
-      - view their stats
-      - view their recent matches
-      - view their achievements
-</details>
-<details>
-<summary>Sounds
-</summary>
-  
-  - The games have sounds
-  - The sound can be disabled from the footer
-  - The sounds are triggered by specific game events (starting game, playing turn, joining, leaving etc)
+<summary>Audio</summary>
+
+- Game sounds toggleable via footer.
+
 </details>
 
-### Implementation details
+## Technical Details
 
 <details>
-<summary>Graphql codegen
-</summary>
-  
-  - types are automatically generated from the schema in the backend using [gql codegen](https://the-guild.dev/graphql/codegen)
-  - in the frontend graphql queries, mutations and subscriptions can be generated directly from custom .graphql files
-  - (this is lit :fire:)
-</details>
-<details>
-<summary>Realtimeness
-</summary>
-  
-  - The realtimeness of the games are enabled by the power of websockets (graphql subscriptions) and Redis
-  - Changes in ongoing games are published from redis into the public, the client subscribes to relevant ones
-</details>
-<details>
-<summary>Authentication
-</summary>
+<summary>GraphQL</summary>
 
-  - Github OAuth with passport.js, and mongo session. The sessions are persisted so that restarting the server keeps them valid
-</details>
-<details>
-<summary>Mongo
-</summary>
-  
-  - I wanted to refrain from using mongoose because its DX lefts a lot to be desired
-  - The database abstractions are built directly on top of the official mongo library for node
-  - Indeces are kept upto date automatically
-    - On start the application seeks the defined indices, and removes any redundant ones
-  - The database can be seeded with a script
-  - the achievements and games can be inserted automatically into mongo with a script
-</details>
-<details>
-<summary>Uploading profile pictures
-</summary>
+- Backend & frontend types auto-generated; frontend queries generated from `.graphql` files.
 
-  - The profile pictures are uploaded into imgur
-  - The packages used for allowing file uploads in Graphql are `graphql-upload-minimal` in the back and `apollo-upload-client` in the front
 </details>
 <details>
-<summary>The games
-</summary>
+<summary>Real-Time Features</summary>
 
-  - The games follow a shared interface so that implementing more games is arbitrary, albeit laborius.
-  - No limit on player count
-  - Only one player can play at a time (sad)
-  - Game must end with each player having a score that can be used to determine who won etc
+- Enabled by websockets (GraphQL subscriptions) and Redis.
+
 </details>
 <details>
-<summary>ELO System
-</summary>
+<summary>MongoDB</summary>
 
-  - Each played game affects the ELO of each player
-  - The amount the ELO changes is calculated based on the winning probabilities of each player
-  - It is a bit arbitrary, but seems to work as expected
-  - Ideas taken from https://gamedev.stackexchange.com/questions/55441/player-ranking-using-elo-with-more-than-two-players
+- Database abstractions built on native node library; no Mongoose.
+
 </details>
 <details>
-<summary>Apollo gql client
-</summary>
-  
-  - Some advanced configuration in the apollo client
-  - The requests are forwarded into multiple different links
-      - ws link handles the websockets
-      - upload link handles the file uploads
-      - http batch link handles everything else and batches the requests to reduce traffic
+<summary>Imgur Uploads</summary>
+
+- Profile pictures hosted on Imgur.
+
 </details>
 <details>
-<summary>Leaderboard
-</summary>
-  
-  - the leaderboard is cached and can be re-computed every 15 minutes
-  - when the leaderboard is re-created, the leaderboard achievements are distributed
+<summary>Monorepo</summary>
+
+- Organized into `server`, `front`, and `environment` packages.
+
 </details>
-<details>
-<summary>Hosting
-</summary>
-  
-  - the backend is hosted in a DigitalOcean VPS
-  - the mongo is hosted in atlas
-  - the backend and its redis are built with docker
-  - the frontend is hosted in Vercel
-</details>
-
-## Monorepo Package Breakdown
-
-The project is organized as a monorepo for clarity and scalability. Here are the three main packages:
-
-1. **server**: Contains all the backend code including API endpoints, database models, and business logic.
-2. **front**: Houses the frontend React application, components, and client-side logic.
-3. **environment**: Includes Docker configurations for MongoDB and Redis, ensuring a consistent environment setup.
 
 ## Development
 
 ### Requirements
+
 - Docker
 - pnpm (or npm)
-- node v18.*.*
-- github project client id and secret
-- imgur api client id and secret
+- node 18
+- github (and imgur) api keys
 
 ## Env file samples
+
 `packages/frontend/.env`
+
 ```sh
 VITE_SERVER_BASE_URL=http://localhost:3000  # root url for where the server is at
 VITE_WS_BASE_URL=ws://localhost:3000        # most likely same as SERVER_BASE_URL but ws as the protocol
 ```
+
 `packages/server/.env`
+
 ```sh
 SERVER_SESSION_SECRET=                       # something_arbitrary_and_secret
 MONGO_CONNECTION_STRING=                     # connection string to mongo
@@ -230,9 +113,6 @@ IMGUR_CLIENT_SECRET=                         # imgur api client secret
 ```
 
 ### Starting site up
-All three packages can be started in dev mode with following commands in monorepo root
-
-e.g.
 
 ```sh
 pnpm --filter environment dev                # redis and mongo
