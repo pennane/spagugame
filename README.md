@@ -44,7 +44,6 @@ Welcome to the future of social gaming, spagugame, a Metropolia course project f
 <summary>Profile & Leaderboard</summary>
 
 - Follow users, change profile pictures, and view stats and achievements.
-- Note that this probably wont work due to ip address limitations
 
 </details>
 <details>
