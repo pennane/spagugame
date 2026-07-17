@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches: [dev]
-    paths: [packages/server/**]
+    paths: [packages/server/**, packages/chess/**]
 
 jobs:
   deploy:
@@ -31,6 +31,7 @@ jobs:
         run: |
           pnpm deploy --filter server --prod --legacy /tmp/spagugame-server
           cp -r packages/server/dist /tmp/spagugame-server/dist
+          cp -r packages/chess/packages/chess-core/dist /tmp/spagugame-server/node_modules/chess-core/dist
           mkdir -p /tmp/spagugame-server/src/graphql
           cp packages/server/src/graphql/schema.graphql /tmp/spagugame-server/src/graphql/schema.graphql
           tar -czf /tmp/spagugame-server.tar.gz -C /tmp spagugame-server
