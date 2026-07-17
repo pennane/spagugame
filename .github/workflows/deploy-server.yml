@@ -1,0 +1,55 @@
+name: Deploy Server
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [packages/server/**]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+
+      - name: Install and build
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm --filter server build
+
+      - name: Create deploy bundle
+        run: |
+          pnpm deploy --filter server --prod --legacy /tmp/spagugame-server
+          cp -r packages/server/dist /tmp/spagugame-server/dist
+          mkdir -p /tmp/spagugame-server/src/graphql
+          cp packages/server/src/graphql/schema.graphql /tmp/spagugame-server/src/graphql/schema.graphql
+          tar -czf /tmp/spagugame-server.tar.gz -C /tmp spagugame-server
+
+      - name: Deploy
+        env:
+          SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_HOST: ${{ vars.VPS_HOST }}
+          VPS_HOST_KEY: ${{ vars.VPS_HOST_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          echo "$VPS_HOST_KEY" >> ~/.ssh/known_hosts
+          scp /tmp/spagugame-server.tar.gz root@"$VPS_HOST":/tmp/spagugame-server.tar.gz
+          ssh root@"$VPS_HOST" bash -s <<'REMOTE'
+            systemctl stop spagugame || true
+            rm -rf /opt/spagugame/dist /opt/spagugame/node_modules /opt/spagugame/package.json /opt/spagugame/src
+            mkdir -p /opt/spagugame
+            tar -xzf /tmp/spagugame-server.tar.gz -C /opt --no-same-owner
+            mv /opt/spagugame-server/* /opt/spagugame/
+            rmdir /opt/spagugame-server
+            rm /tmp/spagugame-server.tar.gz
+            systemctl start spagugame
+          REMOTE

@@ -1,0 +1,14 @@
+[Unit]
+Description=Spagugame Server
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/spagugame
+ExecStart=/usr/bin/node dist/index.js
+Restart=on-failure
+RestartSec=5
+EnvironmentFile=/opt/spagugame/.env
+
+[Install]
+WantedBy=multi-user.target

@@ -10,5 +10,6 @@
   "keywords": [],
   "author": "Arttu Pennanen <arttu.pennanen@metropolia.fi>",
   "license": "ISC",
-  "devDependencies": {}
+  "devDependencies": {},
+  "packageManager": "pnpm@10.26.0"
 }
