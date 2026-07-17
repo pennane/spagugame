@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - uses: pnpm/action-setup@v4
 
@@ -22,6 +24,7 @@ jobs:
       - name: Install and build
         run: |
           pnpm install --frozen-lockfile
+          pnpm --filter chess-core build
           pnpm --filter server build
 
       - name: Create deploy bundle

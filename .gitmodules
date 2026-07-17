@@ -1,0 +1,3 @@
+[submodule "packages/chess"]
+	path = packages/chess
+	url = https://github.com/pennane/chess.git

@@ -16,6 +16,7 @@ enum GameType {
   FIND_FOUR
   TICK_TACK_TOE
   COLOR_FLOOD
+  CHESS
 }
 
 enum UserRole {

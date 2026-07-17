@@ -8,6 +8,12 @@ importers:
 
   .: {}
 
+  packages/chess/packages/chess-core:
+    devDependencies:
+      typescript:
+        specifier: ^5.2.2
+        version: 5.9.3
+
   packages/environment: {}
 
   packages/front:
@@ -18,6 +24,9 @@ importers:
       apollo-upload-client:
         specifier: ^17.0.0
         version: 17.0.0(@apollo/client@3.14.1(@types/react@18.3.31)(graphql-ws@5.16.2(graphql@16.14.2))(graphql@16.14.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(graphql@16.14.2)
+      chess-core:
+        specifier: workspace:*
+        version: link:../chess/packages/chess-core
       graphql:
         specifier: ^16.8.0
         version: 16.14.2
@@ -106,6 +115,9 @@ importers:
       body-parser:
         specifier: ^1.20.2
         version: 1.20.6
+      chess-core:
+        specifier: workspace:*
+        version: link:../chess/packages/chess-core
       connect-mongo:
         specifier: ^5.0.0
         version: 5.1.0(express-session@1.19.0)(mongodb@5.9.2)

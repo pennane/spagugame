@@ -86,7 +86,7 @@ export const RenderedGame: FC<GameRenderedProps> = ({
       const game = data.data?.ongoingGameStateChange
       if (!game || !ongoingGame?._id) return
 
-      const updatedFields = omit(['_id', '__typename'], filter(isNotNil, game))
+      const updatedFields = omit(['_id', '__typename'], filter(isNotNil, game) as Record<string, unknown>)
 
       client.cache.updateQuery(
         {

@@ -1,5 +1,5 @@
 import * as R from "ramda";
-import { Db, MongoClient } from "mongodb";
+import { Collection, Db, MongoClient } from "mongodb";
 import { CollectionSettings } from "../collections/models";
 import { CONFIG_OBJECT } from "./config";
 import { GAME_COLLECTION_SETTINGS } from "../collections/Game/Game";
@@ -94,6 +94,16 @@ export const initializeMongo = async () => {
   await createCollections(db, collectionSettings);
 
   await createAndDropIndexes(db, collectionSettings);
+
+  for (const settings of Object.values(collectionSettings)) {
+    for (const doc of settings.seedDocuments ?? []) {
+      await (settings.collectionGetter(db) as Collection<any>).findOneAndUpdate(
+        { _id: doc._id },
+        { $set: { ...doc } },
+        { upsert: true }
+      );
+    }
+  }
 
   return { db, collections, collectionSettings, mongoClient };
 };

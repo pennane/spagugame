@@ -2,6 +2,8 @@
   "github": {
     "silent": true
   },
+  "installCommand": "cd ../.. && git submodule update --init --recursive && pnpm install",
+  "buildCommand": "pnpm --filter chess-core build && pnpm run build",
   "routes": [
     {
       "src": "/[^.]+",
