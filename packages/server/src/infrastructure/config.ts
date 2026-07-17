@@ -16,6 +16,7 @@ const envVariablesSchema = z.object({
   MONGO_TEST_DB_NAME: z.string(),
   REDIS_PORT: z.number({ coerce: true }).default(6379),
   REDIS_HOST: z.string().default("localhost"),
+  REDIS_PASSWORD: z.string().optional(),
   GITHUB_CLIENT_ID: z.string(),
   GITHUB_CLIENT_SECRET: z.string(),
   GITHUB_CALLBACK_URL: z

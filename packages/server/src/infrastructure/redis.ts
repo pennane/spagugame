@@ -8,6 +8,7 @@ export const initializeRedis = async () => {
   const redisOptions = {
     host: CONFIG_OBJECT.REDIS_HOST,
     port: CONFIG_OBJECT.REDIS_PORT,
+    password: CONFIG_OBJECT.REDIS_PASSWORD,
     retryStrategy: (times: number) => Math.min(times * 50, 2000),
   } satisfies RedisOptions;
 
