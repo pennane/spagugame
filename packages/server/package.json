@@ -6,7 +6,7 @@
   "scripts": {
     "test": "NODE_ENV=test mocha --require ts-node/register 'src/**/*.test.ts'",
     "test:watch": "NODE_ENV=test mocha -r ts-node/register src/**/*.test.ts --extension ts --watch",
-    "dev": "cross-env NODE_ENV=development nodemon src/index.ts",
+    "dev": "pnpm --filter chess-core build && cross-env NODE_ENV=development nodemon src/index.ts",
     "gen:schema": "graphql-codegen --config codegen.schema.yml",
     "seed-db": "ts-node src/scripts/seedDb.ts",
     "build": "tsc",
@@ -71,6 +71,7 @@
     "passport-github2": "^0.1.12",
     "ramda": "^0.29.0",
     "ws": "^8.13.0",
+    "chess-core": "workspace:*",
     "zod": "^3.22.2"
   }
 }

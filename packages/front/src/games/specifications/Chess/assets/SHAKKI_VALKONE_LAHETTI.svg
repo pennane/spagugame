@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="100mm"
+   height="100mm"
+   viewBox="0 0 100 100"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.2 (732a01da63, 2022-12-09)"
+   sodipodi:docname="SHAKKI_VALKONE_LÄHETTI.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="true"
+     inkscape:zoom="0.35355339"
+     inkscape:cx="550.12908"
+     inkscape:cy="1088.9444"
+     inkscape:window-width="1920"
+     inkscape:window-height="1027"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Taso 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#ffffff;fill-rule:evenodd;stroke-width:0.122174;stroke-linejoin:round;stroke-dasharray:0.122174, 0.122174;paint-order:markers fill stroke"
+       id="rect758-3-35-69"
+       width="43.186058"
+       height="7.9303288"
+       x="28.219204"
+       y="59.427315"
+       ry="2.1166666" />
+    <rect
+       style="fill:#ffffff;fill-rule:evenodd;stroke-width:0.0693397;stroke-linejoin:round;stroke-dasharray:0.0693397, 0.0693397;paint-order:markers fill stroke"
+       id="rect758-3-35-69-8"
+       width="20.300598"
+       height="5.4341545"
+       x="39.661938"
+       y="40.902847"
+       ry="1.4504182" />
+    <rect
+       style="fill:#ffffff;fill-rule:evenodd;stroke-width:0.141296;stroke-linejoin:round;stroke-dasharray:0.141296, 0.141296;paint-order:markers fill stroke"
+       id="rect758-3-35-69-6"
+       width="14.346475"
+       height="31.929857"
+       x="42.826763"
+       y="34.035072"
+       ry="8.5223284" />
+    <path
+       id="path1848"
+       style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.191057;stroke-linejoin:round;stroke-dasharray:0.191057, 0.191057;paint-order:markers fill stroke"
+       d="m 49.498827,22.177147 a 10.356006,11.348195 0 0 1 10.31304,8.36538 10.356006,11.348195 0 0 1 -6.42673,13.63121 10.356006,11.348195 0 0 1 -12.94637,-5.84306 10.356006,11.348195 0 0 1 1.07521,-11.58947 5.5825011,2.9169106 58.681388 0 0 2.82809,4.74441 5.5825011,2.9169106 58.681388 0 0 4.45362,0.13798 5.5825011,2.9169106 58.681388 0 0 -2.23483,-6.72776 5.5825011,2.9169106 58.681388 0 0 -1.53406,-1.35805 l 2.9441,-1.18391 a 10.356006,11.348195 0 0 1 1.52793,-0.17673 z" />
+    <path
+       style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.158014;stroke-linejoin:round;stroke-dasharray:0.158014, 0.158014;paint-order:markers fill stroke"
+       id="path11153"
+       sodipodi:type="arc"
+       sodipodi:cx="50.010601"
+       sodipodi:cy="21.379665"
+       sodipodi:rx="4.2126651"
+       sodipodi:ry="4.2126651"
+       sodipodi:start="5.2362553"
+       sodipodi:end="5.149449"
+       sodipodi:open="true"
+       sodipodi:arc-type="arc"
+       d="m 52.11791,17.731954 a 4.2126651,4.2126651 0 0 1 1.585272,5.675369 4.2126651,4.2126651 0 0 1 -5.639632,1.708053 4.2126651,4.2126651 0 0 1 -1.830031,-5.601239 4.2126651,4.2126651 0 0 1 5.560209,-1.951146" />
+  </g>
+</svg>

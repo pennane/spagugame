@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="100mm"
+   height="100mm"
+   viewBox="0 0 100 100"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.2 (732a01da63, 2022-12-09)"
+   sodipodi:docname="SHAKKI_VALKONE_TORNI.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="true"
+     inkscape:zoom="0.35355339"
+     inkscape:cx="-700.03571"
+     inkscape:cy="79.19596"
+     inkscape:window-width="1920"
+     inkscape:window-height="1027"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Taso 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#ffffff;fill-rule:evenodd;stroke-width:0.122174;stroke-linejoin:round;stroke-dasharray:0.122174, 0.122174;paint-order:markers fill stroke"
+       id="rect758-3"
+       width="43.186058"
+       height="7.9303288"
+       x="28.406961"
+       y="58.988518"
+       ry="2.1166666" />
+    <rect
+       style="fill:#ffffff;fill-rule:evenodd;stroke-width:0.131972;stroke-linejoin:round;stroke-dasharray:0.131972, 0.131972;paint-order:markers fill stroke"
+       id="rect758-3-5"
+       width="43.186058"
+       height="9.2532454"
+       x="28.406961"
+       y="30.174309"
+       ry="2.4697633" />
+    <rect
+       style="fill:#ffffff;fill-rule:evenodd;stroke-width:0.208453;stroke-linejoin:round;stroke-dasharray:0.208453, 0.208453;paint-order:markers fill stroke"
+       id="rect758-3-3"
+       width="29.463787"
+       height="33.837723"
+       x="35.268105"
+       y="33.081139"
+       ry="2.8138392" />
+    <rect
+       style="fill:#ffffff;fill-rule:evenodd;stroke-width:0.251932;stroke-linejoin:round;stroke-dasharray:0.251932, 0.251932;paint-order:markers fill stroke"
+       id="rect999-7-2"
+       width="7.0817614"
+       height="11.236976"
+       x="64.511269"
+       y="23.560272"
+       ry="2.8201957" />
+    <rect
+       style="display:inline;fill:#ffffff;fill-rule:evenodd;stroke-width:0.318105;stroke-linejoin:round;stroke-dasharray:0.318105, 0.318105;paint-order:markers fill stroke"
+       id="rect999-7-2-9-8"
+       width="13.467754"
+       height="9.4203701"
+       x="43.266106"
+       y="24.468575"
+       ry="2.3642738" />
+    <rect
+       style="display:inline;fill:#ffffff;fill-rule:evenodd;stroke-width:0.257162;stroke-linejoin:round;stroke-dasharray:0.257162, 0.257162;paint-order:markers fill stroke"
+       id="rect999-7-2-9-3"
+       width="7.0817614"
+       height="11.708387"
+       x="28.406961"
+       y="24.320114"
+       ry="2.9385076" />
+  </g>
+</svg>
