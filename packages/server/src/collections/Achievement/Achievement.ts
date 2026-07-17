@@ -73,8 +73,10 @@ const createLeaderboardAchievement =
 
 const addIdFromName = <T extends { name: string }>(
   achievement: T
-): T & { _id: ObjectId } =>
-  R.assoc("_id", mongoIdFromSeed(achievement.name), achievement);
+): T & { _id: ObjectId } => ({
+  ...achievement,
+  _id: mongoIdFromSeed(achievement.name),
+});
 
 const addOtherUnlockCriteria = <T extends object>(
   achievement: T
