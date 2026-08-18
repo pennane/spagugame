@@ -6,6 +6,7 @@ import { MOBILE_WIDTHS, useIsMobile } from '../../../../hooks/useIsMobile'
 import { useEffect, useState } from 'react'
 import { isNotNil } from 'ramda'
 import { Button } from '../../../../components/Button'
+import { ConnectionStatus } from '../../../../components/ConnectionStatus'
 import { theme } from '../../../../theme'
 
 const BurgirLine = styled.div`
@@ -196,6 +197,7 @@ export const Navbar = () => {
           <StyledNavLink to={'/'}>
             <SpaguNavTitle>Spagu</SpaguNavTitle>
           </StyledNavLink>
+          <ConnectionStatus />
         </StyledThingEiJaksa>
         <MobileNavbar.Wrapper $open={open}>
           <MobileNavbar.Items>
@@ -224,6 +226,7 @@ export const Navbar = () => {
           ))}
         </StyledNavLinks>
 
+        <ConnectionStatus />
         <AuthenticationActions />
       </StyledNavbar>
       <StyledNavbarUnderline />

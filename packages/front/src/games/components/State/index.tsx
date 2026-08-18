@@ -22,6 +22,7 @@ const StyledState = styled.div`
 const StyledStartsIn = styled.div`
   position: absolute;
   inset: 0;
+  pointer-events: none;
   background: rgb(0 0 0 / 50%);
   display: flex;
   justify-content: center;
